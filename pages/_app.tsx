@@ -48,28 +48,44 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Container>
         <Box sx={{ my: 2 }}>
           <Component {...pageProps} />
-
-          <footer>
-            <Container sx={{ width: '100%' }}>
-              <span>
-                Powered by{' '}
-                <a
-                  href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <StyledImage
-                    src="/vercel.svg"
-                    alt="Vercel Logo"
-                    width={72}
-                    height={16}
-                  />
-                </a>
-              </span>
-            </Container>
-          </footer>
         </Box>
       </Container>
+
+      <footer>
+        <Container sx={{ py: 5, position: 'relative' }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              bgcolor: 'primary.main',
+              opacity: '5%',
+              zIndex: -1,
+            }}
+          />
+          <Box
+            sx={{ width: 'max-content', mx: 'auto', verticalAlign: 'middle' }}
+          >
+            <span>
+              Powered by{' '}
+              <a
+                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <StyledImage
+                  src="/vercel.svg"
+                  alt="Vercel Logo"
+                  width={72}
+                  height={16}
+                />
+              </a>
+            </span>
+          </Box>
+        </Container>
+      </footer>
     </ThemeProvider>
   );
 }
