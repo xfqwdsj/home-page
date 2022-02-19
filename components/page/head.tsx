@@ -1,24 +1,42 @@
-import { AppBar, Slide, Toolbar, Typography, useScrollTrigger } from "@mui/material";
-import Head from "next/head";
+import {
+  AppBar,
+  Slide,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+} from '@mui/material';
+import { grey } from '@mui/material/colors';
+import Head from 'next/head';
 
 export interface HeadProps {
-  pageTitle: string,
-  pageDescription: string,
-  topBarTitle: string
+  pageTitle: string;
+  pageDescription: string;
+  topBarTitle: string;
 }
 
-export default function AppHead({ pageTitle, pageDescription, topBarTitle }: HeadProps) {
+export default function AppHead({
+  pageTitle,
+  pageDescription,
+  topBarTitle,
+}: HeadProps) {
   return (
     <>
       <Head>
         <title>{pageTitle}</title>
-        <meta name='description' content={pageDescription} />
+        <meta name="description" content={pageDescription} />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Slide appear={false} direction='down' in={!useScrollTrigger()}>
-        <AppBar>
+      <Slide appear={false} direction="down" in={!useScrollTrigger()}>
+        <AppBar
+          sx={{
+            boxShadow: 0,
+            borderBottom: 1,
+            borderColor: grey[300],
+            backdropFilter: 'blur(10px)',
+          }}
+        >
           <Toolbar>
             <Typography variant="h6" component="div">
               {topBarTitle}
@@ -28,5 +46,5 @@ export default function AppHead({ pageTitle, pageDescription, topBarTitle }: Hea
       </Slide>
       <Toolbar />
     </>
-  )
+  );
 }

@@ -23,6 +23,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     () =>
       createTheme({
         palette: {
+          primary: {
+            main: '#ffffff1a',
+          },
           mode: prefersDarkMode ? 'dark' : 'light',
         },
       }),
@@ -37,11 +40,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      {pageProps.head && (
+      {pageProps.head ? (
         <AppHead
           pageTitle={pageProps.head.pageTitle}
           pageDescription={pageProps.head.pageDescription}
           topBarTitle={pageProps.head.topBarTitle}
+        />
+      ) : (
+        <AppHead
+          pageTitle="LTFan"
+          pageDescription="LTFan's home page"
+          topBarTitle="LTFan"
         />
       )}
 
@@ -54,16 +63,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <footer>
         <Container sx={{ py: 5, position: 'relative' }}>
           <Box
-            sx={{
+            sx={(theme) => ({
               position: 'absolute',
               left: 0,
               top: 0,
               right: 0,
               bottom: 0,
-              bgcolor: 'primary.main',
+              backgroundColor:
+                theme.palette.mode === 'light'
+                  ? theme.palette.common.black
+                  : theme.palette.common.white,
               opacity: '5%',
               zIndex: -1,
-            }}
+            })}
           />
           <Box
             sx={{ width: 'max-content', mx: 'auto', verticalAlign: 'middle' }}
