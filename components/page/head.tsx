@@ -36,6 +36,7 @@ export default function AppHead({
             borderColor: grey[300],
             backdropFilter: 'blur(10px)',
           }}
+          enableColorOnDark
         >
           <Toolbar>
             <Typography variant="h6" component="div">
