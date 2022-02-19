@@ -19,6 +19,11 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         }
       });
     }
+  } else {
+    res
+      .writeHead(405, {
+        Allow: 'GET',
+      })
+      .end();
   }
-  res.status(200).json({ name: 'John Doe' });
 };
