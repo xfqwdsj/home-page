@@ -5,7 +5,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const password = req.query['p'] as string | null | undefined;
     if (password) {
-      bcrypt.hash(password, 32, (err, hash) => {
+      bcrypt.hash(password, 10, (err, hash) => {
         err ? res.status(500).json(err) : res.status(200).send(hash);
       });
     } else {
