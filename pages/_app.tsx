@@ -63,19 +63,19 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <footer>
         <Container sx={{ py: 5, position: 'relative' }}>
           <Box
-            sx={(theme) => ({
+            sx={{
               position: 'absolute',
               left: 0,
               top: 0,
               right: 0,
               bottom: 0,
-              backgroundColor:
+              backgroundColor: (theme) =>
                 theme.palette.mode === 'light'
                   ? theme.palette.common.black
                   : theme.palette.common.white,
               opacity: '5%',
               zIndex: -1,
-            })}
+            }}
           />
           <Box
             sx={{ width: 'max-content', mx: 'auto', verticalAlign: 'middle' }}

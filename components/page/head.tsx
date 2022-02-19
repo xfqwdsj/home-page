@@ -28,23 +28,23 @@ export default function AppHead({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Slide appear={false} direction="down" in={!useScrollTrigger()}>
-        <AppBar
-          sx={{
-            boxShadow: 0,
-            borderBottom: 1,
-            borderColor: grey[300],
-            backdropFilter: 'blur(10px)',
-          }}
-          enableColorOnDark
-        >
-          <Toolbar>
-            <Typography variant="h6" component="div">
-              {topBarTitle}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Slide>
+      <AppBar
+        position="fixed"
+        sx={{
+          boxShadow: 0,
+          borderBottom: 1,
+          borderColor: (theme) =>
+            theme.palette.mode === 'light' ? grey[300] : grey[900],
+          backdropFilter: 'blur(10px)',
+        }}
+        enableColorOnDark
+      >
+        <Toolbar>
+          <Typography variant="h6" component="div">
+            {topBarTitle}
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Toolbar />
     </>
   );
