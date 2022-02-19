@@ -1,7 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import YAML from 'yaml';
 import * as bcrypt from 'bcrypt';
-import { defaultClashProfile } from '../../components/clash_profile/default';
+import {
+  defaultClashProfile,
+  ruleGroups,
+  ruleProviders,
+  rules,
+} from '../../components/clash_profile/default';
 import { freeProxies } from '../../components/clash_profile/free';
 
 interface User {
@@ -37,16 +42,14 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
                     process.env.MY_PROXY_SERVER as string
                   ) as MyServer;
                   profile.proxies.push(proxy);
-                  profile['proxy-groups'][0].proxies.splice(-1, 0, proxy.name);
+                  profile['proxy-groups'][0].proxies.push(proxy.name);
                   break;
                 case 'free':
                   profile['proxy-providers'] = Object.assign(
                     profile['proxy-providers'],
                     freeProxies
                   );
-                  profile['proxy-groups'].splice(
-                    -10,
-                    0,
+                  profile['proxy-groups'].push(
                     {
                       name: '互联网上的免费代理',
                       type: 'select',
@@ -61,15 +64,20 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
                       use: Object.keys(freeProxies),
                     }
                   );
-                  profile['proxy-groups'][0].proxies.splice(
-                    -1,
-                    0,
+                  profile['proxy-groups'][0].proxies.push(
                     '互联网上的免费代理',
                     '自动选择的的免费代理'
                   );
                   break;
               }
             });
+            profile['proxy-groups'][0].proxies.push('DIRECT');
+            if (req.query['nr'] as string | null | undefined) {
+              profile['proxy-groups'].push(...YAML.parse(ruleGroups));
+              Object.assign(profile, YAML.parse(ruleProviders));
+              profile.rules.push(...YAML.parse(rules));
+            }
+            profile.rules.push('MATCH,PROXY');
             res.status(200).send(YAML.stringify(profile));
           } else {
             res.status(404).json(err);
