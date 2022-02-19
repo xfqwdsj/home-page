@@ -67,9 +67,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
                     '互联网上的免费代理',
                     '自动选择的的免费代理'
                   );
+                  break;
               }
             });
-            res.status(200).send('OK');
+            res.status(200).send(YAML.stringify(profile));
           } else {
             res.status(404).json(err);
           }
