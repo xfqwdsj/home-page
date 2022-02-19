@@ -16,8 +16,13 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       const user = users[name] as User;
       bcrypt.compare(password, user.passwd, function (err, result) {
         if (result) {
+          res.status(200).send('OK')
+        } else {
+          res.status(404).json(err)
         }
       });
+    } else {
+      res.status(400).send(null)
     }
   } else {
     res
