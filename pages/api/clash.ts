@@ -29,7 +29,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       if (user) {
         bcrypt.compare(password, user.passwd, function (err, result) {
           if (result) {
-            const profile = defaultClashProfile;
+            const profile = YAML.parse(defaultClashProfile);
             user.groups.forEach((group) => {
               switch (group) {
                 case 'mine':
@@ -76,7 +76,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
           }
         });
       } else {
-        res.status(404).json(null);
+        res.status(404).send(null);
       }
     } else {
       res.status(400).send(null);
