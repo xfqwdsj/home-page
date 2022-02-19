@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import * as bcrypt from 'bcrypt';
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const hashTs = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const password = req.query['p'] as string | null | undefined;
     if (password) {
@@ -9,7 +9,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         err ? res.status(500).json(err) : res.status(200).send(hash);
       });
     } else {
-      res.status(400).send(null)
+      res.status(400).send(null);
     }
   } else {
     res
@@ -19,3 +19,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       .end();
   }
 };
+
+export default hashTs;

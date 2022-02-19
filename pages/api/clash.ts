@@ -24,11 +24,9 @@ interface MyServer {
   alpn: Array<string>;
 }
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const clashTs = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const users = YAML.parse(
-      process.env.CLASH_USERS as string
-    );
+    const users = YAML.parse(process.env.CLASH_USERS as string);
     const name = req.query['n'] as string | null | undefined;
     const password = req.query['p'] as string | null | undefined;
     if (name && password) {
@@ -102,3 +100,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       .end();
   }
 };
+
+export default clashTs;
