@@ -26,7 +26,9 @@ interface MyServer {
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const users = YAML.parse(process.env.CLASH_USERS as string);
+    const users = YAML.parse(
+      process.env.CLASH_USERS as string
+    );
     const name = req.query['n'] as string | null | undefined;
     const password = req.query['p'] as string | null | undefined;
     if (name && password) {
@@ -72,9 +74,12 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
               }
             });
             profile['proxy-groups'][0].proxies.push('DIRECT');
-            if (req.query['nr'] as string | null | undefined) {
+            if (!(req.query['nr'] as string | null | undefined)) {
               profile['proxy-groups'].push(...YAML.parse(ruleGroups));
-              Object.assign(profile, YAML.parse(ruleProviders));
+              profile['rule-providers'] = Object.assign(
+                profile['rule-providers'],
+                YAML.parse(ruleProviders)
+              );
               profile.rules.push(...YAML.parse(rules));
             }
             profile.rules.push('MATCH,PROXY');

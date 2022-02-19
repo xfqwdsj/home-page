@@ -11,6 +11,7 @@ proxy-groups:
   - name: PROXY
     type: select
     proxies: []
+rule-providers: {}
 rules: []
 `;
 
@@ -36,7 +37,7 @@ export const ruleGroups = `
     - DIRECT
     - PROXY
 - name: 中国GeoIP
-type: select
+  type: select
   proxies:
     - DIRECT
     - PROXY
@@ -69,73 +70,63 @@ type: select
 `;
 
 export const ruleProviders = `
-rule-providers:
-  reject:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
-    path: ./ruleset/reject.yaml
-    interval: 86400
-  icloud:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt
-    path: ./ruleset/icloud.yaml
-    interval: 86400
-  apple:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/apple.txt
-    path: ./ruleset/apple.yaml
-    interval: 86400
-  google:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/google.txt
-    path: ./ruleset/google.yaml
-    interval: 86400
-  direct:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
-    path: ./ruleset/direct.yaml
-    interval: 86400
-  private:
-    type: http
-    behavior: domain
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
-    path: ./ruleset/private.yaml
-    interval: 86400
-  cncidr:
-    type: http
-    behavior: ipcidr
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
-    path: ./ruleset/cncidr.yaml
-    interval: 86400
-  lancidr:
-    type: http
-    behavior: ipcidr
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt
-    path: ./ruleset/lancidr.yaml
-    interval: 86400
-  applications:
-    type: http
-    behavior: classical
-    url: >-
-      https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt
-    path: ./ruleset/applications.yaml
-    interval: 86400
+reject:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
+  path: ./ruleset/reject.yaml
+  interval: 86400
+icloud:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt
+  path: ./ruleset/icloud.yaml
+  interval: 86400
+apple:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/apple.txt
+  path: ./ruleset/apple.yaml
+  interval: 86400
+google:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/google.txt
+  path: ./ruleset/google.yaml
+  interval: 86400
+direct:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
+  path: ./ruleset/direct.yaml
+  interval: 86400
+private:
+  type: http
+  behavior: domain
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
+  path: ./ruleset/private.yaml
+  interval: 86400
+cncidr:
+  type: http
+  behavior: ipcidr
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
+  path: ./ruleset/cncidr.yaml
+  interval: 86400
+lancidr:
+  type: http
+  behavior: ipcidr
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt
+  path: ./ruleset/lancidr.yaml
+  interval: 86400
+applications:
+  type: http
+  behavior: classical
+  url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt
+  path: ./ruleset/applications.yaml
+  interval: 86400
 `;
 
-export const rules = `
+export const rules =`
 - 'RULE-SET,applications,本地进程'
 - 'DOMAIN,clash.razord.top,DIRECT'
 - 'DOMAIN,yacd.haishan.me,DIRECT'
