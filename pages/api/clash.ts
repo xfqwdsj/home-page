@@ -14,15 +14,19 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     const password = req.query['p'] as string | null | undefined;
     if (name && password) {
       const user = users[name] as User;
-      bcrypt.compare(password, user.passwd, function (err, result) {
-        if (result) {
-          res.status(200).send('OK')
-        } else {
-          res.status(404).json(err)
-        }
-      });
+      if (user) {
+        bcrypt.compare(password, user.passwd, function (err, result) {
+          if (result) {
+            res.status(200).send('OK');
+          } else {
+            res.status(404).json(err);
+          }
+        });
+      } else {
+        res.status(404).json(null);
+      }
     } else {
-      res.status(400).send(null)
+      res.status(400).send(null);
     }
   } else {
     res
