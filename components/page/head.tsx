@@ -1,9 +1,7 @@
 import {
   AppBar,
-  Slide,
   Toolbar,
   Typography,
-  useScrollTrigger,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Head from 'next/head';
