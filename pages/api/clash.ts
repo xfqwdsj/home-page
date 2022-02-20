@@ -81,7 +81,7 @@ const clashTs = (req: NextApiRequest, res: NextApiResponse) => {
               profile.rules.push(...YAML.parse(rules));
             }
             profile.rules.push('MATCH,PROXY');
-            res.status(200).send(YAML.stringify(profile));
+            res.setHeader('Content-Type', 'text/yaml; charset=utf-8').status(200).send(YAML.stringify(profile));
           } else {
             res.status(404).json(err);
           }
