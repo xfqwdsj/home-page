@@ -8,6 +8,8 @@ import { HeadProps } from '../components/page/head';
 
 const dir = path.join(process.cwd(), 'pages_mdx');
 
+const components = {};
+
 interface MDXPageParams {
   params: {
     file: string;
@@ -22,7 +24,7 @@ interface MDXPageProps {
   head?: HeadProps;
 }
 
-function getFilePaths() {
+const getFilePaths = () => {
   const fileNames = fs.readdirSync(dir);
   return fileNames.map((name) => {
     return {
@@ -31,27 +33,27 @@ function getFilePaths() {
       },
     };
   });
-}
+};
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const paths = getFilePaths();
   return {
     paths,
     fallback: false,
   };
-}
+};
 
-export async function getStaticProps({ params }: MDXPageParams) {
+export const getStaticProps = async ({ params }: MDXPageParams) => {
   const source = await serialize(
     fs.readFileSync(`${dir}/${params.file}.mdx`, 'utf8'),
     { parseFrontmatter: true }
   );
   const props: MDXPageProps = Object.assign({ source }, source.frontmatter);
   return { props };
-}
+};
 
 const Page: NextPage<MDXPageProps> = ({ source }) => {
-  return <MDXRemote {...source} />;
+  return <MDXRemote {...source} components={components} />;
 };
 
 export default Page;

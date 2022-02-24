@@ -15,8 +15,9 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import AppHead from '../components/page/head';
+import AV from 'leancloud-storage/core';
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = useMemo(
@@ -35,6 +36,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const StyledImage = styled(Image)(({ theme }) => ({
     filter: `invert(${theme.palette.mode === 'light' ? '0%' : '100%'})`,
   }));
+
+  AV.init({
+    appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
+    appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,4 +106,4 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </footer>
     </ThemeProvider>
   );
-}
+};

@@ -1,8 +1,4 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Toolbar, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Head from 'next/head';
 
@@ -12,11 +8,7 @@ export interface HeadProps {
   topBarTitle: string;
 }
 
-export default function AppHead({
-  pageTitle,
-  pageDescription,
-  topBarTitle,
-}: HeadProps) {
+export default ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
   return (
     <>
       <Head>
@@ -46,4 +38,4 @@ export default function AppHead({
       <Toolbar />
     </>
   );
-}
+};

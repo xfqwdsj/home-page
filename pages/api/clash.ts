@@ -24,7 +24,7 @@ interface MyServer {
   alpn: Array<string>;
 }
 
-const clashTs = (req: NextApiRequest, res: NextApiResponse) => {
+export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const users = YAML.parse(process.env.CLASH_USERS as string);
     const name = req.query['n'] as string | null | undefined;
@@ -81,7 +81,10 @@ const clashTs = (req: NextApiRequest, res: NextApiResponse) => {
               profile.rules.push(...YAML.parse(rules));
             }
             profile.rules.push('MATCH,PROXY');
-            res.setHeader('Content-Type', 'text/yaml; charset=utf-8').status(200).send(YAML.stringify(profile));
+            res
+              .setHeader('Content-Type', 'text/yaml; charset=utf-8')
+              .status(200)
+              .send(YAML.stringify(profile));
           } else {
             res.status(404).json(err);
           }
@@ -100,5 +103,3 @@ const clashTs = (req: NextApiRequest, res: NextApiResponse) => {
       .end();
   }
 };
-
-export default clashTs;
