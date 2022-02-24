@@ -8,7 +8,7 @@ export interface HeadProps {
   topBarTitle: string;
 }
 
-export default ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
+const AppHead = ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
   return (
     <>
       <Head>
@@ -39,3 +39,5 @@ export default ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
     </>
   );
 };
+
+export default AppHead;

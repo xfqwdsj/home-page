@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import * as bcrypt from 'bcrypt';
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const HashApi = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const password = req.query['p'] as string | null | undefined;
     if (password) {
@@ -19,3 +19,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       .end();
   }
 };
+
+export default HashApi;

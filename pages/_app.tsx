@@ -17,7 +17,7 @@ import {
 import AppHead from '../components/page/head';
 import AV from 'leancloud-storage/core';
 
-export default ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = useMemo(
@@ -107,3 +107,5 @@ export default ({ Component, pageProps }: AppProps) => {
     </ThemeProvider>
   );
 };
+
+export default App;
