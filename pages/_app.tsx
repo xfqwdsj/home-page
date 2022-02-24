@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import AppHead from '../components/page/head';
 import AV from 'leancloud-storage/core';
+import * as adapters from '@leancloud/platform-adapters-react-native';
+import { Adapters } from '@leancloud/adapter-types';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -37,6 +39,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     filter: `invert(${theme.palette.mode === 'light' ? '0%' : '100%'})`,
   }));
 
+  AV.setAdapters(adapters as unknown as Adapters);
   AV.init({
     appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
     appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
