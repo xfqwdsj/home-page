@@ -12,10 +12,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { User, Error as AVError } from 'leancloud-storage';
+import AV, { ACL } from 'leancloud-storage';
+//import { Adapters } from '@leancloud/adapter-types';
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HeadProps } from '../../components/page/head';
+
+//const { User } = AV;
 
 const head: HeadProps = {
   pageTitle: 'Clash | LTFan',
@@ -32,23 +35,24 @@ export const getStaticProps = () => {
 };
 
 const query = async (
+  AC: typeof AV,
   name: string,
   pswd: string
-): Promise<Array<string> | AVError> => {
-  return await User.logIn(name, pswd)
+): Promise<Array<string> | AV.Error> => {
+  return await AC.User.logIn(name, pswd)
     .then((user) => {
       return user.get('group') as Array<string> | null | undefined;
     })
     .then((result) => {
-      User.logOut();
+      AC.User.logOut();
       return result ? result : [];
     })
-    .catch((e: AVError) => {
+    .catch((e: AV.Error) => {
       return e;
     });
 };
 
-const Clash: NextPage = () => {
+const Clash = ({ AC }: { AC: typeof AV }) => {
   const [name, setName] = useState(''); // Name
   const [pswd, setPswd] = useState(''); // Password
   const [open, setOpen] = useState<number | null>(null); // Open (1: Collapse, 2: Dialog)
@@ -102,11 +106,11 @@ const Clash: NextPage = () => {
               variant="contained"
               onClick={() => {
                 close();
-                query(name, pswd).then((result) => {
+                query(AC, name, pswd).then((result) => {
                   if (Array.isArray(result)) {
                     paper(`你的组为${result}`);
                   } else {
-                    paper(JSON.stringify(result));
+                    paper(result.message);
                   }
                 });
               }}
@@ -117,16 +121,16 @@ const Clash: NextPage = () => {
               variant="contained"
               onClick={() => {
                 close();
-                const user = new User();
+                const user = new AC.User();
                 user.setUsername(name);
                 user.setPassword(pswd);
                 user.signUp().then(
                   () => {
                     dialog('注册成功');
-                    User.logOut();
+                    AC.User.logOut();
                   },
-                  (e: AVError) => {
-                    dialog(JSON.stringify(e));
+                  (e: AV.Error) => {
+                    dialog(e.message);
                   }
                 );
               }}

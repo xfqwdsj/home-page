@@ -16,9 +16,7 @@ import {
 } from '@mui/material';
 import AppHead from '../components/page/head';
 import AV from 'leancloud-storage/core';
-import * as adapters from '@leancloud/platform-adapters-browser';
 import { Adapters } from '@leancloud/adapter-types';
-import dynamic from 'next/dynamic';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -71,7 +69,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
       <Container>
         <Box sx={{ my: 2 }}>
-          <Component {...pageProps} />
+          <Component {...pageProps} AC={AV} />
         </Box>
       </Container>
 
