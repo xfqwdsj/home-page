@@ -8,17 +8,12 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  Paper,
   TextField,
   Typography,
 } from '@mui/material';
-import AV, { ACL } from 'leancloud-storage';
-//import { Adapters } from '@leancloud/adapter-types';
-import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import AV from 'leancloud-storage';
+import { useState } from 'react';
 import { HeadProps } from '../../components/page/head';
-
-//const { User } = AV;
 
 const head: HeadProps = {
   pageTitle: 'Clash | LTFan',
@@ -38,14 +33,10 @@ const query = async (
   AC: typeof AV,
   name: string,
   pswd: string
-): Promise<Array<string> | AV.Error> => {
+): Promise<Array<AV.Role> | AV.Error> => {
   return await AC.User.logIn(name, pswd)
     .then((user) => {
-      return user.get('group') as Array<string> | null | undefined;
-    })
-    .then((result) => {
-      AC.User.logOut();
-      return result ? result : [];
+      return user.getRoles()
     })
     .catch((e: AV.Error) => {
       return e;
@@ -109,7 +100,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
                 close();
                 query(AC, name, pswd).then((result) => {
                   if (Array.isArray(result)) {
-                    paper(`你的组为${result}`);
+                    paper(`你的组为${result.map((role) => role.getName())}`);
                   } else {
                     paper(result.message);
                   }
