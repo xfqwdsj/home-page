@@ -1,4 +1,12 @@
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  createTheme,
+  Theme,
+  ThemeProvider,
+  Toolbar,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Head from 'next/head';
 
@@ -9,6 +17,10 @@ export interface HeadProps {
 }
 
 const AppHead = ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
+  const theme = useTheme();
+  theme.palette.primary.main =
+    theme.palette.mode === 'light' ? '#ffffff1a' : '#0000001a';
+
   return (
     <>
       <Head>
@@ -18,26 +30,39 @@ const AppHead = ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppBar
-        position="fixed"
-        sx={{
-          boxShadow: 0,
-          borderBottom: 1,
-          borderColor: (theme) =>
-            theme.palette.mode === 'light' ? grey[300] : grey[900],
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'light' ? '#ffffff1a' : '#0000001a',
-          backdropFilter: 'blur(10px)',
-        }}
-        enableColorOnDark
+      <ThemeProvider
+        theme={(theme: Theme) =>
+          createTheme({
+            ...theme,
+            palette: {
+              ...theme.palette,
+              primary: {
+                main:
+                  theme.palette.mode === 'light' ? '#ffffff1a' : '#0000001a',
+              },
+            },
+          })
+        }
       >
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            {topBarTitle}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+        <AppBar
+          position="fixed"
+          sx={{
+            boxShadow: 0,
+            borderBottom: 1,
+            borderColor: (theme) =>
+              theme.palette.mode === 'light' ? grey[300] : grey[900],
+            backdropFilter: 'blur(10px)',
+          }}
+          enableColorOnDark
+        >
+          <Toolbar>
+            <Typography variant="h6" component="div">
+              {topBarTitle}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+      </ThemeProvider>
     </>
   );
 };
