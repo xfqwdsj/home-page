@@ -36,7 +36,7 @@ const query = async (
 ): Promise<Array<AV.Role> | AV.Error> => {
   return await AC.User.logIn(name, pswd)
     .then((user) => {
-      return user.getRoles()
+      return user.getRoles();
     })
     .catch((e: AV.Error) => {
       return e;
@@ -100,7 +100,15 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
                 close();
                 query(AC, name, pswd).then((result) => {
                   if (Array.isArray(result)) {
-                    paper(`你的组为${result.map((role) => role.getName())}`);
+                    paper(
+                      `你的组为${result
+                        .sort(
+                          (a, b) =>
+                            (a.get('order') as number) -
+                            (b.get('order') as number)
+                        )
+                        .map((role) => role.getName())}`
+                    );
                   } else {
                     paper(result.message);
                   }
