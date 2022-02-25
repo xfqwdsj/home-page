@@ -78,65 +78,73 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
       <Paper>
         <Grid container spacing={1}>
           <Grid container item spacing={1}>
-            <TextField
-              fullWidth
-              label="用户名"
-              type="text"
-              autoComplete="username"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-              }}
-            />
+            <Grid item>
+              <TextField
+                fullWidth
+                label="用户名"
+                type="text"
+                autoComplete="username"
+                value={name}
+                onChange={(event) => {
+                  setName(event.target.value);
+                }}
+              />
+            </Grid>
           </Grid>
           <Grid container item spacing={1}>
-            <TextField
-              fullWidth
-              label="密码"
-              type="password"
-              autoComplete="password"
-              value={pswd}
-              onChange={(event) => {
-                setPswd(event.target.value);
-              }}
-            />
+            <Grid item>
+              <TextField
+                fullWidth
+                label="密码"
+                type="password"
+                autoComplete="password"
+                value={pswd}
+                onChange={(event) => {
+                  setPswd(event.target.value);
+                }}
+              />
+            </Grid>
           </Grid>
           <Grid container item spacing={1}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                close();
-                query(AC, name, pswd).then((result) => {
-                  if (Array.isArray(result)) {
-                    paper(`你的组为${result}`);
-                  } else {
-                    paper(result.message);
-                  }
-                });
-              }}
-            >
-              查询
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => {
-                close();
-                const user = new AC.User();
-                user.setUsername(name);
-                user.setPassword(pswd);
-                user.signUp().then(
-                  () => {
-                    dialog('注册成功');
-                    AC.User.logOut();
-                  },
-                  (e: AV.Error) => {
-                    dialog(e.message);
-                  }
-                );
-              }}
-            >
-              注册
-            </Button>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  close();
+                  query(AC, name, pswd).then((result) => {
+                    if (Array.isArray(result)) {
+                      paper(`你的组为${result}`);
+                    } else {
+                      paper(result.message);
+                    }
+                  });
+                }}
+              >
+                查询
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  close();
+                  const user = new AC.User();
+                  user.setUsername(name);
+                  user.setPassword(pswd);
+                  user.signUp().then(
+                    () => {
+                      dialog('注册成功');
+                      AC.User.logOut();
+                    },
+                    (e: AV.Error) => {
+                      dialog(e.message);
+                    }
+                  );
+                }}
+              >
+                注册
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Paper>

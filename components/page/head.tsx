@@ -25,6 +25,8 @@ const AppHead = ({ pageTitle, pageDescription, topBarTitle }: HeadProps) => {
           borderBottom: 1,
           borderColor: (theme) =>
             theme.palette.mode === 'light' ? grey[300] : grey[900],
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light' ? '#ffffff1a' : '#0000001a',
           backdropFilter: 'blur(10px)',
         }}
         enableColorOnDark

@@ -25,9 +25,6 @@ const App = ({ Component, pageProps }: AppProps) => {
     () =>
       createTheme({
         palette: {
-          primary: {
-            main: prefersDarkMode ? '#0000001a' : '#ffffff1a',
-          },
           mode: prefersDarkMode ? 'dark' : 'light',
         },
       }),
