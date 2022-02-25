@@ -75,7 +75,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
   return (
     <Container>
       <Grid container spacing={1}>
-        <Grid container item spacing={1}>
+        <Grid container item spacing={1} justifyContent="center">
           <Grid item xs>
             <TextField
               label="用户名"
@@ -88,7 +88,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
             />
           </Grid>
         </Grid>
-        <Grid container item spacing={1}>
+        <Grid container item spacing={1} justifyContent="center">
           <Grid item xs>
             <TextField
               label="密码"
