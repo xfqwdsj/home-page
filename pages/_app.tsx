@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import AppHead from '../components/page/head';
 import AV from 'leancloud-storage/core';
+import * as adapters from '@leancloud/platform-adapters-browser'
+import { Adapters } from "@leancloud/adapter-types";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -38,11 +40,12 @@ const App = ({ Component, pageProps }: AppProps) => {
   }));
 
   useEffect(() => {
+    AV.setAdapters(adapters as Adapters)
     AV.init({
       appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
       appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
     });
-  });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
