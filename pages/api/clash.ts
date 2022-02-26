@@ -81,7 +81,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
                 return result;
               }
             );
-            (config['proxy-groups'] as Array<any>).push(groups);
+            (config['proxy-groups'] as Array<any>).push(...groups);
             (
               (config['proxy-groups'] as Array<any>)[0][
                 'proxies'
