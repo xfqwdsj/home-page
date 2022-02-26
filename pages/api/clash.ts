@@ -44,95 +44,80 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
       const password = req.query['p'] as string | null | undefined;
       if (name && password) {
         const config = JSON.parse(JSON.stringify(defaultClashConfig));
-        getRoles(AC.User.logIn(name, password))
-          .then((roles) => {
-            const ruleName = req.query['r'] as string | null | undefined;
-            roles.forEach((role) => {
-              new AC.Query('Proxies')
-                .get(role.get('proxy').id)
-                .then((proxy) => {
-                  const proxies = proxy.get('proxies') as Array<any>;
-                  const providers = proxy.get('providers');
-                  const groups = (
-                    proxy.get('groups') as Array<ServerSideGroup>
-                  ).map((group) => {
-                    const { name, type } = group;
-                    let result = { name, type } as Group;
-                    switch (group.template) {
-                      case 'proxies':
-                        (config['proxies'] as Array<any>).push(...proxies);
-                        result = {
-                          ...result,
-                          proxies: proxies.map((it) => it['name']),
-                        };
-                        break;
-                      case 'providers':
-                        config['proxy-providers'] = Object.assign(
-                          config['proxy-providers'],
-                          providers
-                        );
-                        result = {
-                          ...result,
-                          ...urlTestGroupConfig,
-                          use: Object.keys(providers),
-                        };
-                        break;
-                    }
-                    return result;
-                  });
-                  (config['proxy-groups'] as Array<any>).push(groups);
-                  (
-                    (config['proxy-groups'] as Array<any>)[0][
-                      'proxies'
-                    ] as Array<string>
-                  ).push(...groups.map((group) => group.name));
-                })
-                .catch((e: Error) => {
-                  AC.User.logOut();
-                  res.status(404).send(e.stack);
-                });
-            });
-            if (ruleName) {
-              new AC.Query('Rules')
-                .equalTo('name', ruleName)
-                .first()
-                .then((rule) => {
-                  if (rule) {
-                    if (rule.get('groups') as Array<any> | null | undefined) {
-                      (config['proxy-groups'] as Array<any>).push(
-                        ...rule.get('groups')
-                      );
-                    }
-                    if (rule.get('providers') as any | null | undefined) {
-                      config['rule-providers'] = Object.assign(
-                        config['rule-providers'],
-                        rule.get('providers')
-                      );
-                    }
-                    if (rule.get('rules') as Array<any> | null | undefined) {
-                      (config['rules'] as Array<any>).push(
-                        ...rule.get('rules')
-                      );
-                    }
-                    AC.User.logOut();
-                    send(config, res);
-                  } else {
-                    AC.User.logOut();
-                    res.status(404).send('Rule not found.');
-                  }
-                })
-                .catch((e: Error) => {
-                  AC.User.logOut();
-                  res.status(500).send(e.stack);
-                });
-            } else {
-              AC.User.logOut();
-              send(config, res);
+        const roles = await getRoles(AC.User.logIn(name, password));
+        const ruleName = req.query['r'] as string | null | undefined;
+        for (let i = 0; i < roles.length; i++) {
+          await (async () => {
+            const role = roles[i];
+            const proxy = await new AC.Query('Proxies').get(
+              role.get('proxy').id
+            );
+            const proxies = proxy.get('proxies') as Array<any>;
+            const providers = proxy.get('providers');
+            const groups = (proxy.get('groups') as Array<ServerSideGroup>).map(
+              (group) => {
+                const { name, type } = group;
+                let result = { name, type } as Group;
+                switch (group.template) {
+                  case 'proxies':
+                    (config['proxies'] as Array<any>).push(...proxies);
+                    result = {
+                      ...result,
+                      proxies: proxies.map((it) => it['name']),
+                    };
+                    break;
+                  case 'providers':
+                    config['proxy-providers'] = Object.assign(
+                      config['proxy-providers'],
+                      providers
+                    );
+                    result = {
+                      ...result,
+                      ...urlTestGroupConfig,
+                      use: Object.keys(providers),
+                    };
+                    break;
+                }
+                return result;
+              }
+            );
+            (config['proxy-groups'] as Array<any>).push(groups);
+            (
+              (config['proxy-groups'] as Array<any>)[0][
+                'proxies'
+              ] as Array<string>
+            ).push(...groups.map((group) => group.name));
+          })();
+        }
+        if (ruleName) {
+          const rule = await new AC.Query('Rules')
+            .equalTo('name', ruleName)
+            .first();
+          if (rule) {
+            if (rule.get('groups') as Array<any> | null | undefined) {
+              (config['proxy-groups'] as Array<any>).push(
+                ...rule.get('groups')
+              );
             }
-          })
-          .catch((e: Error) => {
-            res.status(500).send(e.stack);
-          });
+            if (rule.get('providers') as any | null | undefined) {
+              config['rule-providers'] = Object.assign(
+                config['rule-providers'],
+                rule.get('providers')
+              );
+            }
+            if (rule.get('rules') as Array<any> | null | undefined) {
+              (config['rules'] as Array<any>).push(...rule.get('rules'));
+            }
+            AC.User.logOut();
+            send(config, res);
+          } else {
+            AC.User.logOut();
+            res.status(404).send('Rule not found.');
+          }
+        } else {
+          AC.User.logOut();
+          send(config, res);
+        }
       } else {
         res.status(400).send(null);
       }
