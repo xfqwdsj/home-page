@@ -129,6 +129,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
                   />
                   {ruls.map((it) => (
                     <FormControlLabel
+                      key={it}
                       value={it}
                       control={<Radio />}
                       label={it}
