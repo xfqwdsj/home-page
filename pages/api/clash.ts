@@ -1,97 +1,85 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import YAML from 'yaml';
-import * as bcrypt from 'bcrypt';
+import AV from 'leancloud-storage';
+import { getRoles } from '../../components/user';
 import {
-  defaultClashProfile,
-  ruleGroups,
-  ruleProviders,
-  rules,
+  defaultClashConfig,
+  Group,
 } from '../../components/clash_profile/default';
-import { freeProxies } from '../../components/clash_profile/free';
 
-interface User {
-  passwd: string;
-  groups: Array<string>;
-}
+const AC = require('leancloud-storage') as typeof AV;
 
-interface MyServer {
+AC.init({
+  appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
+  appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
+});
+
+interface ServerSideGroup {
   name: string;
   type: string;
-  server: string;
-  port: number;
-  password: string;
-  udp: boolean;
-  alpn: Array<string>;
+  template: string;
 }
+
+const urlTestGroupConfig = {
+  url: 'http://www.gstatic.com/generate_204',
+  interval: 300,
+  tolerance: 50,
+};
 
 const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const users = YAML.parse(process.env.CLASH_USERS as string);
     const name = req.query['n'] as string | null | undefined;
     const password = req.query['p'] as string | null | undefined;
     if (name && password) {
-      const user = users[name] as User;
-      if (user) {
-        bcrypt.compare(password, user.passwd, function (err, result) {
-          if (result) {
-            const profile = YAML.parse(defaultClashProfile);
-            user.groups.forEach((group) => {
-              switch (group) {
-                case 'mine':
-                  const proxy = YAML.parse(
-                    process.env.MY_PROXY_SERVER as string
-                  ) as MyServer;
-                  profile.proxies.push(proxy);
-                  profile['proxy-groups'][0].proxies.push(proxy.name);
-                  break;
-                case 'free':
-                  profile['proxy-providers'] = Object.assign(
-                    profile['proxy-providers'],
-                    freeProxies
-                  );
-                  profile['proxy-groups'].push(
-                    {
-                      name: '互联网上的免费代理',
-                      type: 'select',
-                      use: Object.keys(freeProxies),
-                    },
-                    {
-                      name: '自动选择的的免费代理',
-                      type: 'url-test',
-                      url: 'http://www.gstatic.com/generate_204',
-                      interval: 300,
-                      tolerance: 50,
-                      use: Object.keys(freeProxies),
-                    }
-                  );
-                  profile['proxy-groups'][0].proxies.push(
-                    '互联网上的免费代理',
-                    '自动选择的的免费代理'
-                  );
-                  break;
+      const config = { ...defaultClashConfig };
+      AC.User.logIn(name, password).then((user) => {
+        const query = AC.Relation.reverseQuery('_Role', 'users', user);
+        query.include('Proxies');
+        query.find().then((roles) => {
+          roles.forEach((role) => {
+            const proxy = role.get('proxy');
+            const proxies = proxy.get('proxies') as Array<any>;
+            const providers = proxy.get('providers');
+            const groups = (proxy.get('group') as Array<ServerSideGroup>).map(
+              (group) => {
+                const { name, type } = group;
+                let result = { name, type } as Group;
+                switch (group.template) {
+                  case 'proxies':
+                    (config['proxies'] as Array<any>).push(...proxies);
+                    result = {
+                      ...result,
+                      proxies: proxies.map((it) => it['name']),
+                    };
+                    break;
+                  case 'providers':
+                    config['proxy-providers'] = Object.assign(
+                      config['proxy-providers'],
+                      providers
+                    );
+                    result = {
+                      ...result,
+                      ...urlTestGroupConfig,
+                      use: Object.keys(providers),
+                    };
+                    break;
+                }
+                return result;
               }
-            });
-            profile['proxy-groups'][0].proxies.push('DIRECT');
-            if (!(req.query['nr'] as string | null | undefined)) {
-              profile['proxy-groups'].push(...YAML.parse(ruleGroups));
-              profile['rule-providers'] = Object.assign(
-                profile['rule-providers'],
-                YAML.parse(ruleProviders)
-              );
-              profile.rules.push(...YAML.parse(rules));
-            }
-            profile.rules.push('MATCH,PROXY');
-            res
-              .setHeader('Content-Type', 'text/yaml; charset=utf-8')
-              .status(200)
-              .send(YAML.stringify(profile));
-          } else {
-            res.status(404).json(err);
-          }
+            );
+            (config['proxy-groups'] as Array<any>).push(groups);
+            (
+              (config['proxy-groups'] as Array<any>)[0][
+                'proxies'
+              ] as Array<string>
+            ).push(...groups.map((group) => group.name));
+          });
+          res.status(200).json(config);
+        }).catch((e: AV.Error) => {
+          res.status(e.code).send(e.message)
         });
-      } else {
-        res.status(404).send(null);
-      }
+      }).catch((e: AV.Error) => {
+        res.status(e.code).send(e.message)
+      });
     } else {
       res.status(400).send(null);
     }

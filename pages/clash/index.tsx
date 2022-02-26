@@ -14,6 +14,7 @@ import {
 import AV from 'leancloud-storage';
 import { useState } from 'react';
 import { HeadProps } from '../../components/page/head';
+import { parseRoles } from '../../components/user';
 
 const head: HeadProps = {
   pageTitle: 'Clash | LTFan',
@@ -33,15 +34,13 @@ const query = async (
   AC: typeof AV,
   name: string,
   pswd: string
-): Promise<Array<AV.Role> | AV.Error> => {
-  return await AC.User.logIn(name, pswd)
-    .then((user) => {
-      return user.getRoles();
+): Promise<Array<string> | AV.Error> =>
+  parseRoles(AC.User.logIn(name, pswd))
+    .then((roles) => {
+      AC.User.logOut();
+      return roles;
     })
-    .catch((e: AV.Error) => {
-      return e;
-    });
-};
+    .catch((e: AV.Error) => e);
 
 const Clash = ({ AC }: { AC: typeof AV }) => {
   const [name, setName] = useState(''); // Name
@@ -100,15 +99,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
                 close();
                 query(AC, name, pswd).then((result) => {
                   if (Array.isArray(result)) {
-                    paper(
-                      `你的组为${result
-                        .sort(
-                          (a, b) =>
-                            (a.get('order') as number) -
-                            (b.get('order') as number)
-                        )
-                        .map((role) => role.getName())}`
-                    );
+                    paper(`你的组为${result}`);
                   } else {
                     paper(result.message);
                   }
