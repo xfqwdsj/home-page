@@ -7,12 +7,19 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
+  Link,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from '@mui/material';
 import AV from 'leancloud-storage';
 import { useState } from 'react';
+import { NextLinkComposed } from '../../components/link';
 import { HeadProps } from '../../components/page/head';
 import { parseRoles } from '../../components/user';
 
@@ -30,23 +37,35 @@ export const getStaticProps = () => {
   };
 };
 
+interface QueryResult {
+  roles: Array<string>;
+  rules: Array<string>;
+}
+
 const query = async (
   AC: typeof AV,
   name: string,
   pswd: string
-): Promise<Array<string> | AV.Error> =>
-  parseRoles(AC.User.logIn(name, pswd))
-    .then((roles) => {
-      AC.User.logOut();
-      return roles;
-    })
-    .catch((e: AV.Error) => e);
+): Promise<QueryResult | string> => {
+  try {
+    const roles = await parseRoles(AC.User.logIn(name, pswd));
+    const rules = (await new AC.Query('Rules').find()).map(
+      (rule) => rule.get('name') as string
+    );
+    AC.User.logOut();
+    return { roles, rules };
+  } catch (e) {
+    return (e as Error).message;
+  }
+};
 
 const Clash = ({ AC }: { AC: typeof AV }) => {
   const [name, setName] = useState(''); // Name
   const [pswd, setPswd] = useState(''); // Password
   const [open, setOpen] = useState<number | null>(null); // Open (1: Collapse, 2: Dialog)
   const [msge, setMsge] = useState(''); // Message
+  const [ruls, setRuls] = useState(new Array<string>()); // Rules
+  const [rule, setRule] = useState('none'); // Current rule
 
   const paper = (msg: string) => {
     setMsge(msg);
@@ -60,6 +79,8 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
 
   const close = () => {
     setOpen(null);
+    setRuls([]);
+    setRule('none');
   };
 
   return (
@@ -93,15 +114,58 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
         </Grid>
         <Grid container item spacing={1} justifyContent="center">
           <Grid item>
+            <FormControl>
+              <FormLabel sx={{ mx: 'auto' }}>规则</FormLabel>
+              <RadioGroup
+                row
+                value={rule}
+                onChange={(event) => setRule(event.target.value)}
+              >
+                <>
+                  <FormControlLabel
+                    value="none"
+                    control={<Radio />}
+                    label="无"
+                  />
+                  {ruls.map((it) => (
+                    <FormControlLabel
+                      value={it}
+                      control={<Radio />}
+                      label={it}
+                    />
+                  ))}
+                </>
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container item spacing={1} justifyContent="center">
+          <Grid item>
+            <Link
+              component={NextLinkComposed}
+              to={`/api/clash?n=${name}&p=${pswd}${
+                rule !== 'none' ? `&r=${rule}` : ''
+              }`}
+            >
+              配置链接
+            </Link>
+          </Grid>
+        </Grid>
+        <Grid container item spacing={1} justifyContent="center">
+          <Grid item xs></Grid>
+        </Grid>
+        <Grid container item spacing={1} justifyContent="center">
+          <Grid item>
             <Button
               variant="contained"
               onClick={() => {
                 close();
                 query(AC, name, pswd).then((result) => {
-                  if (Array.isArray(result)) {
-                    paper(`你的组为${result}`);
+                  if (typeof result === 'string') {
+                    paper(result);
                   } else {
-                    paper(result.message);
+                    setRuls(result.rules);
+                    paper(`你的组为${result.roles}`);
                   }
                 });
               }}
