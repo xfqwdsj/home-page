@@ -114,49 +114,6 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
         </Grid>
         <Grid container item spacing={1} justifyContent="center">
           <Grid item>
-            <FormControl>
-              <FormLabel sx={{ mx: 'auto' }}>规则</FormLabel>
-              <RadioGroup
-                row
-                value={rule}
-                onChange={(event) => setRule(event.target.value)}
-              >
-                <>
-                  <FormControlLabel
-                    value="none"
-                    control={<Radio />}
-                    label="无"
-                  />
-                  {ruls.map((it) => (
-                    <FormControlLabel
-                      key={it}
-                      value={it}
-                      control={<Radio />}
-                      label={it}
-                    />
-                  ))}
-                </>
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <Link
-              component={NextLinkComposed}
-              to={`/api/clash?n=${name}&p=${pswd}${
-                rule !== 'none' ? `&r=${rule}` : ''
-              }`}
-            >
-              配置链接
-            </Link>
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item xs></Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
             <Button
               variant="contained"
               onClick={() => {
@@ -195,6 +152,49 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
             >
               注册
             </Button>
+          </Grid>
+        </Grid>
+        <Grid container item spacing={1} justifyContent="center">
+          <Grid item>
+            <FormControl>
+              <FormLabel id="radio-group-rules" sx={{ mx: 'auto' }}>
+                规则
+              </FormLabel>
+              <RadioGroup
+                row
+                value={rule}
+                onChange={(event) => setRule(event.target.value)}
+                aria-labelledby="radio-group-rules"
+              >
+                <>
+                  <FormControlLabel
+                    value="none"
+                    control={<Radio />}
+                    label="无"
+                  />
+                  {ruls.map((it) => (
+                    <FormControlLabel
+                      key={it}
+                      value={it}
+                      control={<Radio />}
+                      label={it}
+                    />
+                  ))}
+                </>
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid container item spacing={1} justifyContent="center">
+          <Grid item>
+            <Link
+              component={NextLinkComposed}
+              to={`/api/clash?n=${name}&p=${pswd}${
+                rule !== 'none' ? `&r=${rule}` : ''
+              }`}
+            >
+              配置链接
+            </Link>
           </Grid>
         </Grid>
       </Grid>

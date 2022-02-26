@@ -24,6 +24,16 @@ const App = ({ Component, pageProps }: AppProps) => {
   const theme = useMemo(
     () =>
       createTheme({
+        components: {
+          MuiBackdrop: {
+            styleOverrides: {
+              root: {
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                backdropFilter: 'blur(5px)',
+              },
+            },
+          },
+        },
         palette: {
           mode: prefersDarkMode ? 'dark' : 'light',
         },
