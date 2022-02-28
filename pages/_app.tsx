@@ -17,6 +17,7 @@ import {
 import AppHead from '../components/page/head';
 import AV from 'leancloud-storage/core';
 import { Adapters } from '@leancloud/adapter-types';
+import vercel from '../public/vercel.svg';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -50,8 +51,8 @@ const App = ({ Component, pageProps }: AppProps) => {
       const adapter = await import('@leancloud/platform-adapters-browser');
       AV.setAdapters(adapter as unknown as Adapters);
       AV.init({
-        appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
-        appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
+        appId: 'nSOTaTjLRFryFL00StQsb3lS-MdYXbMMI',
+        appKey: '3zBz5tMkTpEdoFCnQ7Xqxx65',
       });
     })();
   }, []);
@@ -76,7 +77,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
       <Container>
         <Box sx={{ my: 2 }}>
-          <Component {...pageProps} AC={AV} />
+          <Component {...pageProps} LT={AV} />
         </Box>
       </Container>
 
@@ -108,10 +109,9 @@ const App = ({ Component, pageProps }: AppProps) => {
                 rel="noopener noreferrer"
               >
                 <StyledImage
-                  src="/vercel.svg"
+                  src={vercel}
                   alt="Vercel Logo"
-                  width={72}
-                  height={16}
+                  placeholder="blur"
                 />
               </a>
             </span>

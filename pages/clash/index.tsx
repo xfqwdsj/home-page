@@ -18,10 +18,12 @@ import {
   Typography,
 } from '@mui/material';
 import AV from 'leancloud-storage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NextLinkComposed } from '../../components/link';
 import { HeadProps } from '../../components/page/head';
 import { parseRoles } from '../../components/user';
+import { Adapters } from '@leancloud/adapter-types';
+import { NextPage } from 'next';
 
 const head: HeadProps = {
   pageTitle: 'Clash | LTFan',
@@ -43,23 +45,33 @@ interface QueryResult {
 }
 
 const query = async (
-  AC: typeof AV,
   name: string,
   pswd: string
 ): Promise<QueryResult | string> => {
   try {
-    const roles = await parseRoles(AC.User.logIn(name, pswd));
-    const rules = (await new AC.Query('Rules').find()).map(
+    const roles = await parseRoles(AV.User.logIn(name, pswd));
+    const rules = (await new AV.Query('Rules').find()).map(
       (rule) => rule.get('name') as string
     );
-    AC.User.logOut();
+    AV.User.logOut();
     return { roles, rules };
   } catch (e) {
     return (e as Error).message;
   }
 };
 
-const Clash = ({ AC }: { AC: typeof AV }) => {
+const Clash: NextPage = () => {
+  useEffect(() => {
+    (async () => {
+      const adapter = await import('@leancloud/platform-adapters-browser');
+      AV.setAdapters(adapter as unknown as Adapters);
+      AV.init({
+        appId: 'oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI',
+        appKey: 'SFcECqIUlHq4iPpMy2DpjxbY',
+      });
+    })();
+  }, []);
+
   const [name, setName] = useState(''); // Name
   const [pswd, setPswd] = useState(''); // Password
   const [open, setOpen] = useState<number | null>(null); // Open (1: Collapse, 2: Dialog)
@@ -67,7 +79,7 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
   const [ruls, setRuls] = useState(new Array<string>()); // Rules
   const [rule, setRule] = useState('none'); // Current rule
 
-  const paper = (msg: string) => {
+  const expand = (msg: string) => {
     setMsge(msg);
     setOpen(1);
   };
@@ -118,12 +130,12 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
               variant="contained"
               onClick={() => {
                 close();
-                query(AC, name, pswd).then((result) => {
+                query(name, pswd).then((result) => {
                   if (typeof result === 'string') {
-                    paper(result);
+                    expand(result);
                   } else {
                     setRuls(result.rules);
-                    paper(`你的组为${result.roles}`);
+                    expand(`你的组为${result.roles}`);
                   }
                 });
               }}
@@ -136,13 +148,13 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
               variant="contained"
               onClick={() => {
                 close();
-                const user = new AC.User();
+                const user = new AV.User();
                 user.setUsername(name);
                 user.setPassword(pswd);
                 user.signUp().then(
                   () => {
                     dialog('注册成功');
-                    AC.User.logOut();
+                    AV.User.logOut();
                   },
                   (e: AV.Error) => {
                     dialog(e.message);
@@ -166,21 +178,15 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
                 onChange={(event) => setRule(event.target.value)}
                 aria-labelledby="radio-group-rules"
               >
-                <>
+                <FormControlLabel value="none" control={<Radio />} label="无" />
+                {ruls.map((it) => (
                   <FormControlLabel
-                    value="none"
+                    key={it}
+                    value={it}
                     control={<Radio />}
-                    label="无"
+                    label={it}
                   />
-                  {ruls.map((it) => (
-                    <FormControlLabel
-                      key={it}
-                      value={it}
-                      control={<Radio />}
-                      label={it}
-                    />
-                  ))}
-                </>
+                ))}
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -204,7 +210,9 @@ const Clash = ({ AC }: { AC: typeof AV }) => {
             p: 2,
           }}
         >
-          <Typography variant="body1">{msge}</Typography>
+          <Typography variant="body1" component="span">
+            {msge}
+          </Typography>
         </Container>
       </Collapse>
       <Dialog
