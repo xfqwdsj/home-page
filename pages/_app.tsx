@@ -6,6 +6,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {
+  alpha,
   Box,
   Container,
   createTheme,
@@ -90,23 +91,24 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Container>
 
       <footer>
-        <Container sx={{ py: 5, position: 'relative' }}>
+        <Box
+          sx={{
+            p: 5,
+            width: 1,
+          }}
+        >
           <Box
             sx={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
+              mx: 'auto',
               backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                  ? theme.palette.common.black
-                  : theme.palette.common.white,
-              opacity: '5%',
-              zIndex: -1,
+                alpha(
+                  theme.palette.mode === 'light'
+                    ? theme.palette.common.black
+                    : theme.palette.common.white,
+                  0.5
+                ),
             }}
-          />
-          <Box sx={{ width: 'max-content', mx: 'auto' }}>
+          >
             <Typography component="span">
               Powered by{' '}
               <a
@@ -123,7 +125,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               </a>
             </Typography>
           </Box>
-        </Container>
+        </Box>
       </footer>
     </ThemeProvider>
   );
