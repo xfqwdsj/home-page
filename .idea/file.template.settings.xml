@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExportableFileTemplateSettings">
+    <internal_templates>
+      <template name="TypeScript JSX File.tsx" reformat="true" live-template-enabled="true" enabled="true" />
+    </internal_templates>
+    <default_templates>
+      <template name="卡片页面.tsx" reformat="true" live-template-enabled="true" />
+      <template name="页面.tsx" reformat="true" live-template-enabled="true" />
+    </default_templates>
+  </component>
+</project>

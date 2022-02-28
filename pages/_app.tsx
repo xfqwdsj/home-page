@@ -1,125 +1,213 @@
-import Image from 'next/image';
-import type { AppProps } from 'next/app';
-import { useEffect, useMemo } from 'react';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import Image from "next/image";
+import type {AppProps} from "next/app";
+import {Dispatch, MouseEventHandler, SetStateAction, useEffect, useMemo, useState} from "react";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import {
-  Box,
-  Container,
-  createTheme,
-  CssBaseline,
-  styled,
-  ThemeProvider,
-  useMediaQuery,
-} from '@mui/material';
-import AppHead from '../components/page/head';
-import AV from 'leancloud-storage/core';
-import { Adapters } from '@leancloud/adapter-types';
-import vercel from '../public/vercel.svg';
+    alpha,
+    Box,
+    Button,
+    Container,
+    createTheme,
+    CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    styled,
+    ThemeProvider,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
+import AppHead, { HeadProps } from "../components/head";
+import AV from "leancloud-storage/core";
+import {Adapters} from "@leancloud/adapter-types";
+import vercel from "../public/vercel.svg";
+import {nanoid} from "nanoid";
 
-const App = ({ Component, pageProps }: AppProps) => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+export type LeanAV = typeof AV;
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        components: {
-          MuiBackdrop: {
-            styleOverrides: {
-              root: {
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                backdropFilter: 'blur(5px)',
-              },
-            },
-          },
-        },
-        palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode]
-  );
+type AlertDialogButton = {
+    content: string;
+    onClick: MouseEventHandler<HTMLButtonElement>;
+    autoFocus?: boolean;
+    id?: string;
+};
 
-  const StyledImage = styled(Image)(({ theme }) => ({
-    filter: `invert(${theme.palette.mode === 'light' ? '0%' : '100%'})`,
-  }));
+export type AppAlertDialogController = {
+    setTitle: Dispatch<SetStateAction<string>>;
+    setMessage: Dispatch<SetStateAction<string>>;
+    setButtons: Dispatch<SetStateAction<AlertDialogButton[]>>;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+};
 
-  useEffect(() => {
-    (async () => {
-      const adapter = await import('@leancloud/platform-adapters-browser');
-      AV.setAdapters(adapter as unknown as Adapters);
-      AV.init({
-        appId: 'nSOTaTjLRFryFL00StQsb3lS-MdYXbMMI',
-        appKey: '3zBz5tMkTpEdoFCnQ7Xqxx65',
-      });
-    })();
-  }, []);
+export type AppHeaderController = {
+    setPageTitle: Dispatch<SetStateAction<string>>;
+    setPageDescription: Dispatch<SetStateAction<string>>;
+    setTopBarTitle: Dispatch<SetStateAction<string>>;
+}
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+    const theme = useMemo(
+        () =>
+            createTheme({
+                components: {
+                    MuiTypography: {
+                        styleOverrides: {
+                            root: {
+                                wordWrap: "break-word",
+                            },
+                        },
+                    },
+                    MuiBackdrop: {
+                        styleOverrides: {
+                            root: {
+                                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                                backdropFilter: "blur(5px)",
+                            },
+                        },
+                    },
+                },
+                palette: {
+                    mode: prefersDarkMode ? "dark" : "light",
+                },
+            }),
+        [prefersDarkMode]
+    );
 
-      {pageProps.head ? (
-        <AppHead
-          pageTitle={pageProps.head.pageTitle}
-          pageDescription={pageProps.head.pageDescription}
-          topBarTitle={pageProps.head.topBarTitle}
-        />
-      ) : (
-        <AppHead
-          pageTitle="LTFan"
-          pageDescription="LTFan's home page"
-          topBarTitle="LTFan"
-        />
-      )}
+    const StyledImage = styled(Image)(({theme}) => ({
+        filter: `invert(${theme.palette.mode === "light" ? "0%" : "100%"})`,
+    }));
 
-      <Container>
-        <Box sx={{ my: 2 }}>
-          <Component {...pageProps} LT={AV} />
-        </Box>
-      </Container>
+    const [dialogTitle, changeDialogTitle] = useState("");
+    const [dialogMessage, changeDialogMessage] = useState("");
+    const [dialogButtons, changeDialogButtons] = useState<AlertDialogButton[]>([]);
+    const [isDialogOpen, changeDialogOpen] = useState(false);
 
-      <footer>
-        <Container sx={{ py: 5, position: 'relative' }}>
-          <Box
-            sx={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                  ? theme.palette.common.black
-                  : theme.palette.common.white,
-              opacity: '5%',
-              zIndex: -1,
-            }}
-          />
-          <Box
-            sx={{ width: 'max-content', mx: 'auto', verticalAlign: 'middle' }}
-          >
-            <span>
-              Powered by{' '}
-              <a
-                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <StyledImage
-                  src={vercel}
-                  alt="Vercel Logo"
-                  placeholder="blur"
+    const GlobalAlertDialog: AppAlertDialogController = {
+        setTitle: changeDialogTitle,
+        setMessage: changeDialogMessage,
+        setButtons: changeDialogButtons,
+        setOpen: changeDialogOpen,
+    };
+
+    const [headPageTitle, changeHeadPageTitle] = useState(pageProps.head ? pageProps.head.pageTitle : "LTFan");
+    const [headPageDescription, changeHeadPageDescription] = useState("");
+    const [topBarTitle, changeTopBarTitle] = useState("");
+
+    const GlobalHeader: AppHeaderController = {
+        setPageTitle: changeHeadPageTitle,
+        setPageDescription: changeHeadPageDescription,
+        setTopBarTitle: changeTopBarTitle,
+    }
+
+    useEffect(() => {
+        (async () => {
+            const adapter = await import(
+                "@leancloud/platform-adapters-browser"
+            );
+            AV.setAdapters(adapter as unknown as Adapters);
+            AV.init({
+                appId: "nSOTaTjLRFryFL00StQsb3lS-MdYXbMMI",
+                appKey: "3zBz5tMkTpEdoFCnQ7Xqxx65",
+            });
+        })();
+    }, []);
+
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+
+            <AppHead
+                    pageTitle={headPageTitle}
+                    pageDescription={headPageDescription}
+                    topBarTitle={topBarTitle}
                 />
-              </a>
-            </span>
-          </Box>
-        </Container>
-      </footer>
-    </ThemeProvider>
-  );
+
+            <Container>
+                <Box my={2}>
+                    <Component
+                        {...pageProps}
+                        LT={AV}
+                        header={GlobalHeader}
+                        dialog={GlobalAlertDialog}
+                    />
+                </Box>
+                <Dialog
+                    open={isDialogOpen}
+                    onClose={() => changeDialogOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {dialogMessage}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        {dialogButtons.map((button) => {
+                            const defaultButton = {
+                                autoFocus: false,
+                                id: nanoid(),
+                            };
+                            const {content, onClick, autoFocus, id} = {
+                                ...defaultButton,
+                                ...button,
+                            };
+                            return (
+                                <Button
+                                    onClick={onClick}
+                                    autoFocus={autoFocus}
+                                    key={id}
+                                >
+                                    {content}
+                                </Button>
+                            );
+                        })}
+                    </DialogActions>
+                </Dialog>
+            </Container>
+
+            <footer>
+                <Box
+                    width={1}
+                    p={5}
+                    sx={{
+                        backgroundColor: (theme) =>
+                            alpha(
+                                theme.palette.mode === "light"
+                                    ? theme.palette.common.black
+                                    : theme.palette.common.white,
+                                0.05
+                            ),
+                    }}
+                >
+                    <Box width="max-content" mx="auto">
+                        <Typography component="span">
+                            Powered by{" "}
+                            <a
+                                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <StyledImage
+                                    src={vercel}
+                                    alt="Vercel Logo"
+                                    width={72}
+                                    height={16}
+                                />
+                            </a>
+                        </Typography>
+                    </Box>
+                </Box>
+            </footer>
+        </ThemeProvider>
+    );
 };
 
 export default App;
