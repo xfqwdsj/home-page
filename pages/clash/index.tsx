@@ -148,18 +148,22 @@ const Clash: NextPage = () => {
               variant="contained"
               onClick={() => {
                 close();
-                const user = new AV.User();
-                user.setUsername(name);
-                user.setPassword(pswd);
-                user.signUp().then(
-                  () => {
-                    dialog('注册成功');
-                    AV.User.logOut();
-                  },
-                  (e: AV.Error) => {
-                    dialog(e.message);
-                  }
-                );
+                try {
+                  const user = new AV.User();
+                  user.setUsername(name);
+                  user.setPassword(pswd);
+                  user
+                    .signUp()
+                    .then(() => {
+                      dialog('注册成功');
+                      AV.User.logOut();
+                    })
+                    .catch((e) => {
+                      dialog((e as Error).message);
+                    });
+                } catch (e) {
+                  dialog((e as Error).message);
+                }
               }}
             >
               注册

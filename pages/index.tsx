@@ -1,6 +1,17 @@
-import { Button, Grid, SvgIconTypeMap, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  SvgIconTypeMap,
+  Typography,
+} from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import type { NextPage } from 'next';
+import { UrlObject } from 'url';
+import { ClashIcon } from '../components/icons/clash';
+import GamesIcon from '@mui/icons-material/Games';
 import { NextLinkComposed } from '../components/link';
 import { HeadProps } from '../components/page/head';
 
@@ -18,26 +29,55 @@ export const getStaticProps = () => {
   };
 };
 
-interface HomeApps {
-  name: string
-  icon : OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+interface HomeApp {
+  name: string;
+  icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
     muiName: string;
+  };
+  viewBox?: string;
+  description: string;
+  href: string | UrlObject;
 }
 
-}
+const apps: HomeApp[] = [
+  {
+    name: 'Clash',
+    icon: ClashIcon,
+    viewBox: '0 0 512 512',
+    description: 'Clash 配置多用户托管服务',
+    href: 'clash/',
+  },
+  {
+    name: '游戏',
+    icon: GamesIcon,
+    description: '适合网页游玩的小游戏',
+    href: 'games/',
+  },
+];
 
 const Home: NextPage = () => {
   return (
     <>
-      <Typography variant="h1">LTFan 的大杂烩</Typography>
-      <Grid spacing={2}>
-        <Grid item>
-
-        </Grid>
+      <Grid container spacing={2}>
+        {apps.map((app) => (
+          <Grid key={app.toString()} item xs>
+            <Card sx={{ mx: 'auto', width: 275 }}>
+              <CardContent>
+                <app.icon sx={{ width: 1, height: 80 }} viewBox={app.viewBox} />
+                <Typography variant="h5">{app.name}</Typography>
+                <Typography color="text.secondary">
+                  {app.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small" component={NextLinkComposed} to={app.href}>
+                  去看看
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
-      <Button component={NextLinkComposed} to="clash/" variant="contained">
-        去 Clash
-      </Button>
     </>
   );
 };

@@ -12,6 +12,7 @@ import {
   CssBaseline,
   styled,
   ThemeProvider,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import AppHead from '../components/page/head';
@@ -26,6 +27,13 @@ const App = ({ Component, pageProps }: AppProps) => {
     () =>
       createTheme({
         components: {
+          MuiTypography: {
+            styleOverrides: {
+              root: {
+                wordWrap: 'break-word',
+              },
+            },
+          },
           MuiBackdrop: {
             styleOverrides: {
               root: {
@@ -98,10 +106,8 @@ const App = ({ Component, pageProps }: AppProps) => {
               zIndex: -1,
             }}
           />
-          <Box
-            sx={{ width: 'max-content', mx: 'auto', verticalAlign: 'middle' }}
-          >
-            <span>
+          <Box sx={{ width: 'max-content', mx: 'auto' }}>
+            <Typography component="span">
               Powered by{' '}
               <a
                 href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
@@ -111,10 +117,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                 <StyledImage
                   src={vercel}
                   alt="Vercel Logo"
-                  placeholder="blur"
+                  width={72}
+                  height={16}
                 />
               </a>
-            </span>
+            </Typography>
           </Box>
         </Container>
       </footer>
