@@ -15,6 +15,7 @@ import GamesIcon from '@mui/icons-material/Games';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import { NextLinkComposed } from '../components/link';
 import { HeadProps } from '../components/page/head';
+import { MasonryCards } from '../components/masonryCards';
 
 const head: HeadProps = {
   pageTitle: 'LTFan',
@@ -40,7 +41,7 @@ interface HomeApp {
   href: string | UrlObject;
 }
 
-const apps: HomeApp[] = [
+const cards = [
   {
     name: 'Clash',
     icon: ClashIcon,
@@ -65,26 +66,7 @@ const apps: HomeApp[] = [
 const Home: NextPage = () => {
   return (
     <>
-      <Grid container spacing={2}>
-        {apps.map((app) => (
-          <Grid key={app.toString()} item xs>
-            <Card sx={{ mx: 'auto', width: 275 }}>
-              <CardContent>
-                <app.icon sx={{ width: 1, height: 80 }} viewBox={app.viewBox} />
-                <Typography variant="h5">{app.name}</Typography>
-                <Typography color="text.secondary">
-                  {app.description}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" component={NextLinkComposed} to={app.href}>
-                  去看看
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <MasonryCards cards={cards} />
     </>
   );
 };

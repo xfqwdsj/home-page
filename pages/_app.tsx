@@ -95,18 +95,19 @@ const App = ({ Component, pageProps }: AppProps) => {
           sx={{
             p: 5,
             width: 1,
+            backgroundColor: (theme) =>
+              alpha(
+                theme.palette.mode === 'light'
+                  ? theme.palette.common.black
+                  : theme.palette.common.white,
+                0.05
+              ),
           }}
         >
           <Box
             sx={{
+              width: 'max-content',
               mx: 'auto',
-              backgroundColor: (theme) =>
-                alpha(
-                  theme.palette.mode === 'light'
-                    ? theme.palette.common.black
-                    : theme.palette.common.white,
-                  0.5
-                ),
             }}
           >
             <Typography component="span">
