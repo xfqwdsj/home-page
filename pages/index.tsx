@@ -12,6 +12,7 @@ import type { NextPage } from 'next';
 import { UrlObject } from 'url';
 import { ClashIcon } from '../components/icons/clash';
 import GamesIcon from '@mui/icons-material/Games';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import { NextLinkComposed } from '../components/link';
 import { HeadProps } from '../components/page/head';
 
@@ -52,6 +53,12 @@ const apps: HomeApp[] = [
     icon: GamesIcon,
     description: '适合网页游玩的小游戏',
     href: 'games/',
+  },
+  {
+    name: '测试',
+    icon: BugReportIcon,
+    description: '测试页面，你永远想不到我会在里面放些什么',
+    href: 'test/',
   },
 ];
 

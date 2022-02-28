@@ -1,7 +1,5 @@
 import {
   Button,
-  Collapse,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
@@ -15,7 +13,6 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
 } from '@mui/material';
 import AV from 'leancloud-storage';
 import { useEffect, useState } from 'react';
@@ -74,29 +71,35 @@ const Clash: NextPage = () => {
 
   const [name, setName] = useState(''); // Name
   const [pswd, setPswd] = useState(''); // Password
-  const [open, setOpen] = useState<number | null>(null); // Open (1: Collapse, 2: Dialog)
+  const [open, setOpen] = useState(false); // Open
+  const [tite, setTite] = useState(''); // Title
   const [msge, setMsge] = useState(''); // Message
+  const [cont, setCont] = useState(<></>); // Additional content
   const [ruls, setRuls] = useState(new Array<string>()); // Rules
   const [rule, setRule] = useState('none'); // Current rule
 
-  const expand = (msg: string) => {
+  const dialog = (
+    title: string,
+    msg: string,
+    content?: JSX.Element | undefined
+  ) => {
+    setTite(title);
     setMsge(msg);
-    setOpen(1);
-  };
-
-  const dialog = (msg: string) => {
-    setMsge(msg);
-    setOpen(2);
+    setCont(content ? content : <></>);
+    setOpen(true);
   };
 
   const close = () => {
-    setOpen(null);
+    setOpen(false);
+  };
+
+  const clear = () => {
     setRuls([]);
     setRule('none');
   };
 
   return (
-    <Container>
+    <>
       <Grid container spacing={1}>
         <Grid container item spacing={1} justifyContent="center">
           <Grid item>
@@ -106,6 +109,7 @@ const Clash: NextPage = () => {
               autoComplete="username"
               value={name}
               onChange={(event) => {
+                clear();
                 setName(event.target.value);
               }}
             />
@@ -119,6 +123,7 @@ const Clash: NextPage = () => {
               autoComplete="password"
               value={pswd}
               onChange={(event) => {
+                clear();
                 setPswd(event.target.value);
               }}
             />
@@ -129,13 +134,12 @@ const Clash: NextPage = () => {
             <Button
               variant="contained"
               onClick={() => {
-                close();
                 query(name, pswd).then((result) => {
                   if (typeof result === 'string') {
-                    expand(result);
+                    dialog('查询错误', result);
                   } else {
                     setRuls(result.rules);
-                    expand(`你的组为${result.roles}`);
+                    dialog('查询成功', `你的组为${result.roles}`);
                   }
                 });
               }}
@@ -147,7 +151,6 @@ const Clash: NextPage = () => {
             <Button
               variant="contained"
               onClick={() => {
-                close();
                 try {
                   const user = new AV.User();
                   user.setUsername(name);
@@ -155,14 +158,14 @@ const Clash: NextPage = () => {
                   user
                     .signUp()
                     .then(() => {
-                      dialog('注册成功');
+                      dialog('注册成功', '请联系管理员');
                       AV.User.logOut();
                     })
                     .catch((e) => {
-                      dialog((e as Error).message);
+                      dialog('注册错误', (e as Error).message);
                     });
                 } catch (e) {
-                  dialog((e as Error).message);
+                  dialog('注册错误', (e as Error).message);
                 }
               }}
             >
@@ -208,26 +211,18 @@ const Clash: NextPage = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Collapse in={open === 1}>
-        <Container
-          sx={{
-            p: 2,
-          }}
-        >
-          <Typography variant="body1" component="span">
-            {msge}
-          </Typography>
-        </Container>
-      </Collapse>
       <Dialog
-        open={open === 2}
+        open={open}
         onClose={close}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle>注册结果</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{tite}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{msge}</DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            {msge}
+          </DialogContentText>
+          {cont}
         </DialogContent>
         <DialogActions>
           <Button onClick={close} autoFocus>
@@ -235,7 +230,7 @@ const Clash: NextPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </>
   );
 };
 
