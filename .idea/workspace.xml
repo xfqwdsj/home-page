@@ -4,21 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69ba267e-0aa6-441e-bd65-90d07537f0b6" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/games/gobang/index.tsx" afterDir="false" />
+    <list default="true" id="69ba267e-0aa6-441e-bd65-90d07537f0b6" name="变更" comment="还是 IDEA 好用">
+      <change afterPath="$PROJECT_DIR$/.idea/file.template.settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/gobang/gobang.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/clash_profile/default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/clash_profile/default.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/icons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/icons.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/link.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/link.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/masonryCards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/masonryCards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/page/head.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/page/head.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/masonryCards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/masonry_cards.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/page/head.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/head.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/[file].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/[file].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_document.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_document.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/clash.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/clash.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/clash/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/clash/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/games/gobang/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/gobang/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/games/gobang/nearby.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/gobang/nearby.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/games/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
     </list>
@@ -26,6 +22,15 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File with Masonry Cards" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+    <option name="SCHEME" value="项目" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,10 +55,15 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.TypeScript",
+    "settings.editor.selected.configurable": "fileTemplates",
     "ts.external.directory.path": "D:\\VSProjects\\sturdy-octo-adventure\\node_modules\\typescript\\lib"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\VSProjects\sturdy-octo-adventure\components" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -62,8 +72,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1645198905946</updated>
-      <workItem from="1646116206117" duration="2514000" />
+      <workItem from="1646116206117" duration="8526000" />
     </task>
+    <task id="LOCAL-00001" summary="还是 IDEA 好用">
+      <created>1646122165397</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1646122165398</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -79,6 +97,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="还是 IDEA 好用" />
+    <option name="LAST_COMMIT_MESSAGE" value="还是 IDEA 好用" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

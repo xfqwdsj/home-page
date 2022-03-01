@@ -1,7 +1,7 @@
 import {GetStaticProps, NextPage} from "next";
 import {GobangIcon} from "../../components/icons";
-import {CardInfo, MasonryCards} from "../../components/masonryCards";
-import {HeadProps} from "../../components/page/head";
+import {CardInfo, MasonryCards} from "../../components/masonry_cards";
+import {HeadProps} from "../../components/head";
 
 const head: HeadProps = {
     pageTitle: "游戏 | LTFan",

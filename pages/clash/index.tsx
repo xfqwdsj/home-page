@@ -17,7 +17,7 @@ import {
 import AV from "leancloud-storage";
 import {useEffect, useState} from "react";
 import {NextLinkComposed} from "../../components/link";
-import {HeadProps} from "../../components/page/head";
+import {HeadProps} from "../../components/head";
 import {parseRoles} from "../../components/user";
 import {Adapters} from "@leancloud/adapter-types";
 import {GetStaticProps, NextPage} from "next";

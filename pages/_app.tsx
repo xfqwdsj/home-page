@@ -16,7 +16,7 @@ import {
     Typography,
     useMediaQuery,
 } from "@mui/material";
-import AppHead from "../components/page/head";
+import AppHead from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";

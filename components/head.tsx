@@ -3,7 +3,7 @@ import {grey} from "@mui/material/colors";
 import Head from "next/head";
 import {useRouter} from "next/router";
 import HomeIcon from "@mui/icons-material/Home";
-import {NextLinkComposed} from "../link";
+import {NextLinkComposed} from "./link";
 
 export interface HeadProps {
     pageTitle: string;

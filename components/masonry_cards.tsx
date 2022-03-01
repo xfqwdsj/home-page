@@ -5,13 +5,13 @@ import {UrlObject} from "url";
 import {NextLinkComposed} from "./link";
 
 export type CardInfo = {
-    name: string;
+    name: string
     icon: OverridableComponent<SvgIconTypeMap> & {
-        muiName: string;
-    };
-    viewBox?: string;
-    description: string;
-    href: string | UrlObject;
+        muiName: string
+    }
+    viewBox?: string
+    description: string
+    href: string | UrlObject
 };
 
 export const MasonryCards = (props: { cards: CardInfo[] }) => (

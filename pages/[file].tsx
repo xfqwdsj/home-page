@@ -4,7 +4,7 @@ import path from "path";
 import React from "react";
 import {serialize} from "next-mdx-remote/serialize";
 import {MDXRemote, MDXRemoteSerializeResult} from "next-mdx-remote";
-import {HeadProps} from "../components/page/head";
+import {HeadProps} from "../components/head";
 
 const dir = path.join(process.cwd(), "pages_mdx");
 

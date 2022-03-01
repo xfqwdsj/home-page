@@ -1,6 +1,6 @@
 import {GetStaticProps, NextPage} from "next";
-import {HeadProps} from "../../../components/page/head";
-import {CardInfo, MasonryCards} from "../../../components/masonryCards";
+import {HeadProps} from "../../../components/head";
+import {CardInfo, MasonryCards} from "../../../components/masonry_cards";
 import NearMeIcon from "@mui/icons-material/NearMe";
 
 const head: HeadProps = {

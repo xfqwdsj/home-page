@@ -2,8 +2,8 @@ import type {NextPage} from "next";
 import {ClashIcon} from "../components/icons";
 import GamesIcon from "@mui/icons-material/Games";
 import BugReportIcon from "@mui/icons-material/BugReport";
-import {HeadProps} from "../components/page/head";
-import {MasonryCards} from "../components/masonryCards";
+import {HeadProps} from "../components/head";
+import {MasonryCards} from "../components/masonry_cards";
 
 const head: HeadProps = {
     pageTitle: "LTFan",
