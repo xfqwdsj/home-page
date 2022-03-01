@@ -17,11 +17,17 @@ type PointProps = {
     size: number
 }
 
-export const Point = ({size, left, top, right, bottom, pointType}: PointProps) => {
-    if (size < 40) return <></>;
-    const defaultSvg = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => <svg
-        xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} {...props}/>;
-    const Svg = styled(defaultSvg)({
+export const Point = (props: PointProps) => {
+    if (props.size < 40) return <></>;
+    const {left, top, right, bottom, pointType} = "pointType" in props ? props : {
+        false,
+        false,
+        false,
+        false,
+        undefined,
+    };
+    const Svg = styled((it: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) =>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} {...it}/>)({
         width: size,
         height: size,
     });
