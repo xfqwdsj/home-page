@@ -61,6 +61,18 @@ const cards = [
     description: '测试页面，你永远想不到我会在里面放些什么',
     href: 'test/',
   },
+  {
+    name: '测试',
+    icon: BugReportIcon,
+    description: '测试页面，你永远想不到我会在里面放些什么',
+    href: 'test/',
+  },
+  {
+    name: '测试',
+    icon: BugReportIcon,
+    description: '测试页面，你永远想不到我会在里面放些什么',
+    href: 'test/',
+  },
 ];
 
 const Home: NextPage = () => {

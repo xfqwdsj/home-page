@@ -24,7 +24,7 @@ interface CardInfo {
 export const MasonryCards = (props: { cards: CardInfo[] }) => (
   <Masonry columns={{ xs: 2, sm: 3, md: 4 }} spacing={2}>
     {props.cards.map((card) => (
-      <Card key={card.toString()}>
+      <Card key={card.toString()} sx={{ mx: 'auto' }}>
         <CardContent>
           <card.icon sx={{ width: 1, height: 80 }} viewBox={card.viewBox} />
           <Typography variant="h5">{card.name}</Typography>
