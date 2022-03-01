@@ -13,21 +13,23 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (<>
         <Stack overflow="scroll">
             {board.map((columns, rowIndex) => {
-                columns.map((point, columnIndex) => {
-                    if (rowIndex === 0 && columnIndex === 0 && board[rowIndex + 1][columnIndex] !== undefined) {
-                        return <TopLeft/>;
-                    }
-                    if (rowIndex === 0 && columns[columnIndex + 1] === undefined && board[rowIndex + 1][columnIndex] !== undefined) {
-                        return <TopRight/>;
-                    }
-                    if (board[rowIndex + 1] === undefined && columnIndex === 0 && board[rowIndex - 1][columnIndex] !== undefined) {
-                        return <BottomLeft/>;
-                    }
-                    if (board[rowIndex + 1] === undefined && columns[columnIndex + 1] === undefined && board[rowIndex - 1][columnIndex] !== undefined) {
-                        return <BottomRight/>;
-                    }
-                    return <Point/>;
-                });
+                return <Stack key={rowIndex}>
+                    {columns.map((point, columnIndex) => {
+                        if (rowIndex === 0 && columnIndex === 0 && board[rowIndex + 1][columnIndex] !== undefined) {
+                            return <TopLeft key={columnIndex}/>;
+                        }
+                        if (rowIndex === 0 && columns[columnIndex + 1] === undefined && board[rowIndex + 1][columnIndex] !== undefined) {
+                            return <TopRight key={columnIndex}/>;
+                        }
+                        if (board[rowIndex + 1] === undefined && columnIndex === 0 && board[rowIndex - 1][columnIndex] !== undefined) {
+                            return <BottomLeft key={columnIndex}/>;
+                        }
+                        if (board[rowIndex + 1] === undefined && columns[columnIndex + 1] === undefined && board[rowIndex - 1][columnIndex] !== undefined) {
+                            return <BottomRight key={columnIndex}/>;
+                        }
+                        return <Point key={columnIndex}/>;
+                    })}
+                </Stack>
             })}
         </Stack>
     </>);
