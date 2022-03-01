@@ -28,20 +28,23 @@ export const Point = (props: PointProps) => {
         width: size,
         height: size,
     });
-    let back: JSX.Element;
-    let path = "";
+    let leftPath = <path/>;
+    let topPath = <path/>;
+    let rightPath = <path/>;
+    let bottomPath = <path/>;
+    let point = <path/>;
     let front = <path/>;
-    const chess = `M ${size / 6} ${size / 2} a ${size / 6} ${size / 6} 0 0 0 ${size / 3} 0 a ${size / 6} ${size / 6} 0 0 0 -${size / 3} 0 Z`;
-    if (left) path += `M 0 ${size / 2 - 0.5} h ${size / 2} v 1 h -${size / 2} Z`;
-    if (top) path += `M ${size / 2 - 0.5} 0 v ${size / 2} h 1 v -${size / 2} Z`;
-    if (right) path += `M ${size / 2} ${size / 2 - 0.5} h ${size / 2} v 1 h -${size / 2} Z`;
-    if (bottom) path += `M ${size / 2 - 0.5} ${size / 2} v ${size / 2} h 1 v -${size / 2} Z`;
+    const chess = `M ${size / 3} ${size / 2} a ${size / 6} ${size / 6} 0 0 0 ${size / 3} 0 a ${size / 6} ${size / 6} 0 0 0 -${size / 3} 0 Z`;
+    if (left) leftPath = <path d={`M 0 ${size / 2 - 0.5} h ${size / 2} v 1 h -${size / 2} Z`}/>;
+    if (top) topPath = <path d={`M ${size / 2 - 0.5} 0 v ${size / 2} h 1 v -${size / 2} Z`}/>;
+    if (right) rightPath = <path d={`M ${size / 2} ${size / 2 - 0.5} h ${size / 2} v 1 h -${size / 2} Z`}/>;
+    if (bottom) bottomPath = <path d={`M ${size / 2 - 0.5} ${size / 2} v ${size / 2} h 1 v -${size / 2} Z`}/>;
     switch (pointType) {
         case "normal":
-            path += `M ${size / 2 - 2.5} ${size / 2} a 2.5 2.5 0 0 0 5 0 a 2.5 2.5 0 0 0 -5 0 Z`;
+            point = <path d={`M ${size / 2 - 2.5} ${size / 2} a 2.5 2.5 0 0 0 5 0 a 2.5 2.5 0 0 0 -5 0 Z`}/>;
             break;
         case "main":
-            path += `M ${size / 2 - 5} ${size / 2} a 5 5 0 0 0 10 0 a 5 5 0 0 0 -10 0 Z`;
+            point = <path d={`M ${size / 2 - 5} ${size / 2} a 5 5 0 0 0 10 0 a 5 5 0 0 0 -10 0 Z`}/>;
             break;
         case "black":
             front = <path d={chess} fill="#000" stroke="#fff"/>;
@@ -50,6 +53,5 @@ export const Point = (props: PointProps) => {
             front = <path d={chess} fill="#fff" stroke="#000"/>;
             break;
     }
-    back = <path d={path}/>;
-    return <Svg>{back}{front}</Svg>;
+    return <Svg>{leftPath}{topPath}{rightPath}{bottomPath}{point}{front}</Svg>;
 };
