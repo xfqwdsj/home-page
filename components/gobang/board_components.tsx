@@ -18,7 +18,8 @@ type PointProps = {
 }
 
 export const Point = (props: PointProps) => {
-    if (props.size < 40) return <></>;
+    const {size} = props;
+    if (size < 40) return <></>;
     const {left, top, right, bottom, pointType} = "pointType" in props ? props : {
         left: false,
         top: false,
