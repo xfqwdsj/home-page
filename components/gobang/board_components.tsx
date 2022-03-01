@@ -1,3 +1,9 @@
+import {styled} from "@mui/material";
+
+const Svg = styled('svg')()
+
+export const Blank = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" />;
+
 export const Point = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <path
         d="M253.44 0h5.12v512h-5.12V0ZM512 253.44v5.12H0v-5.12h512ZM271.36 256c0 8.483-6.877 15.36-15.36 15.36s-15.36-6.877-15.36-15.36 6.877-15.36 15.36-15.36 15.36 6.877 15.36 15.36Z"/>

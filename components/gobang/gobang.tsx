@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Stack} from "@mui/material";
-import {BottomLeft, BottomRight, Point, TopLeft, TopRight} from "./board_components";
+import {Blank, BottomLeft, BottomRight, Point, TopLeft, TopRight} from "./board_components";
 
 type GobangProps = {
     board: (null | undefined | 0 | 1)[][]
@@ -15,6 +15,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
             {board.map((columns, rowIndex) => {
                 return <Stack direction="row" key={rowIndex}>
                     {columns.map((point, columnIndex) => {
+                        if (point === undefined) return <Blank key={columnIndex}/>;
                         if (rowIndex === 0 && columnIndex === 0 && board[rowIndex + 1][columnIndex] !== undefined) {
                             return <TopLeft key={columnIndex}/>;
                         }
