@@ -91,13 +91,15 @@ const App = ({Component, pageProps}: AppProps) => {
             </Container>
 
             <footer>
-                <Box width={1} p={5} backgroundColor={(theme) =>
-                    alpha(
-                        theme.palette.mode === "light"
-                            ? theme.palette.common.black
-                            : theme.palette.common.white,
-                        0.05,
-                    )}>
+                <Box width={1} p={5} sx={{
+                    backgroundColor: (theme) =>
+                        alpha(
+                            theme.palette.mode === "light"
+                                ? theme.palette.common.black
+                                : theme.palette.common.white,
+                            0.05,
+                        ),
+                }}>
                     <Box width="max-content" mx="auto">
                         <Typography component="span">
                             Powered by{" "}
