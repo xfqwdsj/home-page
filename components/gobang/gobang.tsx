@@ -29,7 +29,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                         }
                         return <Point key={columnIndex}/>;
                     })}
-                </Stack>
+                </Stack>;
             })}
         </Stack>
     </>);
