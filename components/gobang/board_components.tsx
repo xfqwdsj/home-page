@@ -20,11 +20,11 @@ type PointProps = {
 export const Point = (props: PointProps) => {
     if (props.size < 40) return <></>;
     const {left, top, right, bottom, pointType} = "pointType" in props ? props : {
-        false,
-        false,
-        false,
-        false,
-        undefined,
+        left: false,
+        top: false,
+        right: false,
+        bottom: false,
+        pointType: undefined,
     };
     const Svg = styled((it: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) =>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} {...it}/>)({
