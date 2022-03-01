@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Stack} from "@mui/material";
-import {Blank, BottomLeft, BottomRight, Point, TopLeft, TopRight} from "./board_components";
+import {Point} from "./board_components";
 
 type GobangProps = {
     board: (null | undefined | 0 | 1)[][]
@@ -11,28 +11,10 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     const [current, setCurrent] = useState<0 | 1>(0);
 
     return (<>
-        <Stack overflow="scroll">
-            {board.map((columns, rowIndex) => {
-                return <Stack direction="row" key={rowIndex}>
-                    {columns.map((point, columnIndex) => {
-                        if (point === undefined) return <Blank key={columnIndex}/>;
-                        if (rowIndex === 0 && columnIndex === 0 && board[rowIndex + 1][columnIndex] !== undefined) {
-                            return <TopLeft key={columnIndex}/>;
-                        }
-                        if (rowIndex === 0 && columns[columnIndex + 1] === undefined && board[rowIndex + 1][columnIndex] !== undefined) {
-                            return <TopRight key={columnIndex}/>;
-                        }
-                        if (board[rowIndex + 1] === undefined && columnIndex === 0 && board[rowIndex - 1][columnIndex] !== undefined) {
-                            return <BottomLeft key={columnIndex}/>;
-                        }
-                        if (board[rowIndex + 1] === undefined && columns[columnIndex + 1] === undefined && board[rowIndex - 1][columnIndex] !== undefined) {
-                            return <BottomRight key={columnIndex}/>;
-                        }
-                        return <Point key={columnIndex}/>;
-                    })}
-                </Stack>;
-            })}
-        </Stack>
+        <Point type="topLeft" size={50} pointType="normal"/>
+        <Point type="noTop" size={50} pointType="main"/>
+        <Point type="right" size={50} pointType="black"/>
+        <Point type="horizontal" size={100} pointType="white"/>
     </>);
 };
 
