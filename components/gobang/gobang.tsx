@@ -3,8 +3,8 @@ import {Stack} from "@mui/material";
 import {BottomLeft, BottomRight, Point, TopLeft, TopRight} from "./board_components";
 
 type GobangProps = {
-    board: (null | 0 | 1)[][]
-    onBoardStateChange: (board: (null | 0 | 1)[][]) => void
+    board: (null | undefined | 0 | 1)[][]
+    onBoardStateChange: (board: (null | undefined | 0 | 1)[][]) => void
 }
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {

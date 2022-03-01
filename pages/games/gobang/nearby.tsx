@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = () => ({
 const NearbyGobang: NextPage = () => {
     return (
         <>
-            <Gobang board={[[null, null, null], [null, null, null], [null, null, null]]}  onBoardStateChange={(_) => {}}/>
+            <Gobang board={[[null, null], [null, null, null], [undefined, null, null]]}  onBoardStateChange={(_) => {}}/>
         </>
     );
 };
