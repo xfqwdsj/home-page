@@ -13,7 +13,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (<>
         <Stack overflow="scroll">
             {board.map((columns, rowIndex) => {
-                return <Stack direction="column" overflow="visible" key={rowIndex}>
+                return <Stack direction="row" key={rowIndex}>
                     {columns.map((point, columnIndex) => {
                         if (rowIndex === 0 && columnIndex === 0 && board[rowIndex + 1][columnIndex] !== undefined) {
                             return <TopLeft key={columnIndex}/>;
