@@ -1,5 +1,6 @@
 import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
+import Gobang from "../../../components/gobang/gobang";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -16,7 +17,7 @@ export const getStaticProps: GetStaticProps = () => ({
 const NearbyGobang: NextPage = () => {
     return (
         <>
-
+            <Gobang board={[[null, null, null], [null, null, null], [null, null, null]]}  onBoardStateChange={(_) => {}}/>
         </>
     );
 };

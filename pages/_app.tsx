@@ -85,31 +85,20 @@ const App = ({Component, pageProps}: AppProps) => {
             )}
 
             <Container>
-                <Box sx={{my: 2}}>
+                <Box my={2}>
                     <Component {...pageProps} LT={AV}/>
                 </Box>
             </Container>
 
             <footer>
-                <Box
-                    sx={{
-                        p: 5,
-                        width: 1,
-                        backgroundColor: (theme) =>
-                            alpha(
-                                theme.palette.mode === "light"
-                                    ? theme.palette.common.black
-                                    : theme.palette.common.white,
-                                0.05,
-                            ),
-                    }}
-                >
-                    <Box
-                        sx={{
-                            width: "max-content",
-                            mx: "auto",
-                        }}
-                    >
+                <Box width={1} p={5} backgroundColor={(theme) =>
+                    alpha(
+                        theme.palette.mode === "light"
+                            ? theme.palette.common.black
+                            : theme.palette.common.white,
+                        0.05,
+                    )}>
+                    <Box width="max-content" mx="auto">
                         <Typography component="span">
                             Powered by{" "}
                             <a
