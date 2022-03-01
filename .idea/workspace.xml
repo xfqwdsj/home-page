@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69ba267e-0aa6-441e-bd65-90d07537f0b6" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/games/gobang/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/clash_profile/default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/clash_profile/default.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/icons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/icons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/link.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/link.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/masonryCards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/masonryCards.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/page/head.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/page/head.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/[file].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/[file].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_document.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_document.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/clash.ts" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/clash.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/clash/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/clash/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/games/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +42,16 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/IdeaProjects/sturdy-octo-adventure"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/VSProjects/sturdy-octo-adventure",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.TypeScript",
+    "ts.external.directory.path": "D:\\VSProjects\\sturdy-octo-adventure\\node_modules\\typescript\\lib"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
@@ -38,7 +62,26 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1645198905946</updated>
+      <workItem from="1646116206117" duration="2514000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
