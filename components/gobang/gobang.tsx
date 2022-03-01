@@ -25,7 +25,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                             right: columns[columnIndex + 1] !== undefined,
                             bottom: board[rowIndex + 1][columnIndex] !== undefined
                         };
-                        return <Point size={100} {...type} pointType={column ? column : "normal"} key={columnIndex}/>
+                        return <Point size={100} {...type} pointType={point ? point : "normal"} key={columnIndex}/>
                     })}
                 </Stack>;
             })}
