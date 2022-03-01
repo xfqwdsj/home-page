@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69ba267e-0aa6-441e-bd65-90d07537f0b6" name="变更" comment="还是 IDEA 好用">
-      <change afterPath="$PROJECT_DIR$/.idea/file.template.settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/gobang/gobang.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/masonryCards.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/masonry_cards.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/page/head.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/head.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/[file].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/[file].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/clash/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/clash/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/games/gobang/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/gobang/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/games/gobang/nearby.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/gobang/nearby.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/games/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/games/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="69ba267e-0aa6-441e-bd65-90d07537f0b6" name="变更" comment="." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +59,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1645198905946</updated>
-      <workItem from="1646116206117" duration="8526000" />
+      <workItem from="1646116206117" duration="8771000" />
     </task>
     <task id="LOCAL-00001" summary="还是 IDEA 好用">
       <created>1646122165397</created>
@@ -81,7 +68,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646122165398</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary=".">
+      <created>1646125449163</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1646125449164</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -101,7 +95,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="还是 IDEA 好用" />
-    <option name="LAST_COMMIT_MESSAGE" value="还是 IDEA 好用" />
+    <MESSAGE value="." />
+    <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

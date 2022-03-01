@@ -3,7 +3,7 @@ import {ClashIcon} from "../components/icons";
 import GamesIcon from "@mui/icons-material/Games";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import {HeadProps} from "../components/head";
-import {MasonryCards} from "../components/masonry_cards";
+import {CardInfo, MasonryCards} from "../components/masonry_cards";
 
 const head: HeadProps = {
     pageTitle: "LTFan",
@@ -17,24 +17,24 @@ export const getStaticProps = () => ({
     },
 });
 
-const cards = [
+const cards: CardInfo[] = [
     {
         name: "Clash",
         icon: ClashIcon,
         description: "Clash 配置多用户托管服务",
-        href: "clash/",
+        href: "/clash/",
     },
     {
         name: "游戏",
         icon: GamesIcon,
         description: "适合网页游玩的小游戏",
-        href: "games/",
+        href: "/games/",
     },
     {
         name: "测试",
         icon: BugReportIcon,
         description: "测试页面，你永远想不到我会在里面放些什么",
-        href: "test/",
+        href: "/test/",
     },
 ];
 

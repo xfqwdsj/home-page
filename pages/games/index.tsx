@@ -20,7 +20,7 @@ const cards: CardInfo[] = [
         name: "五子棋",
         icon: GobangIcon,
         description: "最多两人的对战游戏",
-        href: "gobang/",
+        href: "/games/gobang/",
     },
 ];
 

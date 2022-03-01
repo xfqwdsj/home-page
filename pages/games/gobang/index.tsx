@@ -19,7 +19,7 @@ const cards: CardInfo[] = [{
     name: "面对面",
     icon: NearMeIcon,
     description: "邀请身边的朋友面对面进行游戏",
-    href: "nearby",
+    href: "/games/gobang/nearby",
 }];
 
 const Gobang: NextPage = () => {
