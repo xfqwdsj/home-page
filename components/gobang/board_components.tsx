@@ -1,10 +1,6 @@
 import {styled} from "@mui/material";
 import {SVGProps} from "react";
-import {Status} from "./gobang";
-
-export type Normal = "normal"
-export type Main = "main"
-export type PointTypes = Normal | Main
+import {PointTypes, Status} from "./gobang";
 
 type PointProps = {
     size: number
