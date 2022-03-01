@@ -2,14 +2,8 @@ import {useState} from "react";
 import {Stack} from "@mui/material";
 import {Point} from "./board_components";
 
-
-export type Normal = "normal"
-export type Main = "main"
-export type PointTypes = Normal | Main
-
-export type Black = "black"
-export type White = "white"
-export type Status = Black | White
+export type PointTypes = "normal" | "main"
+export type Status = "black" | "white"
 
 type GobangProps = {
     board: (null | undefined | Status)[][]
@@ -17,7 +11,7 @@ type GobangProps = {
 }
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
-    const [current, setCurrent] = useState<Status>(Black);
+    const [current, setCurrent] = useState<Status>("black");
 
     return (<>
         <Stack overflow="scroll">
