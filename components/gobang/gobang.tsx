@@ -19,14 +19,14 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
             {board.map((columns, rowIndex) => {
                 return <Stack direction="row" key={rowIndex}>
                     {columns.map((point, columnIndex) => {
-                        if (point === undefined) return <Point size={100}/>
+                        if (point === undefined) return <Point size={100} key={columnIndex}/>
                         const type = {
                             left: columns[columnIndex - 1] !== undefined,
                             top: board[rowIndex - 1][columnIndex] !== undefined,
                             right: columns[columnIndex + 1] !== undefined,
                             bottom: board[rowIndex + 1][columnIndex] !== undefined
                         };
-                        return <Point size={100} {...type} pointType={column ? column : "normal"}/>
+                        return <Point size={100} {...type} pointType={column ? column : "normal"} key={columnIndex}/>
                     })}
                 </Stack>;
             })}
