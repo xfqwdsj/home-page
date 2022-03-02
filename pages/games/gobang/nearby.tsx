@@ -61,7 +61,7 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
             if (i % 2 === 1) tmp = 0;
             else tmp--;
             (function calc(r: number, c: number) {
-                if (board[r] && board[r].array[c].point === player) {
+                if (board[r] && board[r].array[c] && board[r].array[c].point === player) {
                     tmp++;
                     const params = go(i, r, c);
                     calc(params[0], params[1]);

@@ -24,17 +24,21 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                                 return <Point size={100} key={id} />;
                             const type = {
                                 left:
+                                    columns[columnIndex - 1] &&
                                     columns[columnIndex - 1].point !==
-                                    undefined,
+                                        undefined,
                                 top:
                                     board[rowIndex - 1] &&
+                                    board[rowIndex - 1].array[columnIndex] &&
                                     board[rowIndex - 1].array[columnIndex]
                                         .point !== undefined,
                                 right:
+                                    columns[columnIndex + 1] &&
                                     columns[columnIndex + 1].point !==
-                                    undefined,
+                                        undefined,
                                 bottom:
                                     board[rowIndex + 1] &&
+                                    board[rowIndex + 1].array[columnIndex] &&
                                     board[rowIndex + 1].array[columnIndex]
                                         .point !== undefined,
                             };
