@@ -9,6 +9,8 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Slider,
+    Typography,
 } from "@mui/material";
 import {nanoid} from "nanoid";
 
@@ -61,7 +63,11 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
             if (i % 2 === 1) tmp = 0;
             else tmp--;
             (function calc(r: number, c: number) {
-                if (board[r] && board[r].array[c] && board[r].array[c].point === player) {
+                if (
+                    board[r] &&
+                    board[r].array[c] &&
+                    board[r].array[c].point === player
+                ) {
                     tmp++;
                     const params = go(i, r, c);
                     calc(params[0], params[1]);
@@ -74,29 +80,39 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
 
 const NearbyGobang: NextPage = () => {
     const [board, setBoard] = useState<GobangBoard>(() => defaultBoard());
-    const [current, setCurrent] = useState<Player>("black");
+    const [size, setSize] = useState(100);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
+
+    let current: Player = "black";
 
     const stateChange = (x: number, y: number) => {
         if (!board[x].array[y].point) {
             const tmp = [...board];
             tmp[x].array[y].point = current;
             setBoard(tmp);
-            setCurrent(current === "black" ? "white" : "black");
+            current = current === "black" ? "white" : "black";
             const winner = getWinner(board, x, y);
             if (winner) {
                 setMessage(winner);
                 setOpen(true);
             }
         }
-    }
+    };
 
     return (
         <>
+            <Typography component="span">下一步：{current}</Typography>
             <Gobang
                 board={board}
                 onBoardStateChange={stateChange}
+                size={size}
+            />
+            <Slider
+                aria-label="Board Size"
+                value={size}
+                onChange={(_, newValue) => setSize(newValue as number)}
+                valueLabelDisplay="auto"
             />
             <Dialog
                 open={open}

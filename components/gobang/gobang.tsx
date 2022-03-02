@@ -11,6 +11,7 @@ export type GobangBoard = {array: GobangPoint[]; id: string}[];
 type GobangProps = {
     board: GobangBoard;
     onBoardStateChange: (x: number, y: number) => void;
+    size: number;
 };
 
 const MemorizedPoint = React.memo<
@@ -49,18 +50,16 @@ const MemorizedPoint = React.memo<
     }
 );
 
-const Gobang = ({board, onBoardStateChange}: GobangProps) => {
+const Gobang = ({board, onBoardStateChange, size}: GobangProps) => {
     return (
         <Stack overflow="auto" alignItems="flex-start" mx="auto">
             {board.map((row, rowIndex) => {
-                console.log(`     ${rowIndex}`);
                 const columns = row.array;
                 return (
                     <Stack direction="row" key={row.id}>
                         {columns.map(({point, id}, columnIndex) => {
-                            console.log(`${columnIndex}`);
                             if (point === undefined)
-                                return <MemorizedPoint size={100} key={id} />;
+                                return <MemorizedPoint size={size} key={id} />;
                             const type = {
                                 left:
                                     columns[columnIndex - 1] &&
@@ -83,7 +82,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                             };
                             return (
                                 <MemorizedPoint
-                                    size={100}
+                                    size={size}
                                     x={rowIndex}
                                     y={columnIndex}
                                     {...type}
