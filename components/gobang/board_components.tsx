@@ -50,7 +50,7 @@ export const Point = (props: PointProps) => {
         ...props
     };
     const Svg = styled((it: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) =>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} {...onClick} {...it}/>)({
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} onClick={onClick} {...it}/>)({
         width: size,
         height: size,
     });

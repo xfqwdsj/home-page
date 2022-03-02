@@ -1,6 +1,7 @@
 import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
-import Gobang from "../../../components/gobang/gobang";
+import Gobang, {GobangBoard} from "../../../components/gobang/gobang";
+import {useState} from "react";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -15,9 +16,11 @@ export const getStaticProps: GetStaticProps = () => ({
 });
 
 const NearbyGobang: NextPage = () => {
+    const [board, changeBoard] = useState<GobangBoard>([[null, "black", undefined], ["white", null, null], [undefined, null, null]]);
+
     return (
         <>
-            <Gobang board={[[null, "black", undefined], ["white", null, null], [undefined, null, null]]}  onBoardStateChange={(_) => {}}/>
+            <Gobang board={board} onBoardStateChange={(value) => changeBoard(value)}/>
         </>
     );
 };

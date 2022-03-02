@@ -5,9 +5,11 @@ import {Point} from "./board_components";
 export type PointTypes = "normal" | "main"
 export type Status = "black" | "white"
 
+export type GobangBoard = (null | undefined | Status)[][];
+
 type GobangProps = {
-    board: (null | undefined | Status)[][]
-    onBoardStateChange: (board: (null | undefined | Status)[][]) => void
+    board: GobangBoard
+    onBoardStateChange: (GobangBoard) => void
 }
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
@@ -28,7 +30,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                         return <Point size={100} {...type} pointType={point ? point : "normal"}
                                       onClick={(_) => {
                                           board[rowIndex][columnIndex] = current;
-                                          //onBoardStateChange(board);
+                                          onBoardStateChange(board);
                                           setCurrent(current === "black" ? "white" : "black");
                                       }}
                                       key={columnIndex}/>;
