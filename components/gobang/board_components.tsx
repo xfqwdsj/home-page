@@ -1,6 +1,6 @@
 import {styled} from "@mui/material";
 import {MouseEventHandler, SVGProps} from "react";
-import {PointTypes, Status} from "./gobang";
+import {Player, PointTypes} from "./gobang";
 
 type PointProps = {
     /**
@@ -30,7 +30,7 @@ type PointProps = {
     /**
      * 该点类型。分别为：普通、主要（较大的点）、黑棋落、白棋落。
      */
-    pointType?: PointTypes | Status
+    pointType?: PointTypes | Player
     /**
      * 点击处理。
      */
@@ -41,13 +41,13 @@ const defaultProps = {
     left: false,
     top: false,
     right: false,
-    bottom: false
-}
+    bottom: false,
+};
 
 export const Point = (props: PointProps) => {
     const {size, left, top, right, bottom, pointType, onClick} = {
         ...defaultProps,
-        ...props
+        ...props,
     };
     const Svg = styled((it: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) =>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${size} ${size}`} onClick={onClick} {...it}/>)({
@@ -55,12 +55,7 @@ export const Point = (props: PointProps) => {
         height: size,
     });
     if (size < 40) return <Svg/>;
-    let leftPath: JSX.Element | undefined;
-    let topPath: JSX.Element | undefined;
-    let rightPath: JSX.Element | undefined;
-    let bottomPath: JSX.Element | undefined;
-    let point: JSX.Element | undefined;
-    let front: JSX.Element | undefined;
+    let leftPath, topPath, rightPath, bottomPath, point, front: JSX.Element | undefined;
     const chess = `M ${size / 3} ${size / 2} a ${size / 6} ${size / 6} 0 0 0 ${size / 3} 0 a ${size / 6} ${size / 6} 0 0 0 -${size / 3} 0 Z`;
     if (left) leftPath = <path d={`M 0 ${size / 2 - 0.5} h ${size / 2} v 1 h -${size / 2} Z`}/>;
     if (top) topPath = <path d={`M ${size / 2 - 0.5} 0 v ${size / 2} h 1 v -${size / 2} Z`}/>;

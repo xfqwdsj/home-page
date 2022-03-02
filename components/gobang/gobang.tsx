@@ -3,17 +3,18 @@ import {Stack} from "@mui/material";
 import {Point} from "./board_components";
 
 export type PointTypes = "normal" | "main"
-export type Status = "black" | "white"
+export type Player = "black" | "white"
 
-export type GobangBoard = (null | undefined | Status)[][];
+export type GobangPoint = null | undefined | Player;
+export type GobangBoard = (GobangPoint)[][];
 
 type GobangProps = {
     board: GobangBoard
-    onBoardStateChange: (board: GobangBoard) => void
+    onBoardStateChange: (board: GobangBoard, x: number, y: number) => void
 }
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
-    const [current, setCurrent] = useState<Status>("black");
+    const [current, setCurrent] = useState<Player>("black");
 
     return (
         <Stack overflow="scroll" alignItems="center">
@@ -30,7 +31,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                         return <Point size={100} {...type} pointType={point ? point : "normal"}
                                       onClick={(_) => {
                                           board[rowIndex][columnIndex] = current;
-                                          onBoardStateChange(board);
+                                          onBoardStateChange(board, rowIndex, columnIndex);
                                           setCurrent(current === "black" ? "white" : "black");
                                       }}
                                       key={columnIndex}/>;
@@ -42,3 +43,18 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
 };
 
 export default Gobang;
+
+export interface Board {
+    board?: () => GobangBoard;
+    left?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    topLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    top?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    topRight?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    right?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    bottomRight?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    bottom?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    bottomLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
+    winner?: ((board: GobangBoard, row?: number, column?: number) => Player | undefined)
+        | ((board: GobangBoard, row: number, column: number) => Player | undefined)
+        | ((board: GobangBoard) => Player | undefined);
+}
