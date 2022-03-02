@@ -3,6 +3,7 @@ import {GetStaticProps, NextPage} from "next";
 import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
 import {useState} from "react";
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
@@ -94,7 +95,7 @@ const NearbyGobang: NextPage = () => {
             current = current === "black" ? "white" : "black";
             const winner = getWinner(board, x, y);
             if (winner) {
-                setMessage(winner);
+                setMessage(`恭喜：${winner}`);
                 setOpen(true);
             }
         }
@@ -102,7 +103,9 @@ const NearbyGobang: NextPage = () => {
 
     return (
         <>
-            <Typography component="span">下一步：{current}</Typography>
+            <Box mx="auto">
+                <Typography component="span">下一步：{current}</Typography>
+            </Box>
             <Gobang
                 board={board}
                 onBoardStateChange={stateChange}
@@ -110,6 +113,8 @@ const NearbyGobang: NextPage = () => {
             />
             <Slider
                 aria-label="Board Size"
+                min={40}
+                max={100}
                 value={size}
                 onChange={(_, newValue) => setSize(newValue as number)}
                 valueLabelDisplay="auto"
@@ -120,7 +125,7 @@ const NearbyGobang: NextPage = () => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">哈哈</DialogTitle>
+                <DialogTitle id="alert-dialog-title">赢了！</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         {message}

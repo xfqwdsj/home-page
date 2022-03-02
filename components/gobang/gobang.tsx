@@ -52,11 +52,11 @@ const MemorizedPoint = React.memo<
 
 const Gobang = ({board, onBoardStateChange, size}: GobangProps) => {
     return (
-        <Stack overflow="auto" alignItems="flex-start" mx="auto">
+        <Stack overflow="auto" alignItems="flex-start">
             {board.map((row, rowIndex) => {
                 const columns = row.array;
                 return (
-                    <Stack direction="row" key={row.id}>
+                    <Stack direction="row" mx="auto" key={row.id}>
                         {columns.map(({point, id}, columnIndex) => {
                             if (point === undefined)
                                 return <MemorizedPoint size={size} key={id} />;
