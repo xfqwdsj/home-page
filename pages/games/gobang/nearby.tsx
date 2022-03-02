@@ -26,15 +26,13 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const defaultBoard = () =>
-    new Array<GobangPoint[]>(15).map((_) =>
-        new Array<GobangPoint>(15).map((_) => null)
-    );
+const defaultBoard = (): GobangPoint[][] =>
+    Array.from({length: 15}, () => Array.from({length: 15}, () => null));
 
 const getWinner = (board: GobangBoard, row: number, column: number) => {
     const player = board[row][column];
     if (player) {
-        let tmp = 1;
+        let tmp = 0;
         const go = (i: number, r: number, c: number) => {
             switch (i) {
                 case 1:
@@ -60,10 +58,11 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
         for (let i = 1; i <= 8; i++) {
             if (tmp >= 5) return player;
             if (i % 2 === 1) tmp = 0;
-            (function (r: number, c: number) {
+            (function calc(r: number, c: number) {
                 if (board[r][c] === player) {
                     tmp++;
-                    arguments.callee(...go(i, r, c));
+                    const params = go(i, r, c);
+                    calc(params[0], params[1]);
                 }
             })(row, column);
         }
