@@ -43,8 +43,3 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
 };
 
 export default Gobang;
-
-export interface Board {
-    defaultBoard?: () => GobangBoard;
-    winner?: (board: GobangBoard, row: number, column: number) => Player | undefined
-}

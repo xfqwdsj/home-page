@@ -1,8 +1,18 @@
 import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
-import Gobang, {Board, GobangBoard, GobangPoint} from "../../../components/gobang/gobang";
+import Gobang, {
+    GobangBoard,
+    GobangPoint,
+} from "../../../components/gobang/gobang";
 import {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from "@mui/material";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -16,66 +26,69 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const mBoard: Board = {
-    defaultBoard: () => new Array<GobangPoint[]>(15).map((_) =>
-        new Array<GobangPoint>(15).map((_) =>
-            null,
-        ),
-    ),
-    winner: (board, row: number, column: number) => {
-        const player = board[row][column];
-        if (player) {
-            let tmp = 1;
-            const go = (i: number, r: number, c: number) => {
-                switch (i) {
-                    case 1:
-                        return [r, c - 1];
-                    case 2:
-                        return [r, c + 1];
-                    case 3:
-                        return [r - 1, c];
-                    case 4:
-                        return [r + 1, c];
-                    case 5:
-                        return [r + 1, c - 1];
-                    case 6:
-                        return [r - 1, c + 1];
-                    case 7:
-                        return [r - 1, c - 1];
-                    case 8:
-                        return [r + 1, c + 1];
-                }
-            };
-            for (let i = 1; i <= 8; i++) {
-                if (tmp >= 5) return player;
-                if (i % 2 === 1) tmp = 0;
-                (function(r: number, c: number) {
-                    if (board[r][c] === player) {
-                        tmp++;
-                        arguments.callee(...go(i, r, c));
-                    }
-                })(row, column);
+const defaultBoard = () =>
+    new Array<GobangPoint[]>(15).map((_) =>
+        new Array<GobangPoint>(15).map((_) => null)
+    );
+
+const getWinner = (board: GobangBoard, row: number, column: number) => {
+    const player = board[row][column];
+    if (player) {
+        let tmp = 1;
+        const go = (i: number, r: number, c: number) => {
+            switch (i) {
+                case 1:
+                    return [r, c - 1];
+                case 2:
+                    return [r, c + 1];
+                case 3:
+                    return [r - 1, c];
+                case 4:
+                    return [r + 1, c];
+                case 5:
+                    return [r + 1, c - 1];
+                case 6:
+                    return [r - 1, c + 1];
+                case 7:
+                    return [r - 1, c - 1];
+                case 8:
+                    return [r + 1, c + 1];
+                default:
+                    return [0, 0];
             }
-            return undefined;
+        };
+        for (let i = 1; i <= 8; i++) {
+            if (tmp >= 5) return player;
+            if (i % 2 === 1) tmp = 0;
+            (function (r: number, c: number) {
+                if (board[r][c] === player) {
+                    tmp++;
+                    arguments.callee(...go(i, r, c));
+                }
+            })(row, column);
         }
-    },
+        return undefined;
+    }
 };
 
 const NearbyGobang: NextPage = () => {
-    const [board, setBoard] = useState<GobangBoard>(mBoard.defaultBoard());
+    const [board, setBoard] = useState<GobangBoard>(defaultBoard());
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
     return (
         <>
-            <Gobang board={board} onBoardStateChange={(value, x, y) => {
-                setBoard(value);
-                const winner = mBoard.winner(board, x, y);
-                if (winner) {
-                    setMessage(winner);
-                    setOpen(true);
-                }
-            }}/>
+            <Gobang
+                board={board}
+                onBoardStateChange={(value, x, y) => {
+                    setBoard(value);
+                    const winner = getWinner(board, x, y);
+                    if (winner) {
+                        setMessage(winner);
+                        setOpen(true);
+                    }
+                }}
+            />
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}
