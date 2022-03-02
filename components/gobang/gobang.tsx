@@ -20,7 +20,6 @@ const MemorizedPoint = React.memo<
     }
 >(
     function MemorizedPoint(props) {
-        console.log("Rendered!!!");
         const onClick: MouseEventHandler<SVGSVGElement> | undefined =
             props.pointType !== undefined
                 ? (_) => {

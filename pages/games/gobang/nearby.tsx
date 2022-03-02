@@ -80,19 +80,18 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
 };
 
 const NearbyGobang: NextPage = () => {
+    const [current, setCurrent] = useState<Player>("black");
     const [board, setBoard] = useState<GobangBoard>(() => defaultBoard());
     const [size, setSize] = useState(100);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
-
-    let current: Player = "black";
 
     const stateChange = (x: number, y: number) => {
         if (!board[x].array[y].point) {
             const tmp = [...board];
             tmp[x].array[y].point = current;
             setBoard(tmp);
-            current = current === "black" ? "white" : "black";
+            setCurrent(current === "black" ? "white" : "black");
             const winner = getWinner(board, x, y);
             if (winner) {
                 setMessage(`恭喜：${winner}`);
@@ -103,7 +102,7 @@ const NearbyGobang: NextPage = () => {
 
     return (
         <>
-            <Box mx="auto">
+            <Box width="max-content" mx="auto">
                 <Typography component="span">下一步：{current}</Typography>
             </Box>
             <Gobang
