@@ -1,6 +1,6 @@
 import {Stack} from "@mui/material";
 import React from "react";
-import {Point} from "./board_components";
+import {Point, PointProps} from "./board_components";
 
 export type PointTypes = "normal" | "main";
 export type Player = "black" | "white";
