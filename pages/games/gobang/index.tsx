@@ -1,6 +1,6 @@
 import {GetStaticProps, NextPage} from "next";
 import {HeadProps} from "../../../components/head";
-import {CardInfo, MasonryCards} from "../../../components/masonry_cards";
+import {CardInfo, CardsGrid} from "../../../components/cards_grid";
 import NearMeIcon from "@mui/icons-material/NearMe";
 
 const head: HeadProps = {
@@ -25,7 +25,7 @@ const cards: CardInfo[] = [{
 const Gobang: NextPage = () => {
     return (
         <>
-            <MasonryCards cards={cards}/>
+            <CardsGrid cards={cards}/>
         </>
     );
 };

@@ -13,8 +13,8 @@ type GobangProps = {
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     const [current, setCurrent] = useState<Status>("black");
 
-    return (<>
-        <Stack overflow="scroll">
+    return (
+        <Stack overflow="scroll" alignItems="center">
             {board.map((columns, rowIndex) => {
                 return <Stack direction="row" key={rowIndex}>
                     {columns.map((point, columnIndex) => {
@@ -25,12 +25,18 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                             right: columns[columnIndex + 1] !== undefined,
                             bottom: board[rowIndex + 1] && board[rowIndex + 1][columnIndex] !== undefined,
                         };
-                        return <Point size={100} {...type} pointType={point ? point : "normal"} key={columnIndex}/>;
+                        return <Point size={100} {...type} pointType={point ? point : "normal"}
+                                      onClick={(_) => {
+                                          board[rowIndex][columnIndex] = current;
+                                          //onBoardStateChange(board);
+                                          setCurrent(current === "black" ? "white" : "black");
+                                      }}
+                                      key={columnIndex}/>;
                     })}
                 </Stack>;
             })}
         </Stack>
-    </>);
+    );
 };
 
 export default Gobang;

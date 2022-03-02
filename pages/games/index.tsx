@@ -1,6 +1,6 @@
 import {GetStaticProps, NextPage} from "next";
 import {GobangIcon} from "../../components/icons";
-import {CardInfo, MasonryCards} from "../../components/masonry_cards";
+import {CardInfo, CardsGrid} from "../../components/cards_grid";
 import {HeadProps} from "../../components/head";
 
 const head: HeadProps = {
@@ -27,7 +27,7 @@ const cards: CardInfo[] = [
 const Games: NextPage = () => {
     return (
         <>
-            <MasonryCards cards={cards}/>
+            <CardsGrid cards={cards}/>
         </>
     );
 };

@@ -3,7 +3,7 @@ import {ClashIcon} from "../components/icons";
 import GamesIcon from "@mui/icons-material/Games";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import {HeadProps} from "../components/head";
-import {CardInfo, MasonryCards} from "../components/masonry_cards";
+import {CardInfo, CardsGrid} from "../components/cards_grid";
 
 const head: HeadProps = {
     pageTitle: "LTFan",
@@ -41,7 +41,7 @@ const cards: CardInfo[] = [
 const Home: NextPage = () => {
     return (
         <>
-            <MasonryCards cards={cards}/>
+            <CardsGrid cards={cards}/>
         </>
     );
 };
