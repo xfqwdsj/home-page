@@ -86,20 +86,6 @@ const NearbyGobang: NextPage = () => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
-    const stateChange = (x: number, y: number) => {
-        if (!board[x].array[y].point) {
-            const tmp = [...board];
-            tmp[x].array[y].point = current;
-            setBoard(tmp);
-            setCurrent(current === "black" ? "white" : "black");
-            const winner = getWinner(board, x, y);
-            if (winner) {
-                setMessage(`恭喜：${winner}`);
-                setOpen(true);
-            }
-        }
-    };
-
     return (
         <>
             <Box width="max-content" mx="auto">
@@ -107,7 +93,19 @@ const NearbyGobang: NextPage = () => {
             </Box>
             <Gobang
                 board={board}
-                onBoardStateChange={stateChange}
+                onBoardStateChange={(x, y) => {
+                    if (!board[x].array[y].point) {
+                        const tmp = [...board];
+                        tmp[x].array[y].point = current;
+                        setBoard(tmp);
+                        setCurrent(current === "black" ? "white" : "black");
+                        const winner = getWinner(board, x, y);
+                        if (winner) {
+                            setMessage(`恭喜：${winner}`);
+                            setOpen(true);
+                        }
+                    }
+                }}
                 size={size}
             />
             <Slider
