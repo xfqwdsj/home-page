@@ -45,7 +45,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
 export default Gobang;
 
 export interface Board {
-    board?: () => GobangBoard;
+    defaultBoard?: () => GobangBoard;
     left?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
     topLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
     top?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
