@@ -80,8 +80,9 @@ const NearbyGobang: NextPage = () => {
 
     const stateChange = (x: number, y: number) => {
         if (!board[x].array[y].point) {
-            board[x].array[y].point = current;
-            setBoard(board);
+            const tmp = [...board];
+            tmp[x].array[y].point = current;
+            setBoard(tmp);
             setCurrent(current === "black" ? "white" : "black");
             const winner = getWinner(board, x, y);
             if (winner) {
