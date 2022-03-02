@@ -45,7 +45,7 @@ const defaultProps = {
     bottom: false,
 };
 
-export const Point = React.memo<PointProps>((props) => {
+export const Point = (props: PointProps) => {
     const {size, left, top, right, bottom, pointType, onClick} = {
         ...defaultProps,
         ...props,
@@ -137,16 +137,4 @@ export const Point = React.memo<PointProps>((props) => {
             {front && front}
         </Svg>
     );
-});
-Point.displayName = "Point";
-
-/*
-export class Point1 extends React.Component<PointProps> {
-    render() {
-        const {size, left, top, right, bottom, pointType, onClick} = {
-            ...defaultProps,
-            ...this.props,
-        }
-
-    }
-}*/
+};
