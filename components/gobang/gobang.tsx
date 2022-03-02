@@ -23,30 +23,42 @@ const MemorizedPoint = React.memo<
         const onClick: MouseEventHandler<SVGSVGElement> | undefined =
             props.pointType !== undefined
                 ? (_) => {
-                      props.onBoardStateChange && props.x && props.y &&
+                      if (
+                          props.onBoardStateChange !== undefined &&
+                          props.x !== undefined &&
+                          props.y !== undefined
+                      ) {
                           props.onBoardStateChange(props.x, props.y);
+                      }
                   }
                 : undefined;
-        delete props.onBoardStateChange;
+        const result = {...props};
+        if (result.onBoardStateChange !== undefined)
+            delete result.onBoardStateChange;
         return <Point onClick={onClick} {...props} />;
     },
-    (a, b) =>
-        a.size === b.size &&
-        a.left === b.left &&
-        a.top === b.top &&
-        a.right === b.right &&
-        a.bottom === b.bottom &&
-        a.pointType === b.pointType
+    function areEqual(a, b) {
+        return (
+            a.size === b.size &&
+            a.left === b.left &&
+            a.top === b.top &&
+            a.right === b.right &&
+            a.bottom === b.bottom &&
+            a.pointType === b.pointType
+        );
+    }
 );
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (
         <Stack overflow="auto" alignItems="flex-start" mx="auto">
             {board.map((row, rowIndex) => {
+                console.log(`     ${rowIndex}`);
                 const columns = row.array;
                 return (
                     <Stack direction="row" key={row.id}>
                         {columns.map(({point, id}, columnIndex) => {
+                            console.log(`${columnIndex}`);
                             if (point === undefined)
                                 return <MemorizedPoint size={100} key={id} />;
                             const type = {

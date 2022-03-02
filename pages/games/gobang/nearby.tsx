@@ -73,27 +73,29 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
 };
 
 const NearbyGobang: NextPage = () => {
-    const [board, setBoard] = useState<GobangBoard>(defaultBoard());
+    const [board, setBoard] = useState<GobangBoard>(() => defaultBoard());
     const [current, setCurrent] = useState<Player>("black");
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
+
+    const stateChange = (x: number, y: number) => {
+        if (!board[x].array[y].point) {
+            board[x].array[y].point = current;
+            setBoard(board);
+            setCurrent(current === "black" ? "white" : "black");
+            const winner = getWinner(board, x, y);
+            if (winner) {
+                setMessage(winner);
+                setOpen(true);
+            }
+        }
+    }
 
     return (
         <>
             <Gobang
                 board={board}
-                onBoardStateChange={(x, y) => {
-                    if (!board[x].array[y].point) {
-                        board[x].array[y].point = current;
-                        setBoard(board);
-                        setCurrent(current === "black" ? "white" : "black");
-                        const winner = getWinner(board, x, y);
-                        if (winner) {
-                            setMessage(winner);
-                            setOpen(true);
-                        }
-                    }
-                }}
+                onBoardStateChange={stateChange}
             />
             <Dialog
                 open={open}
