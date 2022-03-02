@@ -110,19 +110,7 @@ const NearbyGobang: NextPage = () => {
             </Box>
             <Gobang
                 board={board}
-                onBoardStateChange={(x: number, y: number) => {
-                    if (!board[x].array[y].point) {
-                        const tmp = [...board];
-                        tmp[x].array[y].point = current;
-                        setBoard(tmp);
-                        setCurrent(current === "black" ? "white" : "black");
-                        const winner = getWinner(board, x, y);
-                        if (winner) {
-                            setMessage(`恭喜：${winner}`);
-                            setOpen(true);
-                        }
-                    }
-                }}
+                onBoardStateChange={stateChange}
                 size={size}
             />
             <Slider
