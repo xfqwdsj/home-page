@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import React from "react";
 import {MouseEventHandler, SVGProps} from "react";
 import {Player, PointTypes} from "./gobang";
 
@@ -44,7 +45,7 @@ const defaultProps = {
     bottom: false,
 };
 
-export const Point = (props: PointProps) => {
+export const Point = React.memo<PointProps>((props) => {
     const {size, left, top, right, bottom, pointType, onClick} = {
         ...defaultProps,
         ...props,
@@ -77,4 +78,15 @@ export const Point = (props: PointProps) => {
     }
     return <Svg>{leftPath && leftPath}{topPath && topPath}{rightPath && rightPath}{bottomPath && bottomPath}
         {point && point}{front && front}</Svg>;
-};
+});
+
+/*
+export class Point1 extends React.Component<PointProps> {
+    render() {
+        const {size, left, top, right, bottom, pointType, onClick} = {
+            ...defaultProps,
+            ...this.props,
+        }
+
+    }
+}*/
