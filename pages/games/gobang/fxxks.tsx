@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = () => ({
 });
 
 const FxxksGobang: NextPage = () => {
-    const board = [
+    const board: GobangBoard = [
         [null, "black", undefined, null],
         ["white", null, null, undefined],
         [undefined, null, null, "white"],
