@@ -44,13 +44,14 @@ const mBoard: Board = {
                         return [r - 1, c - 1];
                     case 8:
                         return [r + 1, c + 1];
+                    default: return [0, 0];
                 }
             };
             for (let i = 1; i <= 8; i++) {
                 if (tmp >= 5) return player;
                 if (i % 2 === 1) tmp = 0;
                 (function(r: number, c: number) {
-                    if (board[r][c] === player) {
+                    if (board[r] && board[r][c] === player) {
                         tmp++;
                         arguments.callee(...go(i, r, c));
                     }
