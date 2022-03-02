@@ -86,6 +86,23 @@ const NearbyGobang: NextPage = () => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
+    let programCurrent: Player = "black";
+
+    const stateChange = (x: number, y: number) => {
+        if (!board[x].array[y].point) {
+            const tmp = [...board];
+            tmp[x].array[y].point = programCurrent;
+            setBoard(tmp);
+            programCurrent = programCurrent === "black" ? "white" : "black";
+            setCurrent(programCurrent);
+            const winner = getWinner(board, x, y);
+            if (winner) {
+                setMessage(`恭喜：${winner}`);
+                setOpen(true);
+            }
+        }
+    };
+
     return (
         <>
             <Box width="max-content" mx="auto">
@@ -93,7 +110,7 @@ const NearbyGobang: NextPage = () => {
             </Box>
             <Gobang
                 board={board}
-                onBoardStateChange={(x, y) => {
+                onBoardStateChange={(x: number, y: number) => {
                     if (!board[x].array[y].point) {
                         const tmp = [...board];
                         tmp[x].array[y].point = current;
