@@ -100,7 +100,7 @@ export const mBoard: Board = {
 };
 
 const NearbyGobang: NextPage = () => {
-    const [board, setBoard] = useState<GobangBoard>(mBoard.board());
+    const [board, setBoard] = useState<GobangBoard>(mBoard.defaultBoard());
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 

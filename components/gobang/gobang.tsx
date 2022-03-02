@@ -6,7 +6,7 @@ export type PointTypes = "normal" | "main"
 export type Player = "black" | "white"
 
 export type GobangPoint = null | undefined | Player;
-export type GobangBoard = (GobangPoint)[][];
+export type GobangBoard = GobangPoint[][];
 
 type GobangProps = {
     board: GobangBoard
@@ -54,7 +54,5 @@ export interface Board {
     bottomRight?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
     bottom?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
     bottomLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    winner?: ((board: GobangBoard, row?: number, column?: number) => Player | undefined)
-        | ((board: GobangBoard, row: number, column: number) => Player | undefined)
-        | ((board: GobangBoard) => Player | undefined);
+    winner?: (board: GobangBoard, row: number, column: number) => Player | undefined
 }
