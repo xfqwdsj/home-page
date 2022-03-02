@@ -3,6 +3,7 @@ import {GetStaticProps, NextPage} from "next";
 import Gobang, {
     GobangBoard,
     GobangPoint,
+    Player,
 } from "../../../components/gobang/gobang";
 import {useState} from "react";
 import {
@@ -57,7 +58,8 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
         };
         for (let i = 1; i <= 8; i++) {
             if (tmp >= 5) return player;
-            if (i % 2 === 1) tmp = 0; else tmp--;
+            if (i % 2 === 1) tmp = 0;
+            else tmp--;
             (function calc(r: number, c: number) {
                 if (board[r] && board[r][c] === player) {
                     tmp++;
@@ -72,6 +74,7 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
 
 const NearbyGobang: NextPage = () => {
     const [board, setBoard] = useState<GobangBoard>(defaultBoard());
+    const [current, setCurrent] = useState<Player>("black");
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("");
 
@@ -79,12 +82,16 @@ const NearbyGobang: NextPage = () => {
         <>
             <Gobang
                 board={board}
-                onBoardStateChange={(value, x, y) => {
-                    setBoard(value);
-                    const winner = getWinner(board, x, y);
-                    if (winner) {
-                        setMessage(winner);
-                        setOpen(true);
+                onBoardStateChange={(x, y) => {
+                    if (!board[x][y]) {
+                        board[x][y] = current;
+                        setBoard(board);
+                        setCurrent(current === "black" ? "white" : "black");
+                        const winner = getWinner(board, x, y);
+                        if (winner) {
+                            setMessage(winner);
+                            setOpen(true);
+                        }
                     }
                 }}
             />
