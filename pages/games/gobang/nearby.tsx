@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-export const mBoard: Board = {
+export const mBoard: Required<Board> = {
     defaultBoard: () => new Array<GobangPoint[]>(15).map((_) =>
         new Array<GobangPoint>(15).map((_) =>
             null,
