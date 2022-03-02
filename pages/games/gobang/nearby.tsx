@@ -16,50 +16,12 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const mBoard: Required<Board> = {
+const mBoard: Board = {
     defaultBoard: () => new Array<GobangPoint[]>(15).map((_) =>
         new Array<GobangPoint>(15).map((_) =>
             null,
         ),
     ),
-    left: (board, row, column) => [board[row][column - 1], [row, column - 1]],
-    topLeft: (board, row, column) =>
-        [
-            board[row - 1] ? board[row - 1][column - 1] : undefined,
-            [row - 1,
-                column - 1],
-        ],
-    top: (board, row, column) =>
-        [
-            board[row - 1] ? board[row - 1][column] : undefined,
-            [row - 1,
-                column],
-        ],
-    topRight: (board, row, column) =>
-        [
-            board[row - 1] ? board[row - 1][column + 1] : undefined,
-            [row - 1,
-                column + 1],
-        ],
-    right: (board, row, column) => [board[row][column + 1], [row, column + 1]],
-    bottomRight: (board, row, column) =>
-        [
-            board[row + 1] ? board[row + 1][column + 1] : undefined,
-            [row + 1,
-                column + 1],
-        ],
-    bottom: (board, row, column) =>
-        [
-            board[row + 1] ? board[row + 1][column] : undefined,
-            [row + 1,
-                column],
-        ],
-    bottomLeft: (board, row, column) =>
-        [
-            board[row + 1] ? board[row + 1][column - 1] : undefined,
-            [row + 1,
-                column - 1],
-        ],
     winner: (board, row: number, column: number) => {
         const player = board[row][column];
         if (player) {
@@ -67,21 +29,21 @@ const mBoard: Required<Board> = {
             const go = (i: number, r: number, c: number) => {
                 switch (i) {
                     case 1:
-                        return this.left(board, r, c)[1] as [number, number];
+                        return [r, c - 1];
                     case 2:
-                        return this.right(board, r, c)[1] as [number, number];
+                        return [r, c + 1];
                     case 3:
-                        return this.top(board, r, c)[1] as [number, number];
+                        return [r - 1, c];
                     case 4:
-                        return this.bottom(board, r, c)[1] as [number, number];
+                        return [r + 1, c];
                     case 5:
-                        return this.bottomLeft(board, r, c)[1] as [number, number];
+                        return [r + 1, c - 1];
                     case 6:
-                        return this.topRight(board, r, c)[1] as [number, number];
+                        return [r - 1, c + 1];
                     case 7:
-                        return this.topLeft(board, r, c)[1] as [number, number];
+                        return [r - 1, c - 1];
                     case 8:
-                        return this.bottomRight(board, r, c)[1] as [number, number];
+                        return [r + 1, c + 1];
                 }
             };
             for (let i = 1; i <= 8; i++) {

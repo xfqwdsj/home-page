@@ -46,13 +46,5 @@ export default Gobang;
 
 export interface Board {
     defaultBoard?: () => GobangBoard;
-    left?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    topLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    top?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    topRight?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    right?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    bottomRight?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    bottom?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
-    bottomLeft?: (board: GobangBoard, row: number, column: number) => [GobangPoint, [number, number]];
     winner?: (board: GobangBoard, row: number, column: number) => Player | undefined
 }
