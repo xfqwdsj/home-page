@@ -57,9 +57,9 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
         };
         for (let i = 1; i <= 8; i++) {
             if (tmp >= 5) return player;
-            if (i % 2 === 1) tmp = 0;
+            if (i % 2 === 1) tmp = 0; else tmp--;
             (function calc(r: number, c: number) {
-                if (board[r][c] === player) {
+                if (board[r] && board[r][c] === player) {
                     tmp++;
                     const params = go(i, r, c);
                     calc(params[0], params[1]);
