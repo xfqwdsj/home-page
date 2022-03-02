@@ -49,7 +49,7 @@ const mBoard: Board = {
             for (let i = 1; i <= 8; i++) {
                 if (tmp >= 5) return player;
                 if (i % 2 === 1) tmp = 0;
-                ((r: number, c: number) => {
+                (function(r: number, c: number) {
                     if (board[r][c] === player) {
                         tmp++;
                         arguments.callee(...go(i, r, c));
