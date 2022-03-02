@@ -1,5 +1,6 @@
 import {Stack} from "@mui/material";
-import {Point} from "./board_components";
+import React from "react";
+import {Point, PointProps} from "./board_components";
 
 export type PointTypes = "normal" | "main";
 export type Player = "black" | "white";
@@ -12,16 +13,18 @@ type GobangProps = {
     onBoardStateChange: (x: number, y: number) => void;
 };
 
+const MemorizedPoint = React.memo<PointProps>((props) => <Point {...props} />);
+
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (
-        <Stack overflow="auto" justifyContent="flex-start" mx="auto">
+        <Stack overflow="auto" alignItems="flex-start" mx="auto">
             {board.map((row, rowIndex) => {
                 const columns = row.array;
                 return (
                     <Stack direction="row" key={row.id}>
                         {columns.map(({point, id}, columnIndex) => {
                             if (point === undefined)
-                                return <Point size={100} key={id} />;
+                                return <MemorizedPoint size={100} key={id} />;
                             const type = {
                                 left:
                                     columns[columnIndex - 1] &&
@@ -43,7 +46,7 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                                         .point !== undefined,
                             };
                             return (
-                                <Point
+                                <MemorizedPoint
                                     size={100}
                                     {...type}
                                     pointType={point ? point : "normal"}

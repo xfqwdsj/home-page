@@ -2,7 +2,7 @@ import {styled} from "@mui/material";
 import {MouseEventHandler, SVGProps} from "react";
 import {Player, PointTypes} from "./gobang";
 
-type PointProps = {
+export type PointProps = {
     /**
      * 以像素为单位的每个点的大小，应不小于 40。
      */
