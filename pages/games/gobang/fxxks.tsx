@@ -16,17 +16,15 @@ export const getStaticProps: GetStaticProps = () => ({
 });
 
 const FxxksGobang: NextPage = () => {
-    const [board, changeBoard] = useState<GobangBoard>(
-        [
-            [null,      "black",    undefined,  null],
-            ["white",   null,       null,       undefined],
-            [undefined, null,       null,       "white"]
-        ]
-    );
+    const board = [
+        [null, "black", undefined, null],
+        ["white", null, null, undefined],
+        [undefined, null, null, "white"],
+    ];
 
     return (
         <>
-            <Gobang board={board} onBoardStateChange={(value) => changeBoard(value)}/>
+            <Gobang board={board} onBoardStateChange={(_0, _1) => {}} />
         </>
     );
 };
