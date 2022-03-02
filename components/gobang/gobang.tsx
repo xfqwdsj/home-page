@@ -9,7 +9,7 @@ export type GobangBoard = (null | undefined | Status)[][];
 
 type GobangProps = {
     board: GobangBoard
-    onBoardStateChange: (GobangBoard) => void
+    onBoardStateChange: (board: GobangBoard) => void
 }
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
