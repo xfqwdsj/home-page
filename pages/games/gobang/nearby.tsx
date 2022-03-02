@@ -1,10 +1,6 @@
 import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
-import Gobang, {
-    GobangBoard,
-    GobangPoint,
-    Player,
-} from "../../../components/gobang/gobang";
+import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
 import {useState} from "react";
 import {
     Button,
@@ -14,6 +10,7 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
+import {nanoid} from "nanoid";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -27,11 +24,14 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const defaultBoard = (): GobangPoint[][] =>
-    Array.from({length: 15}, () => Array.from({length: 15}, () => null));
+const defaultBoard = (): GobangBoard =>
+    Array.from({length: 15}, () => ({
+        array: Array.from({length: 15}, () => ({point: null, id: nanoid()})),
+        id: nanoid(),
+    }));
 
 const getWinner = (board: GobangBoard, row: number, column: number) => {
-    const player = board[row][column];
+    const player = board[row].array[column].point;
     if (player) {
         let tmp = 0;
         const go = (i: number, r: number, c: number) => {
@@ -61,7 +61,7 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
             if (i % 2 === 1) tmp = 0;
             else tmp--;
             (function calc(r: number, c: number) {
-                if (board[r] && board[r][c] === player) {
+                if (board[r] && board[r].array[c].point === player) {
                     tmp++;
                     const params = go(i, r, c);
                     calc(params[0], params[1]);
@@ -83,8 +83,8 @@ const NearbyGobang: NextPage = () => {
             <Gobang
                 board={board}
                 onBoardStateChange={(x, y) => {
-                    if (!board[x][y]) {
-                        board[x][y] = current;
+                    if (!board[x].array[y].point) {
+                        board[x].array[y].point = current;
                         setBoard(board);
                         setCurrent(current === "black" ? "white" : "black");
                         const winner = getWinner(board, x, y);

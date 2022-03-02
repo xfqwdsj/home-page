@@ -4,8 +4,8 @@ import {Point} from "./board_components";
 export type PointTypes = "normal" | "main";
 export type Player = "black" | "white";
 
-export type GobangPoint = null | undefined | Player;
-export type GobangBoard = GobangPoint[][];
+export type GobangPoint = {point: null | undefined | Player; id: string};
+export type GobangBoard = {array: GobangPoint[]; id: string}[];
 
 type GobangProps = {
     board: GobangBoard;
@@ -14,24 +14,29 @@ type GobangProps = {
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (
-        <Stack overflow="auto" alignItems="flexStart" mx="auto">
-            {board.map((columns, rowIndex) => {
+        <Stack overflow="auto" justifyContent="flex-start" mx="auto">
+            {board.map((row, rowIndex) => {
+                const columns = row.array;
                 return (
-                    <Stack direction="row" key={rowIndex}>
-                        {columns.map((point, columnIndex) => {
+                    <Stack direction="row" key={row.id}>
+                        {columns.map(({point, id}, columnIndex) => {
                             if (point === undefined)
-                                return <Point size={100} key={columnIndex} />;
+                                return <Point size={100} key={id} />;
                             const type = {
-                                left: columns[columnIndex - 1] !== undefined,
+                                left:
+                                    columns[columnIndex - 1].point !==
+                                    undefined,
                                 top:
                                     board[rowIndex - 1] &&
-                                    board[rowIndex - 1][columnIndex] !==
-                                        undefined,
-                                right: columns[columnIndex + 1] !== undefined,
+                                    board[rowIndex - 1].array[columnIndex]
+                                        .point !== undefined,
+                                right:
+                                    columns[columnIndex + 1].point !==
+                                    undefined,
                                 bottom:
                                     board[rowIndex + 1] &&
-                                    board[rowIndex + 1][columnIndex] !==
-                                        undefined,
+                                    board[rowIndex + 1].array[columnIndex]
+                                        .point !== undefined,
                             };
                             return (
                                 <Point

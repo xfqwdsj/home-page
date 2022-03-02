@@ -16,22 +16,19 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const cards: CardInfo[] = [{
-    name: "面对面",
-    icon: NearMeIcon,
-    description: "邀请身边的朋友面对面进行游戏",
-    href: "/games/gobang/nearby",
-}, {
-    name: "乱玩",
-    icon: NoneIcon,
-    description: "啥也没",
-    href: "/games/gobang/fxxks",
-}];
+const cards: CardInfo[] = [
+    {
+        name: "面对面",
+        icon: NearMeIcon,
+        description: "邀请身边的朋友面对面进行游戏",
+        href: "/games/gobang/nearby",
+    },
+];
 
 const Gobang: NextPage = () => {
     return (
         <>
-            <CardsGrid cards={cards}/>
+            <CardsGrid cards={cards} />
         </>
     );
 };
