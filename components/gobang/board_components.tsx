@@ -9,6 +9,14 @@ export type PointProps = {
      */
     size: number;
     /**
+     * X 坐标。
+     */
+    x?: number;
+    /**
+     * Y 坐标。
+     */
+    y?: number;
+    /**
      * 是否绘制连接左边的线条。
      * @default false
      */
@@ -39,6 +47,8 @@ export type PointProps = {
 };
 
 const defaultProps = {
+    x: 0,
+    y: 0,
     left: false,
     top: false,
     right: false,

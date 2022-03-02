@@ -57,17 +57,18 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                                     board[rowIndex + 1].array[columnIndex]
                                         .point !== undefined,
                             };
+                            const onClick = (_) => {
+                                onBoardStateChange(
+                                    rowIndex,
+                                    columnIndex
+                                );
+                            };
                             return (
                                 <MemorizedPoint
                                     size={100}
                                     {...type}
                                     pointType={point ? point : "normal"}
-                                    onClick={(_) => {
-                                        onBoardStateChange(
-                                            rowIndex,
-                                            columnIndex
-                                        );
-                                    }}
+                                    onClick={onClick}
                                     key={columnIndex}
                                 />
                             );
