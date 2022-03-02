@@ -1,5 +1,5 @@
 import {Stack} from "@mui/material";
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import {Point, PointProps} from "./board_components";
 
 export type PointTypes = "normal" | "main";
@@ -13,10 +13,22 @@ type GobangProps = {
     onBoardStateChange: (x: number, y: number) => void;
 };
 
-const MemorizedPoint = React.memo<PointProps>(
+const MemorizedPoint = React.memo<
+    Omit<PointProps, "onClick"> & {
+        onBoardStateChange?: (x: number, y: number) => void;
+    }
+>(
     function MemorizedPoint(props) {
         console.log("Rendered!!!");
-        return <Point {...props} />;
+        const onClick: MouseEventHandler<SVGSVGElement> | undefined =
+            props.pointType !== undefined
+                ? (_) => {
+                      props.onBoardStateChange && props.x && props.y &&
+                          props.onBoardStateChange(props.x, props.y);
+                  }
+                : undefined;
+        delete props.onBoardStateChange;
+        return <Point onClick={onClick} {...props} />;
     },
     (a, b) =>
         a.size === b.size &&
@@ -57,18 +69,14 @@ const Gobang = ({board, onBoardStateChange}: GobangProps) => {
                                     board[rowIndex + 1].array[columnIndex]
                                         .point !== undefined,
                             };
-                            const onClick = (_) => {
-                                onBoardStateChange(
-                                    rowIndex,
-                                    columnIndex
-                                );
-                            };
                             return (
                                 <MemorizedPoint
                                     size={100}
+                                    x={rowIndex}
+                                    y={columnIndex}
                                     {...type}
                                     pointType={point ? point : "normal"}
-                                    onClick={onClick}
+                                    onBoardStateChange={onBoardStateChange}
                                     key={columnIndex}
                                 />
                             );
