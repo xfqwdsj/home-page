@@ -13,11 +13,19 @@ type GobangProps = {
     onBoardStateChange: (x: number, y: number) => void;
 };
 
-const MemorizedPoint = React.memo<PointProps>((props) => {
-    console.log("Rendered!!!");
-    return <Point {...props} />;
-});
-MemorizedPoint.displayName = "MemorizedPoint";
+const MemorizedPoint = React.memo<PointProps>(
+    function MemorizedPoint(props) {
+        console.log("Rendered!!!");
+        return <Point {...props} />;
+    },
+    (a, b) =>
+        a.size === b.size &&
+        a.left === b.left &&
+        a.top === b.top &&
+        a.right === b.right &&
+        a.bottom === b.bottom &&
+        a.pointType === b.pointType
+);
 
 const Gobang = ({board, onBoardStateChange}: GobangProps) => {
     return (
