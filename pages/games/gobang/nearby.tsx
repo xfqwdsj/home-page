@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-export const mBoard: Required<Board> = {
+const mBoard: Required<Board> = {
     defaultBoard: () => new Array<GobangPoint[]>(15).map((_) =>
         new Array<GobangPoint>(15).map((_) =>
             null,
@@ -67,21 +67,21 @@ export const mBoard: Required<Board> = {
             const go = (i: number, r: number, c: number) => {
                 switch (i) {
                     case 1:
-                        return this.left(board, r, c)[1];
+                        return this.left(board, r, c)[1] as [number, number];
                     case 2:
-                        return this.right(board, r, c)[1];
+                        return this.right(board, r, c)[1] as [number, number];
                     case 3:
-                        return this.top(board, r, c)[1];
+                        return this.top(board, r, c)[1] as [number, number];
                     case 4:
-                        return this.bottom(board, r, c)[1];
+                        return this.bottom(board, r, c)[1] as [number, number];
                     case 5:
-                        return this.bottomLeft(board, r, c)[1];
+                        return this.bottomLeft(board, r, c)[1] as [number, number];
                     case 6:
-                        return this.topRight(board, r, c)[1];
+                        return this.topRight(board, r, c)[1] as [number, number];
                     case 7:
-                        return this.topLeft(board, r, c)[1];
+                        return this.topLeft(board, r, c)[1] as [number, number];
                     case 8:
-                        return this.bottomRight(board, r, c)[1];
+                        return this.bottomRight(board, r, c)[1] as [number, number];
                 }
             };
             for (let i = 1; i <= 8; i++) {
