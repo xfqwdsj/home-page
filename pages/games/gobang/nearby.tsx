@@ -26,7 +26,7 @@ const defaultBoard = (): GobangBoard => {
     const mainPoints = [
         [3, 3],
         [3, 11],
-        [14, 14],
+        [7, 7],
         [11, 3],
         [11, 11],
     ];
