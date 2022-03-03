@@ -12,7 +12,7 @@ import {
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
     pageDescription: "Would you like to try it on?",
-    topBarTitle: "面对面游戏 | 五子棋",
+    topBarTitle: "在线游戏 | 五子棋",
 };
 
 export const getStaticProps: GetStaticProps = () => ({
@@ -52,7 +52,7 @@ const doOnPointClick: Reducer<
     return {board, player};
 };
 
-const NearbyGobang: NextPage<{
+const OnlineGobang: NextPage<{
     header: AppHeaderController;
     dialog: AppDialogController;
 }> = ({header, dialog}) => {
@@ -71,6 +71,8 @@ const NearbyGobang: NextPage<{
             />
             <Slider
                 aria-label="Board Size"
+                min={40}
+                max={100}
                 value={size}
                 onChange={(_, newValue) => setSize(newValue as number)}
                 valueLabelDisplay="auto"
@@ -79,4 +81,4 @@ const NearbyGobang: NextPage<{
     );
 };
 
-export default NearbyGobang;
+export default OnlineGobang;

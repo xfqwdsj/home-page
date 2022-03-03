@@ -1,13 +1,6 @@
 import Image from "next/image";
 import type {AppProps} from "next/app";
-import {
-    Dispatch,
-    MouseEventHandler,
-    SetStateAction,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -15,7 +8,6 @@ import "@fontsource/roboto/700.css";
 import {
     alpha,
     Box,
-    Button,
     Container,
     createTheme,
     CssBaseline,
@@ -33,21 +25,17 @@ import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
-import {nanoid} from "nanoid";
+import {initializeApp} from "firebase/app";
+import {getAnalytics} from "firebase/analytics";
+import {getDatabase} from "firebase/database";
 
 export type LeanAV = typeof AV;
 
-type AlertDialogButton = {
-    content: string;
-    onClick: MouseEventHandler<HTMLButtonElement>;
-    autoFocus?: boolean;
-    id?: string;
-};
-
-export type AppAlertDialogController = {
+export type AppDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;
-    setMessage: Dispatch<SetStateAction<string>>;
-    setButtons: Dispatch<SetStateAction<AlertDialogButton[]>>;
+    setContent: Dispatch<SetStateAction<JSX.Element>>;
+    setActions: Dispatch<SetStateAction<JSX.Element>>;
+    setOnCancel: Dispatch<SetStateAction<() => void>>;
     setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -56,6 +44,24 @@ export type AppHeaderController = {
     setPageDescription: Dispatch<SetStateAction<string>>;
     setTopBarTitle: Dispatch<SetStateAction<string>>;
 };
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    databaseURL: process.env.databaseURL,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+};
+
+// Initialize Firebase
+export const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseAnalytics = getAnalytics(firebaseApp);
+export const firebaseDatabase = getDatabase(firebaseApp);
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -91,16 +97,16 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     }));
 
     const [dialogTitle, changeDialogTitle] = useState("");
-    const [dialogMessage, changeDialogMessage] = useState("");
-    const [dialogButtons, changeDialogButtons] = useState<AlertDialogButton[]>(
-        []
-    );
+    const [dialogContent, changeDialogContent] = useState(<></>);
+    const [dialogActions, changeDialogActions] = useState(<></>);
+    const [dialogOnCancel, changeDialogOnCancel] = useState(() => () => {});
     const [isDialogOpen, changeDialogOpen] = useState(false);
 
-    const GlobalAlertDialog: AppAlertDialogController = {
+    const GlobalAlertDialog: AppDialogController = {
         setTitle: changeDialogTitle,
-        setMessage: changeDialogMessage,
-        setButtons: changeDialogButtons,
+        setContent: changeDialogContent,
+        setActions: changeDialogActions,
+        setOnCancel: changeDialogOnCancel,
         setOpen: changeDialogOpen,
     };
 
@@ -168,7 +174,7 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 </Box>
                 <Dialog
                     open={isDialogOpen}
-                    onClose={() => changeDialogOpen(false)}
+                    onClose={dialogOnCancel}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
@@ -177,30 +183,10 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {dialogMessage}
+                            {dialogContent}
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions>
-                        {dialogButtons.map((button) => {
-                            const defaultButton = {
-                                autoFocus: false,
-                                id: nanoid(),
-                            };
-                            const {content, onClick, autoFocus, id} = {
-                                ...defaultButton,
-                                ...button,
-                            };
-                            return (
-                                <Button
-                                    onClick={onClick}
-                                    autoFocus={autoFocus}
-                                    key={id}
-                                >
-                                    {content}
-                                </Button>
-                            );
-                        })}
-                    </DialogActions>
+                    <DialogActions>{dialogActions}</DialogActions>
                 </Dialog>
             </Container>
 

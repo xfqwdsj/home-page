@@ -73,7 +73,7 @@ export const Point = (props: PointProps) => {
         width: size,
         height: size,
     });
-    if (size < 40) return <Svg />;
+    if (size <= 0) return <Svg />;
     let leftPath,
         topPath,
         rightPath,
