@@ -1,10 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import AV from "leancloud-storage";
 import {getRoles} from "../../components/user";
 import {defaultClashConfig, Group} from "../../components/clash_profile/default";
 import YAML from "yaml";
+import { LeanAV } from "../_app";
 
-const AC = require("leancloud-storage") as typeof AV;
+const AC = require("leancloud-storage") as LeanAV;
 
 AC.init({
     appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",

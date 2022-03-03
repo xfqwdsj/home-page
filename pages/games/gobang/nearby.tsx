@@ -5,10 +5,10 @@ import Gobang, {
     Player,
     PointTypes,
 } from "../../../components/gobang/gobang";
-import {Reducer, useCallback, useReducer, useState} from "react";
-import {Box, Slider, Typography} from "@mui/material";
+import {Reducer, useReducer, useState} from "react";
+import {Slider} from "@mui/material";
 import {nanoid} from "nanoid";
-import {AppAlertDialog} from "../../_app";
+import {AppAlertDialogController, AppHeaderController} from "../../_app";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -96,14 +96,16 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
 
 const doOnPointClick: Reducer<
     {board: GobangBoard; player: Player},
-    {dialog: AppAlertDialog; x: number; y: number}
-> = ({board, player}, {dialog, x, y}) => {
+    {dialog: AppAlertDialogController; header: AppHeaderController; x: number; y: number}
+> = ({board, player}, {dialog, header, x, y}) => {
     if (
         board[x].array[y].point === "normal" ||
         board[x].array[y].point === "main"
     ) {
         const tmp = [...board];
+        const nextPlayer = player === "black" ? "white" : "black";
         tmp[x].array[y].point = player;
+        header.setPageTitle(`下一步：${nextPlayer} | ${head.topBarTitle}`)
         const winner = getWinner(board, x, y);
         if (winner) {
             dialog.setTitle("赢了！");
@@ -117,26 +119,26 @@ const doOnPointClick: Reducer<
             ]);
             dialog.setOpen(true);
         }
-        return {board: tmp, player: player === "black" ? "white" : "black"};
+        return {board: tmp, player: nextPlayer};
     }
     return {board, player};
 };
 
-const NearbyGobang: NextPage<{dialog: AppAlertDialog}> = ({dialog}) => {
-    const [{board, player}, dispatchState] = useReducer(doOnPointClick, {
+const NearbyGobang: NextPage<{
+    header: AppHeaderController;
+    dialog: AppAlertDialogController;
+}> = ({header, dialog}) => {
+    const [{board}, dispatchState] = useReducer(doOnPointClick, {
         board: defaultBoard(),
         player: "black",
     });
-    const [size, setSize] = useState(100);
+    const [size, setSize] = useState(50);
 
     return (
         <>
-            <Box width="max-content" mx="auto">
-                <Typography component="span">下一步：{player}</Typography>
-            </Box>
             <Gobang
                 board={board}
-                onPointClick={(x, y) => dispatchState({dialog, x, y})}
+                onPointClick={(x, y) => dispatchState({header, dialog, x, y})}
                 size={size}
             />
             <Slider

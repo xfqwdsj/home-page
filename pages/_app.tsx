@@ -22,11 +22,13 @@ import {
     Typography,
     useMediaQuery,
 } from "@mui/material";
-import AppHead from "../components/head";
+import AppHead, { HeadProps } from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
 import {nanoid} from "nanoid";
+
+export type LeanAV = typeof AV;
 
 type AlertDialogButton = {
     content: string;
@@ -35,14 +37,20 @@ type AlertDialogButton = {
     id?: string;
 };
 
-export type AppAlertDialog = {
+export type AppAlertDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;
     setMessage: Dispatch<SetStateAction<string>>;
     setButtons: Dispatch<SetStateAction<AlertDialogButton[]>>;
     setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const App = ({Component, pageProps}: AppProps) => {
+export type AppHeaderController = {
+    setPageTitle: Dispatch<SetStateAction<string>>;
+    setPageDescription: Dispatch<SetStateAction<string>>;
+    setTopBarTitle: Dispatch<SetStateAction<string>>;
+}
+
+const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
     const theme = useMemo(
         () =>
@@ -75,17 +83,27 @@ const App = ({Component, pageProps}: AppProps) => {
         filter: `invert(${theme.palette.mode === "light" ? "0%" : "100%"})`,
     }));
 
-    const [title, changeTitle] = useState("");
-    const [message, changeMessage] = useState("");
-    const [buttons, changeButtons] = useState<AlertDialogButton[]>([]);
-    const [open, changeOpen] = useState(false);
+    const [dialogTitle, changeDialogTitle] = useState("");
+    const [dialogMessage, changeDialogMessage] = useState("");
+    const [dialogButtons, changeDialogButtons] = useState<AlertDialogButton[]>([]);
+    const [isDialogOpen, changeDialogOpen] = useState(false);
 
-    const GlobalAlertDialog: AppAlertDialog = {
-        setTitle: changeTitle,
-        setMessage: changeMessage,
-        setButtons: changeButtons,
-        setOpen: changeOpen,
+    const GlobalAlertDialog: AppAlertDialogController = {
+        setTitle: changeDialogTitle,
+        setMessage: changeDialogMessage,
+        setButtons: changeDialogButtons,
+        setOpen: changeDialogOpen,
     };
+
+    const [headPageTitle, changeHeadPageTitle] = useState(pageProps.head ? pageProps.head.pageTitle : "LTFan");
+    const [headPageDescription, changeHeadPageDescription] = useState("");
+    const [topBarTitle, changeTopBarTitle] = useState("");
+
+    const GlobalHeader: AppHeaderController = {
+        setPageTitle: changeHeadPageTitle,
+        setPageDescription: changeHeadPageDescription,
+        setTopBarTitle: changeTopBarTitle,
+    }
 
     useEffect(() => {
         (async () => {
@@ -104,42 +122,35 @@ const App = ({Component, pageProps}: AppProps) => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
 
-            {pageProps.head ? (
-                <AppHead
-                    pageTitle={pageProps.head.pageTitle}
-                    pageDescription={pageProps.head.pageDescription}
-                    topBarTitle={pageProps.head.topBarTitle}
+            <AppHead
+                    pageTitle={headPageTitle}
+                    pageDescription={headPageDescription}
+                    topBarTitle={topBarTitle}
                 />
-            ) : (
-                <AppHead
-                    pageTitle="LTFan"
-                    pageDescription="LTFan's home page"
-                    topBarTitle="LTFan"
-                />
-            )}
 
             <Container>
                 <Box my={2}>
                     <Component
                         {...pageProps}
                         LT={AV}
+                        header={GlobalHeader}
                         dialog={GlobalAlertDialog}
                     />
                 </Box>
                 <Dialog
-                    open={open}
-                    onClose={() => changeOpen(false)}
+                    open={isDialogOpen}
+                    onClose={() => changeDialogOpen(false)}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {message}
+                            {dialogMessage}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        {buttons.map((button) => {
+                        {dialogButtons.map((button) => {
                             const defaultButton = {
                                 autoFocus: false,
                                 id: nanoid(),
