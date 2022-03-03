@@ -38,8 +38,8 @@ const defaultBoard = (): GobangBoard => {
         [11, 3],
         [11, 11],
     ];
-    return Array.from({length: 15}, (x) => ({
-        array: Array.from({length: 15}, (y) => {
+    return Array.from({length: 15}, (_, x) => ({
+        array: Array.from({length: 15}, (_, y) => {
             let point: PointTypes = "normal";
             mainPoints.forEach((p, i) => {
                 if (x === p[0] && y === p[1]) {
