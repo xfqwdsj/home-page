@@ -25,9 +25,9 @@ import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
-import {initializeApp} from "firebase/app";
-import {getAnalytics} from "firebase/analytics";
-import {getDatabase} from "firebase/database";
+import {initializeApp, FirebaseApp} from "firebase/app";
+import {getAnalytics, Analytics} from "firebase/analytics";
+import {getDatabase, Database} from "firebase/database";
 
 export type LeanAV = typeof AV;
 
@@ -45,23 +45,9 @@ export type AppHeaderController = {
     setTopBarTitle: Dispatch<SetStateAction<string>>;
 };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: process.env.apiKey,
-    authDomain: process.env.authDomain,
-    databaseURL: process.env.databaseURL,
-    projectId: process.env.projectId,
-    storageBucket: process.env.storageBucket,
-    messagingSenderId: process.env.messagingSenderId,
-    appId: process.env.appId,
-    measurementId: process.env.measurementId,
-};
-
-// Initialize Firebase
-export const firebaseApp = initializeApp(firebaseConfig);
-export const firebaseAnalytics = getAnalytics(firebaseApp);
-export const firebaseDatabase = getDatabase(firebaseApp);
+export let firebaseApp: FirebaseApp;
+export let firebaseAnalytics: Analytics;
+export let firebaseDatabase: Database;
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -137,6 +123,22 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 appKey: "3zBz5tMkTpEdoFCnQ7Xqxx65",
             });
         })();
+    }, []);
+
+    useEffect(() => {
+        const firebaseConfig = {
+            apiKey: process.env.apiKey,
+            authDomain: process.env.authDomain,
+            databaseURL: process.env.databaseURL,
+            projectId: process.env.projectId,
+            storageBucket: process.env.storageBucket,
+            messagingSenderId: process.env.messagingSenderId,
+            appId: process.env.appId,
+            measurementId: process.env.measurementId,
+        };
+        firebaseApp = initializeApp(firebaseConfig);
+        firebaseAnalytics = getAnalytics(firebaseApp);
+        firebaseDatabase = getDatabase(firebaseApp);
     }, []);
 
     useEffect(() => {
