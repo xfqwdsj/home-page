@@ -10,13 +10,13 @@ export type GobangBoard = {array: GobangPoint[]; id: string}[];
 
 type GobangProps = {
     board: GobangBoard;
-    onBoardStateChange: (x: number, y: number) => void;
+    onPointClick: (x: number, y: number) => void;
     size: number;
 };
 
 const MemorizedPoint = React.memo<
     Omit<PointProps, "onClick"> & {
-        onBoardStateChange?: (x: number, y: number) => void;
+        onPointClick?: (x: number, y: number) => void;
     }
 >(
     function MemorizedPoint(props) {
@@ -24,20 +24,20 @@ const MemorizedPoint = React.memo<
             props.pointType !== undefined
                 ? (_) => {
                       if (
-                          props.onBoardStateChange !== undefined &&
+                          props.onPointClick !== undefined &&
                           props.x !== undefined &&
                           props.y !== undefined
                       ) {
-                          props.onBoardStateChange(props.x, props.y);
+                          props.onPointClick(props.x, props.y);
                       }
                   }
                 : undefined;
         const result = {...props};
-        if (result.onBoardStateChange !== undefined)
-            delete result.onBoardStateChange;
+        if (result.onPointClick !== undefined)
+            delete result.onPointClick;
         return <Point onClick={onClick} {...props} />;
     },
-    function areEqual(a, b) {
+    (a, b) => {
         return (
             a.size === b.size &&
             a.left === b.left &&
@@ -49,7 +49,7 @@ const MemorizedPoint = React.memo<
     }
 );
 
-const Gobang = ({board, onBoardStateChange, size}: GobangProps) => {
+const Gobang = ({board, onPointClick, size}: GobangProps) => {
     return (
         <Stack overflow="auto" alignItems="flex-start">
             {board.map((row, rowIndex) => {
@@ -86,7 +86,7 @@ const Gobang = ({board, onBoardStateChange, size}: GobangProps) => {
                                     y={columnIndex}
                                     {...type}
                                     pointType={point ? point : "normal"}
-                                    onBoardStateChange={onBoardStateChange}
+                                    onPointClick={onPointClick}
                                     key={columnIndex}
                                 />
                             );

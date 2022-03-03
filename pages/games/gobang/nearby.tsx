@@ -5,19 +5,10 @@ import Gobang, {
     Player,
     PointTypes,
 } from "../../../components/gobang/gobang";
-import {useState} from "react";
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Slider,
-    Typography,
-} from "@mui/material";
+import {Reducer, useCallback, useReducer, useState} from "react";
+import {Box, Slider, Typography} from "@mui/material";
 import {nanoid} from "nanoid";
+import {AppAlertDialog} from "../../_app";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -35,6 +26,7 @@ const defaultBoard = (): GobangBoard => {
     const mainPoints = [
         [3, 3],
         [3, 11],
+        [14, 14],
         [11, 3],
         [11, 11],
     ];
@@ -102,38 +94,49 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
     }
 };
 
-const NearbyGobang: NextPage = () => {
-    const [current, setCurrent] = useState<Player>("black");
-    const [board, setBoard] = useState<GobangBoard>(() => defaultBoard());
-    const [size, setSize] = useState(100);
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState("");
-
-    let programCurrent: Player = "black";
-
-    const stateChange = (x: number, y: number) => {
-        if (!board[x].array[y].point) {
-            const tmp = [...board];
-            tmp[x].array[y].point = programCurrent;
-            setBoard(tmp);
-            programCurrent = programCurrent === "black" ? "white" : "black";
-            setCurrent(programCurrent);
-            const winner = getWinner(board, x, y);
-            if (winner) {
-                setMessage(`恭喜：${winner}`);
-                setOpen(true);
-            }
+const doOnPointClick: Reducer<
+    {board: GobangBoard; player: Player},
+    {dialog: AppAlertDialog; x: number; y: number}
+> = ({board, player}, {dialog, x, y}) => {
+    if (
+        board[x].array[y].point === "normal" ||
+        board[x].array[y].point === "main"
+    ) {
+        const tmp = [...board];
+        tmp[x].array[y].point = player;
+        const winner = getWinner(board, x, y);
+        if (winner) {
+            dialog.setTitle("赢了！");
+            dialog.setMessage(`恭喜：${winner}`);
+            dialog.setButtons([
+                {
+                    content: "确定",
+                    onClick: () => dialog.setOpen(false),
+                    autoFocus: true,
+                },
+            ]);
+            dialog.setOpen(true);
         }
-    };
+        return {board: tmp, player: player === "black" ? "white" : "black"};
+    }
+    return {board, player};
+};
+
+const NearbyGobang: NextPage<{dialog: AppAlertDialog}> = ({dialog}) => {
+    const [{board, player}, dispatchState] = useReducer(doOnPointClick, {
+        board: defaultBoard(),
+        player: "black",
+    });
+    const [size, setSize] = useState(100);
 
     return (
         <>
             <Box width="max-content" mx="auto">
-                <Typography component="span">下一步：{current}</Typography>
+                <Typography component="span">下一步：{player}</Typography>
             </Box>
             <Gobang
                 board={board}
-                onBoardStateChange={stateChange}
+                onPointClick={(x, y) => dispatchState({dialog, x, y})}
                 size={size}
             />
             <Slider
@@ -144,24 +147,6 @@ const NearbyGobang: NextPage = () => {
                 onChange={(_, newValue) => setSize(newValue as number)}
                 valueLabelDisplay="auto"
             />
-            <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">赢了！</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {message}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpen(false)} autoFocus>
-                        确定
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </>
     );
 };
