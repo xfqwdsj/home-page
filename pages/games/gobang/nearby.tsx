@@ -1,6 +1,10 @@
 import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
-import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
+import Gobang, {
+    GobangBoard,
+    Player,
+    PointTypes,
+} from "../../../components/gobang/gobang";
 import {useState} from "react";
 import {
     Box,
@@ -27,11 +31,27 @@ export const getStaticProps: GetStaticProps = () => ({
     },
 });
 
-const defaultBoard = (): GobangBoard =>
-    Array.from({length: 15}, () => ({
-        array: Array.from({length: 15}, () => ({point: null, id: nanoid()})),
+const defaultBoard = (): GobangBoard => {
+    const mainPoints = [
+        [3, 3],
+        [3, 11],
+        [11, 3],
+        [11, 11],
+    ];
+    return Array.from({length: 15}, (x) => ({
+        array: Array.from({length: 15}, (y) => {
+            let point: PointTypes = "normal";
+            mainPoints.forEach((p, i) => {
+                if (x === p[0] && y === p[1]) {
+                    point = "main";
+                    mainPoints.splice(i, 1);
+                }
+            });
+            return {point: point, id: nanoid()};
+        }),
         id: nanoid(),
     }));
+};
 
 const getWinner = (board: GobangBoard, row: number, column: number) => {
     const player = board[row].array[column].point;
@@ -60,9 +80,11 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
             }
         };
         for (let i = 1; i <= 8; i++) {
-            if (tmp >= 5) return player;
-            if (i % 2 === 1) tmp = 0;
-            else tmp--;
+            if (i % 2 === 1) {
+                tmp = 0;
+            } else {
+                tmp--;
+            }
             (function calc(r: number, c: number) {
                 if (
                     board[r] &&
@@ -74,6 +96,7 @@ const getWinner = (board: GobangBoard, row: number, column: number) => {
                     calc(params[0], params[1]);
                 }
             })(row, column);
+            if (tmp >= 5) return player;
         }
         return undefined;
     }

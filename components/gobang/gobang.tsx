@@ -5,7 +5,7 @@ import {Point, PointProps} from "./board_components";
 export type PointTypes = "normal" | "main";
 export type Player = "black" | "white";
 
-export type GobangPoint = {point: null | undefined | Player; id: string};
+export type GobangPoint = {point: undefined | PointTypes | Player; id: string};
 export type GobangBoard = {array: GobangPoint[]; id: string}[];
 
 type GobangProps = {
