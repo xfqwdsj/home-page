@@ -133,6 +133,20 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
         })();
     }, []);
 
+    useEffect(() => {
+        changeHeadPageTitle(
+            pageProps.head ? pageProps.head.pageTitle : "LTFan"
+        );
+        changeHeadPageDescription(
+            pageProps.head
+                ? pageProps.head.pageDescription
+                : "LTFan's home page."
+        );
+        changeTopBarTitle(
+            pageProps.head ? pageProps.head.topBarTitle : "LTFan"
+        );
+    }, [pageProps.head]);
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
