@@ -1,6 +1,13 @@
 import Image from "next/image";
 import type {AppProps} from "next/app";
-import {Dispatch, MouseEventHandler, SetStateAction, useEffect, useMemo, useState} from "react";
+import {
+    Dispatch,
+    MouseEventHandler,
+    SetStateAction,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -22,7 +29,7 @@ import {
     Typography,
     useMediaQuery,
 } from "@mui/material";
-import AppHead, { HeadProps } from "../components/head";
+import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
@@ -48,7 +55,7 @@ export type AppHeaderController = {
     setPageTitle: Dispatch<SetStateAction<string>>;
     setPageDescription: Dispatch<SetStateAction<string>>;
     setTopBarTitle: Dispatch<SetStateAction<string>>;
-}
+};
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -85,7 +92,9 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
 
     const [dialogTitle, changeDialogTitle] = useState("");
     const [dialogMessage, changeDialogMessage] = useState("");
-    const [dialogButtons, changeDialogButtons] = useState<AlertDialogButton[]>([]);
+    const [dialogButtons, changeDialogButtons] = useState<AlertDialogButton[]>(
+        []
+    );
     const [isDialogOpen, changeDialogOpen] = useState(false);
 
     const GlobalAlertDialog: AppAlertDialogController = {
@@ -95,15 +104,21 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
         setOpen: changeDialogOpen,
     };
 
-    const [headPageTitle, changeHeadPageTitle] = useState(pageProps.head ? pageProps.head.pageTitle : "LTFan");
-    const [headPageDescription, changeHeadPageDescription] = useState("");
-    const [topBarTitle, changeTopBarTitle] = useState("");
+    const [headPageTitle, changeHeadPageTitle] = useState(
+        pageProps.head ? pageProps.head.pageTitle : "LTFan"
+    );
+    const [headPageDescription, changeHeadPageDescription] = useState(
+        pageProps.head ? pageProps.head.pageDescription : "LTFan's home page."
+    );
+    const [topBarTitle, changeTopBarTitle] = useState(
+        pageProps.head ? pageProps.head.topBarTitle : "LTFan"
+    );
 
     const GlobalHeader: AppHeaderController = {
         setPageTitle: changeHeadPageTitle,
         setPageDescription: changeHeadPageDescription,
         setTopBarTitle: changeTopBarTitle,
-    }
+    };
 
     useEffect(() => {
         (async () => {
@@ -123,10 +138,10 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
             <CssBaseline />
 
             <AppHead
-                    pageTitle={headPageTitle}
-                    pageDescription={headPageDescription}
-                    topBarTitle={topBarTitle}
-                />
+                pageTitle={headPageTitle}
+                pageDescription={headPageDescription}
+                topBarTitle={topBarTitle}
+            />
 
             <Container>
                 <Box my={2}>
@@ -143,7 +158,9 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">
+                        {dialogTitle}
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
                             {dialogMessage}
