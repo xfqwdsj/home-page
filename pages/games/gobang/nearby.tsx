@@ -105,7 +105,7 @@ const doOnPointClick: Reducer<
         const tmp = [...board];
         const nextPlayer = player === "black" ? "white" : "black";
         tmp[x].array[y].point = player;
-        header.setPageTitle(`下一步：${nextPlayer} | ${head.topBarTitle}`)
+        header.setTopBarTitle(`下一步：${nextPlayer} | ${head.topBarTitle}`)
         const winner = getWinner(board, x, y);
         if (winner) {
             dialog.setTitle("赢了！");
