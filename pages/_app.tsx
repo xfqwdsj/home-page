@@ -45,9 +45,15 @@ export type AppHeaderController = {
     setTopBarTitle: Dispatch<SetStateAction<string>>;
 };
 
-export let firebaseApp: FirebaseApp;
-export let firebaseAnalytics: Analytics;
-export let firebaseDatabase: Database;
+let firebaseApp: FirebaseApp;
+let firebaseAnalytics: Analytics;
+let firebaseDatabase: Database;
+
+export type AppFirebase = {
+    firebaseApp: FirebaseApp;
+    firebaseAnalytics: Analytics;
+    firebaseDatabase: Database;
+};
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -127,14 +133,15 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
 
     useEffect(() => {
         const firebaseConfig = {
-            apiKey: process.env.apiKey,
-            authDomain: process.env.authDomain,
-            databaseURL: process.env.databaseURL,
-            projectId: process.env.projectId,
-            storageBucket: process.env.storageBucket,
-            messagingSenderId: process.env.messagingSenderId,
-            appId: process.env.appId,
-            measurementId: process.env.measurementId,
+            apiKey: "AIzaSyARtphlxOTWb2Gpw_v-WXTeoZycygLkzLY",
+            authDomain: "parabolic-clock-343006.firebaseapp.com",
+            databaseURL:
+                "https://parabolic-clock-343006-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "parabolic-clock-343006",
+            storageBucket: "parabolic-clock-343006.appspot.com",
+            messagingSenderId: "3147281179",
+            appId: "1:3147281179:web:e5aca9f46100847cadd9be",
+            measurementId: "G-W6Z1KYLLDN",
         };
         firebaseApp = initializeApp(firebaseConfig);
         firebaseAnalytics = getAnalytics(firebaseApp);
@@ -170,6 +177,11 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     <Component
                         {...pageProps}
                         LT={AV}
+                        firebase={{
+                            firebaseApp,
+                            firebaseAnalytics,
+                            firebaseDatabase,
+                        }}
                         header={GlobalHeader}
                         dialog={GlobalAlertDialog}
                     />
