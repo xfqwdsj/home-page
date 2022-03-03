@@ -80,9 +80,11 @@ export const Point = (props: PointProps) => {
         bottomPath,
         point,
         front: JSX.Element | undefined;
-    const chess = `M ${size / 3} ${size / 2} a ${size / 6} ${size / 6} 0 0 0 ${
-        size / 3
-    } 0 a ${size / 6} ${size / 6} 0 0 0 -${size / 3} 0 Z`;
+    const chess = `M ${size / 8} ${size / 2} a ${(size * 3) / 8} ${
+        (size * 3) / 8
+    } 0 0 0 ${(size * 3) / 4} 0 a ${(size * 3) / 8} ${(size * 3) / 8} 0 0 0 -${
+        (size * 3) / 4
+    } 0 Z`;
     if (left)
         leftPath = (
             <path
