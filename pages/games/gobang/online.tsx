@@ -3,16 +3,13 @@ import {GetStaticProps, NextPage} from "next";
 import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
 import {Reducer, useEffect, useReducer, useState} from "react";
 import {Button, Slider} from "@mui/material";
-import {
-    AppDialogController,
-    AppFirebase,
-    AppHeaderController,
-} from "../../_app";
+import {AppDialogController, AppHeaderController} from "../../_app";
 import {
     defaultBoard,
     getWinner,
 } from "../../../components/gobang/fifteenFifteenFive";
 import {ref, set, onValue} from "firebase/database";
+import {firebaseDatabase} from "../../../components/firebase";
 
 const head: HeadProps = {
     pageTitle: "五子棋 | 在 LTFan 上面对面进行的游戏",
@@ -76,8 +73,7 @@ const calculateState: Reducer<
 const OnlineGobang: NextPage<{
     header: AppHeaderController;
     dialog: AppDialogController;
-    firebase: AppFirebase;
-}> = ({header, dialog, firebase}) => {
+}> = ({header, dialog}) => {
     const [{board}, dispatchState] = useReducer(calculateState, {
         board: defaultBoard(),
         player: "black",
@@ -86,9 +82,9 @@ const OnlineGobang: NextPage<{
     const [size, setSize] = useState(50);
 
     useEffect(() => {
-        const refData = ref(firebase.firebaseDatabase, "/rooms/a");
+        const refData = ref(firebaseDatabase, "/rooms/a");
         onValue(refData, (snapshot) => {
-            const val = snapshot.val() as {x: number; y: number};
+            const val = snapshot.val() as {x: number; y: number} | null;
             if (val) {
                 dispatchState({
                     type: "updateBoard",
@@ -104,7 +100,7 @@ const OnlineGobang: NextPage<{
                 });
             }
         });
-    });
+    }, []);
 
     return (
         <>

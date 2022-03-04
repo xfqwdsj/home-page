@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type {AppProps} from "next/app";
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useLayoutEffect, useMemo, useState} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -25,9 +25,6 @@ import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
-import {initializeApp, FirebaseApp} from "firebase/app";
-import {getAnalytics, Analytics} from "firebase/analytics";
-import {getDatabase, Database} from "firebase/database";
 
 export type LeanAV = typeof AV;
 
@@ -43,16 +40,6 @@ export type AppHeaderController = {
     setPageTitle: Dispatch<SetStateAction<string>>;
     setPageDescription: Dispatch<SetStateAction<string>>;
     setTopBarTitle: Dispatch<SetStateAction<string>>;
-};
-
-let firebaseApp: FirebaseApp;
-let firebaseAnalytics: Analytics;
-let firebaseDatabase: Database;
-
-export type AppFirebase = {
-    firebaseApp: FirebaseApp;
-    firebaseAnalytics: Analytics;
-    firebaseDatabase: Database;
 };
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
@@ -132,23 +119,6 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     }, []);
 
     useEffect(() => {
-        const firebaseConfig = {
-            apiKey: "AIzaSyARtphlxOTWb2Gpw_v-WXTeoZycygLkzLY",
-            authDomain: "parabolic-clock-343006.firebaseapp.com",
-            databaseURL:
-                "https://parabolic-clock-343006-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "parabolic-clock-343006",
-            storageBucket: "parabolic-clock-343006.appspot.com",
-            messagingSenderId: "3147281179",
-            appId: "1:3147281179:web:e5aca9f46100847cadd9be",
-            measurementId: "G-W6Z1KYLLDN",
-        };
-        firebaseApp = initializeApp(firebaseConfig);
-        firebaseAnalytics = getAnalytics(firebaseApp);
-        firebaseDatabase = getDatabase(firebaseApp);
-    }, []);
-
-    useEffect(() => {
         changeHeadPageTitle(
             pageProps.head ? pageProps.head.pageTitle : "LTFan"
         );
@@ -177,11 +147,6 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     <Component
                         {...pageProps}
                         LT={AV}
-                        firebase={{
-                            firebaseApp,
-                            firebaseAnalytics,
-                            firebaseDatabase,
-                        }}
                         header={GlobalHeader}
                         dialog={GlobalAlertDialog}
                     />
