@@ -221,7 +221,7 @@ const OnlineGobang: NextPage<{
             />
             <Slider
                 aria-label="Board Size"
-                min={40}
+                min={0}
                 max={100}
                 value={size}
                 onChange={(_, newValue) => setSize(newValue as number)}
