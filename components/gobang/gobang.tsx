@@ -33,8 +33,7 @@ const MemorizedPoint = React.memo<
                   }
                 : undefined;
         const result = {...props};
-        if (result.onPointClick !== undefined)
-            delete result.onPointClick;
+        if (result.onPointClick !== undefined) delete result.onPointClick;
         return <Point onClick={onClick} {...props} />;
     },
     (a, b) => {
@@ -59,35 +58,40 @@ const Gobang = ({board, onPointClick, size}: GobangProps) => {
                         {columns.map(({point, id}, columnIndex) => {
                             if (point === undefined)
                                 return <MemorizedPoint size={size} key={id} />;
-                            const type = {
-                                left:
-                                    columns[columnIndex - 1] &&
-                                    columns[columnIndex - 1].point !==
-                                        undefined,
-                                top:
-                                    board[rowIndex - 1] &&
-                                    board[rowIndex - 1].array[columnIndex] &&
-                                    board[rowIndex - 1].array[columnIndex]
-                                        .point !== undefined,
-                                right:
-                                    columns[columnIndex + 1] &&
-                                    columns[columnIndex + 1].point !==
-                                        undefined,
-                                bottom:
-                                    board[rowIndex + 1] &&
-                                    board[rowIndex + 1].array[columnIndex] &&
-                                    board[rowIndex + 1].array[columnIndex]
-                                        .point !== undefined,
-                            };
                             return (
                                 <MemorizedPoint
                                     size={size}
                                     x={rowIndex}
                                     y={columnIndex}
-                                    {...type}
+                                    left={
+                                        columns[columnIndex - 1] &&
+                                        columns[columnIndex - 1].point !==
+                                            undefined
+                                    }
+                                    top={
+                                        board[rowIndex - 1] &&
+                                        board[rowIndex - 1].array[
+                                            columnIndex
+                                        ] &&
+                                        board[rowIndex - 1].array[columnIndex]
+                                            .point !== undefined
+                                    }
+                                    right={
+                                        columns[columnIndex + 1] &&
+                                        columns[columnIndex + 1].point !==
+                                            undefined
+                                    }
+                                    bottom={
+                                        board[rowIndex + 1] &&
+                                        board[rowIndex + 1].array[
+                                            columnIndex
+                                        ] &&
+                                        board[rowIndex + 1].array[columnIndex]
+                                            .point !== undefined
+                                    }
                                     pointType={point ? point : "normal"}
                                     onPointClick={onPointClick}
-                                    key={columnIndex}
+                                    key={id}
                                 />
                             );
                         })}

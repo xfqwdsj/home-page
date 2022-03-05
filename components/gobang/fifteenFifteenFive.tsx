@@ -51,11 +51,7 @@ export const getWinner = (board: GobangBoard, row: number, column: number) => {
             }
         };
         for (let i = 1; i <= 8; i++) {
-            if (i % 2 === 1) {
-                tmp = 0;
-            } else {
-                tmp--;
-            }
+            if (i % 2 === 1) tmp = 0;
             (function calc(r: number, c: number) {
                 const [x, y] = next(i, r, c);
                 if (
