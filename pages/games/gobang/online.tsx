@@ -82,7 +82,6 @@ const calculateState: Reducer<
                 tmp[x].array[y].point = nextPlayer.current;
                 const winner = getWinner(board, x, y);
                 if (winner) {
-                    nextPlayer.current = null;
                     const onCancel = () => dialog.setOpen(false);
                     header.setTopBarTitle(
                         `赢家：${nextPlayer} | ${head.topBarTitle}`
@@ -92,6 +91,7 @@ const calculateState: Reducer<
                     dialog.setActions(<Button onClick={onCancel}>确定</Button>);
                     dialog.setOnCancel(() => onCancel);
                     dialog.setOpen(true);
+                    nextPlayer.current = null;
                 } else {
                     nextPlayer.current =
                         nextPlayer.current === "black" ? "white" : "black";
