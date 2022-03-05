@@ -40,16 +40,16 @@ const doOnPointClick: Reducer<
         tmp[x].array[y].point = nextPlayer.current;
         const winner = getWinner(board, x, y);
         if (winner) {
+            nextPlayer.current = null;
             const onCancel = () => dialog.setOpen(false);
             header.setTopBarTitle(
-                `赢家：${nextPlayer.current} | ${head.topBarTitle}`
+                `赢家：${winner} | ${head.topBarTitle}`
             );
             dialog.setTitle("赢了！");
             dialog.setContent(<>{`恭喜：${winner}`}</>);
             dialog.setActions(<Button onClick={onCancel}>确定</Button>);
             dialog.setOnCancel(() => onCancel);
             dialog.setOpen(true);
-            nextPlayer.current = null;
         } else {
             nextPlayer.current =
                 nextPlayer.current === "black" ? "white" : "black";
