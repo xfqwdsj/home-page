@@ -1,6 +1,13 @@
 import Image from "next/image";
 import type {AppProps} from "next/app";
-import {Dispatch, SetStateAction, useEffect, useLayoutEffect, useMemo, useState} from "react";
+import {
+    Dispatch,
+    SetStateAction,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useState,
+} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -25,6 +32,7 @@ import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
+import {initFirebaseAppCheck} from "../components/firebase";
 
 export type LeanAV = typeof AV;
 
@@ -116,6 +124,10 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 appKey: "3zBz5tMkTpEdoFCnQ7Xqxx65",
             });
         })();
+    }, []);
+
+    useEffect(() => {
+        initFirebaseAppCheck();
     }, []);
 
     useEffect(() => {
