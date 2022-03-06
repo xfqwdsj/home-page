@@ -1,5 +1,8 @@
-import {GobangBoard, PointTypes} from "./gobang";
+import {GobangBoard, Player, PointTypes} from "./gobang";
 import {nanoid} from "nanoid";
+import {AppDialogController, AppHeaderController} from "../../pages/_app";
+import {MutableRefObject} from "react";
+import {Button} from "@mui/material";
 
 export const defaultBoard = (): GobangBoard => {
     const mainPoints = [
@@ -67,4 +70,42 @@ export const getWinner = (board: GobangBoard, row: number, column: number) => {
         }
         return undefined;
     }
+};
+
+export const drop = (
+    board: GobangBoard,
+    x: number,
+    y: number,
+    nextPlayer: MutableRefObject<Player | null>,
+    dialog: AppDialogController,
+    header: AppHeaderController,
+    topBarTitle: string
+) => {
+    if (
+        board[x].array[y].point === "normal" ||
+        board[x].array[y].point === "main"
+    ) {
+        if (nextPlayer.current === null) {
+            return board;
+        }
+        const tmp = [...board];
+        tmp[x].array[y].point = nextPlayer.current;
+        const winner = getWinner(board, x, y);
+        if (winner) {
+            nextPlayer.current = null;
+            const onCancel = () => dialog.setOpen(false);
+            header.setTopBarTitle(`赢家：${winner} | ${topBarTitle}`);
+            dialog.setTitle("赢了！");
+            dialog.setContent(<>{`恭喜：${winner}`}</>);
+            dialog.setActions(<Button onClick={onCancel}>确定</Button>);
+            dialog.setOnCancel(() => onCancel);
+            dialog.setOpen(true);
+        } else {
+            nextPlayer.current =
+                nextPlayer.current === "black" ? "white" : "black";
+            header.setTopBarTitle(`下一步：${nextPlayer.current} | ${topBarTitle}`);
+        }
+        return tmp;
+    }
+    return board;
 };

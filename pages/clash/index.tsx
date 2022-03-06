@@ -14,13 +14,13 @@ import {
     RadioGroup,
     TextField,
 } from "@mui/material";
-import AV from "leancloud-storage";
 import {useEffect, useState} from "react";
 import {NextLinkComposed} from "../../components/link";
 import {HeadProps} from "../../components/head";
 import {parseRoles} from "../../components/user";
 import {Adapters} from "@leancloud/adapter-types";
 import {GetStaticProps, NextPage} from "next";
+import AV from "../../components/leancloud";
 
 const head: HeadProps = {
     pageTitle: "Clash | LTFan",
@@ -56,17 +56,6 @@ const query = async (
 };
 
 const Clash: NextPage = () => {
-    useEffect(() => {
-        (async () => {
-            const adapter = await import("@leancloud/platform-adapters-browser");
-            AV.setAdapters(adapter as unknown as Adapters);
-            AV.init({
-                appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",
-                appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
-            });
-        })();
-    }, []);
-
     const [name, setName] = useState(""); // Name
     const [pswd, setPswd] = useState(""); // Password
     const [open, setOpen] = useState(false); // Open
