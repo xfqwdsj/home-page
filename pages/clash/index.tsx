@@ -14,13 +14,13 @@ import {
     RadioGroup,
     TextField,
 } from "@mui/material";
-import AV from "leancloud-storage";
 import {useEffect, useState} from "react";
 import {NextLinkComposed} from "../../components/link";
 import {HeadProps} from "../../components/head";
 import {parseRoles} from "../../components/user";
 import {Adapters} from "@leancloud/adapter-types";
 import {GetStaticProps, NextPage} from "next";
+import { LeanAV as AV } from "../../components/leancloud";
 
 const head: HeadProps = {
     pageTitle: "Clash | LTFan",
