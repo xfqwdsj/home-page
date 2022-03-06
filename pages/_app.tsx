@@ -1,6 +1,13 @@
 import Image from "next/image";
 import type {AppProps} from "next/app";
-import {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
+import {
+    Dispatch,
+    SetStateAction,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useState,
+} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -25,9 +32,7 @@ import AppHead, {HeadProps} from "../components/head";
 import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
-import {initializeApp, FirebaseApp} from "firebase/app";
-import {getAnalytics, Analytics} from "firebase/analytics";
-import {getDatabase, Database} from "firebase/database";
+import {initFirebaseAppCheck} from "../components/firebase";
 
 export type LeanAV = typeof AV;
 
@@ -44,10 +49,6 @@ export type AppHeaderController = {
     setPageDescription: Dispatch<SetStateAction<string>>;
     setTopBarTitle: Dispatch<SetStateAction<string>>;
 };
-
-export let firebaseApp: FirebaseApp;
-export let firebaseAnalytics: Analytics;
-export let firebaseDatabase: Database;
 
 const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -126,19 +127,7 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     }, []);
 
     useEffect(() => {
-        const firebaseConfig = {
-            apiKey: process.env.apiKey,
-            authDomain: process.env.authDomain,
-            databaseURL: process.env.databaseURL,
-            projectId: process.env.projectId,
-            storageBucket: process.env.storageBucket,
-            messagingSenderId: process.env.messagingSenderId,
-            appId: process.env.appId,
-            measurementId: process.env.measurementId,
-        };
-        firebaseApp = initializeApp(firebaseConfig);
-        firebaseAnalytics = getAnalytics(firebaseApp);
-        firebaseDatabase = getDatabase(firebaseApp);
+        initFirebaseAppCheck();
     }, []);
 
     useEffect(() => {

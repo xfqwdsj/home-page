@@ -1,4 +1,4 @@
-import { GobangBoard, PointTypes } from "./gobang";
+import {GobangBoard, PointTypes} from "./gobang";
 import {nanoid} from "nanoid";
 
 export const defaultBoard = (): GobangBoard => {
@@ -28,7 +28,7 @@ export const getWinner = (board: GobangBoard, row: number, column: number) => {
     const player = board[row].array[column].point;
     if (player) {
         let tmp = 0;
-        const go = (i: number, r: number, c: number) => {
+        const next = (i: number, r: number, c: number) => {
             switch (i) {
                 case 1:
                     return [r, c - 1];
@@ -51,23 +51,19 @@ export const getWinner = (board: GobangBoard, row: number, column: number) => {
             }
         };
         for (let i = 1; i <= 8; i++) {
-            if (i % 2 === 1) {
-                tmp = 0;
-            } else {
-                tmp--;
-            }
+            if (i % 2 === 1) tmp = 0;
             (function calc(r: number, c: number) {
+                const [x, y] = next(i, r, c);
                 if (
-                    board[r] &&
-                    board[r].array[c] &&
-                    board[r].array[c].point === player
+                    board[x] &&
+                    board[x].array[y] &&
+                    board[x].array[y].point === player
                 ) {
                     tmp++;
-                    const params = go(i, r, c);
-                    calc(params[0], params[1]);
+                    calc(x, y);
                 }
             })(row, column);
-            if (tmp >= 5) return player;
+            if (tmp >= 4) return player;
         }
         return undefined;
     }
