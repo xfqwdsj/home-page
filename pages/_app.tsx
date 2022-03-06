@@ -158,7 +158,6 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 <Box my={2}>
                     <Component
                         {...pageProps}
-                        LT={AV}
                         header={GlobalHeader}
                         dialog={GlobalAlertDialog}
                     />
