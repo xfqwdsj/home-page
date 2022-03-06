@@ -4,7 +4,6 @@ import {
     Dispatch,
     SetStateAction,
     useEffect,
-    useLayoutEffect,
     useMemo,
     useState,
 } from "react";
@@ -29,12 +28,10 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import AppHead, {HeadProps} from "../components/head";
-import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
 import {initFirebaseAppCheck} from "../components/firebase";
-
-export type LeanAV = typeof AV;
+import { LeanAV as AV } from "../components/leancloud";
 
 export type AppDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;
