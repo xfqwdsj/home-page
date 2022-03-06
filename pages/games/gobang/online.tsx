@@ -2,15 +2,16 @@ import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
 import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
 import {
+    Dispatch,
     MutableRefObject,
     Reducer,
+    SetStateAction,
     useEffect,
     useReducer,
     useRef,
     useState,
 } from "react";
 import {
-    Button,
     Collapse,
     List,
     ListItemButton,
@@ -21,7 +22,6 @@ import {AppDialogController, AppHeaderController} from "../../_app";
 import {
     defaultBoard,
     drop,
-    getWinner,
 } from "../../../components/gobang/fifteenFifteenFive";
 import {
     GithubAuthProvider,
@@ -49,24 +49,25 @@ type ServerSideRoomData = {
     time: number;
 };
 
-const calculateState: Reducer<
-    {board: GobangBoard; room?: string; me?: Player},
-    (
-        | {
-              type: "updateBoard";
-              dialog: AppDialogController;
-              header: AppHeaderController;
-              x: number;
-              y: number;
-          }
-        | {
-              type: "init";
-              joinedRoom: string;
-          }
-    ) & {
-        nextPlayer: MutableRefObject<Player | null>;
-    }
-> = ({board, room, me}, action) => {
+type State = {board: GobangBoard; room?: string; me?: Player};
+
+type Action = (
+    | {
+          type: "updateBoard";
+          dialog: AppDialogController;
+          header: AppHeaderController;
+          x: number;
+          y: number;
+      }
+    | {
+          type: "init";
+          joinedRoom: string;
+      }
+) & {
+    nextPlayer: MutableRefObject<Player | null>;
+};
+
+const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
     const {nextPlayer} = action;
     switch (action.type) {
         case "updateBoard":
@@ -140,67 +141,82 @@ const OnlineGobang: NextPage<{
         };
     }, []);
 
+    const onCreateRoom = () => {
+        setCanSetRoom(false);
+        if (firebaseAuth.currentUser) {
+            const time = new Date().getTime();
+            set(
+                ref(
+                    firebaseDatabase,
+                    `games/${firebaseAuth.currentUser.uid}/time`
+                ),
+                time
+            );
+            set(
+                ref(
+                    firebaseDatabase,
+                    `games/${firebaseAuth.currentUser.uid}/next`
+                ),
+                firebaseAuth.currentUser.uid
+            );
+            set(
+                ref(
+                    firebaseDatabase,
+                    `games/${firebaseAuth.currentUser.uid}/players/black`
+                ),
+                firebaseAuth.currentUser.uid
+            );
+            set(
+                ref(
+                    firebaseDatabase,
+                    `rooms/public/${firebaseAuth.currentUser.uid}`
+                ),
+                {
+                    name: `${
+                        firebaseAuth.currentUser.email
+                            ? firebaseAuth.currentUser.email
+                            : firebaseAuth.currentUser.uid
+                    } 的房间`,
+                    status: "wait-for-start",
+                    time,
+                } as ServerSideRoomData
+            );
+        }
+    };
+
+    const joinRoom = (id: string) => {
+        setCanSetRoom(false);
+        dispatchState({
+            type: "init",
+            joinedRoom: id,
+            nextPlayer,
+        });
+    };
+
+    const onPointClick = (x: number, y: number) => {
+        dispatchState({
+            type: "updateBoard",
+            header,
+            dialog,
+            x,
+            y,
+            nextPlayer,
+        });
+    };
+
     return (
         <>
             <Collapse in={canSetRoom}>
                 <List>
                     <ListItemButton
-                        onClick={() => {
-                            setCanSetRoom(false);
-                            if (firebaseAuth.currentUser) {
-                                const time = new Date().getTime();
-                                set(
-                                    ref(
-                                        firebaseDatabase,
-                                        `games/${firebaseAuth.currentUser.uid}/time`
-                                    ),
-                                    time
-                                );
-                                set(
-                                    ref(
-                                        firebaseDatabase,
-                                        `games/${firebaseAuth.currentUser.uid}/next`
-                                    ),
-                                    firebaseAuth.currentUser.uid
-                                );
-                                set(
-                                    ref(
-                                        firebaseDatabase,
-                                        `games/${firebaseAuth.currentUser.uid}/players/black`
-                                    ),
-                                    firebaseAuth.currentUser.uid
-                                );
-                                set(
-                                    ref(
-                                        firebaseDatabase,
-                                        `rooms/public/${firebaseAuth.currentUser.uid}`
-                                    ),
-                                    {
-                                        name: `${
-                                            firebaseAuth.currentUser.email
-                                                ? firebaseAuth.currentUser.email
-                                                : firebaseAuth.currentUser.uid
-                                        } 的房间`,
-                                        status: "wait-for-start",
-                                        time,
-                                    } as ServerSideRoomData
-                                );
-                            }
-                        }}
+                        onClick={onCreateRoom}
                         disabled={!canSetRoom}
                     >
                         <ListItemText primary="发布" secondary="创建新房间" />
                     </ListItemButton>
                     {Object.keys(rooms).map((id) => (
                         <ListItemButton
-                            onClick={() => {
-                                setCanSetRoom(false);
-                                dispatchState({
-                                    type: "init",
-                                    joinedRoom: id,
-                                    nextPlayer,
-                                });
-                            }}
+                            onClick={() => joinRoom(id)}
                             disabled={!canSetRoom}
                             key={id}
                         >
@@ -212,20 +228,7 @@ const OnlineGobang: NextPage<{
                     ))}
                 </List>
             </Collapse>
-            <Gobang
-                board={board}
-                onPointClick={(x, y) =>
-                    dispatchState({
-                        type: "updateBoard",
-                        header,
-                        dialog,
-                        x,
-                        y,
-                        nextPlayer,
-                    })
-                }
-                size={size}
-            />
+            <Gobang board={board} onPointClick={onPointClick} size={size} />
             <Slider
                 aria-label="Board Size"
                 value={size}
