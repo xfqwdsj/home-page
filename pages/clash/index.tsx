@@ -20,7 +20,7 @@ import {HeadProps} from "../../components/head";
 import {parseRoles} from "../../components/user";
 import {Adapters} from "@leancloud/adapter-types";
 import {GetStaticProps, NextPage} from "next";
-import { LeanAV as AV } from "../../components/leancloud";
+import AV from "../../components/leancloud";
 
 const head: HeadProps = {
     pageTitle: "Clash | LTFan",

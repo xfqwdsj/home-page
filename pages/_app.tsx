@@ -31,7 +31,7 @@ import AppHead, {HeadProps} from "../components/head";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
 import {initFirebaseAppCheck} from "../components/firebase";
-import { LeanAV as AV } from "../components/leancloud";
+import AV from "../components/leancloud";
 
 export type AppDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;

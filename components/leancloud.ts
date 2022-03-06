@@ -1,2 +1,3 @@
 import AV from "leancloud-storage/core";
-export const LeanAV = AV;
+const LeanAV = AV
+export default LeanAV;
