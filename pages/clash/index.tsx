@@ -56,17 +56,6 @@ const query = async (
 };
 
 const Clash: NextPage = () => {
-    useEffect(() => {
-        (async () => {
-            const adapter = await import("@leancloud/platform-adapters-browser");
-            AV.setAdapters(adapter as unknown as Adapters);
-            AV.init({
-                appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",
-                appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
-            });
-        })();
-    }, []);
-
     const [name, setName] = useState(""); // Name
     const [pswd, setPswd] = useState(""); // Password
     const [open, setOpen] = useState(false); // Open

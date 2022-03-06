@@ -120,8 +120,8 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
             );
             AV.setAdapters(adapter as unknown as Adapters);
             AV.init({
-                appId: "nSOTaTjLRFryFL00StQsb3lS-MdYXbMMI",
-                appKey: "3zBz5tMkTpEdoFCnQ7Xqxx65",
+                appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",
+                appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
             });
         })();
     }, []);
