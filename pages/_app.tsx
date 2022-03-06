@@ -4,7 +4,6 @@ import {
     Dispatch,
     SetStateAction,
     useEffect,
-    useLayoutEffect,
     useMemo,
     useState,
 } from "react";
@@ -29,12 +28,10 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import AppHead, {HeadProps} from "../components/head";
-import AV from "leancloud-storage/core";
 import {Adapters} from "@leancloud/adapter-types";
 import vercel from "../public/vercel.svg";
 import {initFirebaseAppCheck} from "../components/firebase";
-
-export type LeanAV = typeof AV;
+import AV from "../components/leancloud";
 
 export type AppDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;
@@ -120,8 +117,8 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
             );
             AV.setAdapters(adapter as unknown as Adapters);
             AV.init({
-                appId: "nSOTaTjLRFryFL00StQsb3lS-MdYXbMMI",
-                appKey: "3zBz5tMkTpEdoFCnQ7Xqxx65",
+                appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",
+                appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
             });
         })();
     }, []);
@@ -158,7 +155,6 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 <Box my={2}>
                     <Component
                         {...pageProps}
-                        LT={AV}
                         header={GlobalHeader}
                         dialog={GlobalAlertDialog}
                     />
