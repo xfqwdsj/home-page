@@ -20,6 +20,7 @@ import {
 import {AppDialogController, AppHeaderController} from "../../_app";
 import {
     defaultBoard,
+    drop,
     getWinner,
 } from "../../../components/gobang/fifteenFifteenFive";
 import {
@@ -70,38 +71,19 @@ const calculateState: Reducer<
     switch (action.type) {
         case "updateBoard":
             const {dialog, header, x, y} = action;
-            if (
-                me &&
-                (board[x].array[y].point === "normal" ||
-                    board[x].array[y].point === "main")
-            ) {
-                if (nextPlayer.current === null) {
-                    return {board, room, me};
-                }
-                const tmp = [...board];
-                tmp[x].array[y].point = nextPlayer.current;
-                const winner = getWinner(board, x, y);
-                if (winner) {
-                    nextPlayer.current = null;
-                    const onCancel = () => dialog.setOpen(false);
-                    header.setTopBarTitle(
-                        `赢家：${winner} | ${head.topBarTitle}`
-                    );
-                    dialog.setTitle("赢了！");
-                    dialog.setContent(<>{`恭喜：${winner}`}</>);
-                    dialog.setActions(<Button onClick={onCancel}>确定</Button>);
-                    dialog.setOnCancel(() => onCancel);
-                    dialog.setOpen(true);
-                } else {
-                    nextPlayer.current =
-                        nextPlayer.current === "black" ? "white" : "black";
-                    header.setTopBarTitle(
-                        `下一步：${nextPlayer} | ${head.topBarTitle}`
-                    );
-                }
-                return {board: tmp, room, me};
-            }
-            break;
+            return {
+                board: drop(
+                    board,
+                    x,
+                    y,
+                    nextPlayer,
+                    dialog,
+                    header,
+                    head.topBarTitle
+                ),
+                room,
+                me,
+            };
         case "init":
             return {
                 board: defaultBoard(),
@@ -109,7 +91,6 @@ const calculateState: Reducer<
                 me,
             };
     }
-    return {board, room, me};
 };
 
 const OnlineGobang: NextPage<{
