@@ -12,6 +12,7 @@ import {
     useState,
 } from "react";
 import {
+    Button,
     Collapse,
     List,
     ListItemButton,
@@ -28,7 +29,7 @@ import {
     onAuthStateChanged,
     signInWithRedirect,
 } from "firebase/auth";
-import {ref, off, onValue, set, update} from "firebase/database";
+import {remove, off, onValue, ref, set} from "firebase/database";
 import {firebaseAuth, firebaseDatabase} from "../../../components/firebase";
 
 const head: HeadProps = {
@@ -62,6 +63,7 @@ type Action = (
     | {
           type: "init";
           joinedRoom: string;
+          dispatch: Dispatch<Action>;
       }
 ) & {
     nextPlayer: MutableRefObject<Player | null>;
@@ -72,6 +74,11 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
     switch (action.type) {
         case "updateBoard":
             const {dialog, header, x, y} = action;
+            set(ref(firebaseDatabase, `games/${room}/current`), {
+                player: me,
+                x,
+                y,
+            });
             return {
                 board: drop(
                     board,
@@ -86,6 +93,42 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
                 me,
             };
         case "init":
+            onValue(
+                ref(firebaseDatabase, `games/${room}/current`),
+                (snapshot) => {
+                    if (
+                        snapshot.child("player").val() !== me &&
+                        snapshot.child("player").val() === nextPlayer.current
+                    ) {
+                        action.dispatch({
+                            type: "updateBoard",
+                            dialog,
+                            header,
+                            x: snapshot.child("x").val() as number,
+                            y: snapshot.child("y").val() as number,
+                            nextPlayer,
+                        });
+                    }
+                }
+            );
+            /*
+            onValue(
+                ref(
+                    firebaseDatabase,
+                    `games/${room}/players/${
+                        me === "black" ? "white" : "black"
+                    }`
+                ), (snapshot) => {
+
+                }
+            );
+            off(
+                ref(
+                    firebaseDatabase,
+                    `games/${room}/winner/${me === "black" ? "white" : "black"}`
+                )
+            );
+            */
             return {
                 board: defaultBoard(),
                 room: action.joinedRoom,
@@ -98,7 +141,7 @@ const OnlineGobang: NextPage<{
     header: AppHeaderController;
     dialog: AppDialogController;
 }> = ({header, dialog}) => {
-    const [{board, room}, dispatchState] = useReducer(calculateState, {
+    const [{board, room, me}, dispatchState] = useReducer(calculateState, {
         board: defaultBoard(),
     });
     const [size, setSize] = useState(50);
@@ -132,12 +175,74 @@ const OnlineGobang: NextPage<{
         const cleanup = () => {
             off(publicRooms);
             unsubscribe();
+            if (room !== undefined) {
+                if (firebaseAuth.currentUser?.uid === room) {
+                    const time = new Date().getTime();
+                    off(ref(firebaseDatabase, `games/${room}/current`));
+                    off(
+                        ref(
+                            firebaseDatabase,
+                            `games/${room}/players/${
+                                me === "black" ? "white" : "black"
+                            }`
+                        )
+                    );
+                    off(
+                        ref(
+                            firebaseDatabase,
+                            `games/${room}/winner/${
+                                me === "black" ? "white" : "black"
+                            }`
+                        )
+                    );
+                    set(ref(firebaseDatabase, `games/${room}/time`), time);
+                    remove(ref(firebaseDatabase, `games/${room}/next`));
+                    remove(ref(firebaseDatabase, `games/${room}/current`));
+                    remove(
+                        ref(firebaseDatabase, `games/${room}/players/black`)
+                    );
+                    remove(
+                        ref(firebaseDatabase, `games/${room}/players/white`)
+                    );
+                    remove(ref(firebaseDatabase, `games/${room}/winner/black`));
+                    remove(ref(firebaseDatabase, `games/${room}/winner/white`));
+                    set(ref(firebaseDatabase, `rooms/public/${room}`), {
+                        name: `${
+                            firebaseAuth.currentUser.email
+                                ? firebaseAuth.currentUser.email
+                                : firebaseAuth.currentUser.uid
+                        } 的房间`,
+                        status: "end",
+                        time,
+                    } as ServerSideRoomData);
+                } else {
+                    remove(
+                        ref(firebaseDatabase, `games/${room}/players/${me}`)
+                    );
+                }
+            }
         };
+
         window.addEventListener("beforeunload", cleanup);
 
         return () => {
-            cleanup();
             window.removeEventListener("beforeunload", cleanup);
+            cleanup();
+            const onClose = () => dialog.setOpen(false);
+            const onConfirm = () => {
+                remove(ref(firebaseDatabase, `rooms/public/${room}`));
+                onClose();
+            };
+            dialog.setTitle("提示");
+            dialog.setContent(<>要删除房间吗？</>);
+            dialog.setActions(
+                <>
+                    <Button onClick={onClose}>取消</Button>
+                    <Button onClick={onConfirm}>确定</Button>
+                </>
+            );
+            dialog.setOnClose(() => onClose);
+            dialog.setOpen(true);
         };
     }, []);
 
@@ -181,6 +286,7 @@ const OnlineGobang: NextPage<{
                     time,
                 } as ServerSideRoomData
             );
+            joinRoom(firebaseAuth.currentUser.uid);
         }
     };
 
@@ -189,6 +295,7 @@ const OnlineGobang: NextPage<{
         dispatchState({
             type: "init",
             joinedRoom: id,
+            dispatch: dispatchState,
             nextPlayer,
         });
     };
