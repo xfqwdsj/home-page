@@ -294,7 +294,6 @@ const OnlineGobang: NextPage<{
     };
 
     const joinRoom = (id: string) => {
-        setCanSetRoom(false);
         let role: Player | undefined;
         const RoleSelect = ({
             onChange,
@@ -360,6 +359,7 @@ const OnlineGobang: NextPage<{
         };
         const join = () => {
             if (role !== undefined) {
+                setCanSetRoom(false);
                 set(
                     ref(firebaseDatabase, `games/${id}/time`),
                     new Date().getTime()
