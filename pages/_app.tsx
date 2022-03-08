@@ -175,17 +175,15 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle
-                        id="alert-dialog-title"
-                        children={dialogTitle}
-                    />
+                    <DialogTitle id="alert-dialog-title">
+                        {dialogTitle}
+                    </DialogTitle>
                     <DialogContent>
-                        <DialogContentText
-                            id="alert-dialog-description"
-                            children={dialogContent}
-                        />
+                        <DialogContentText id="alert-dialog-description">
+                            {dialogContent}
+                        </DialogContentText>
                     </DialogContent>
-                    <DialogActions children={dialogActions} />
+                    <DialogActions>{dialogActions}</DialogActions>
                 </Dialog>
             </Container>
 
