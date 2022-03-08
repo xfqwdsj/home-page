@@ -99,7 +99,7 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
             changeDialogTitle(title);
             changeDialogContent(content);
             changeDialogActions(actions);
-            changeDialogOnClose(() => onClose());
+            changeDialogOnClose(() => onClose);
         },
         setOpen: changeDialogOpen,
     };
