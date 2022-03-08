@@ -105,7 +105,9 @@ export const drop = (
         } else {
             nextPlayer.current =
                 nextPlayer.current === "black" ? "white" : "black";
-            header.setTopBarTitle(`下一步：${nextPlayer.current} | ${topBarTitle}`);
+            header.setTopBarTitle(
+                `下一步：${nextPlayer.current} | ${topBarTitle}`
+            );
         }
         return tmp;
     }

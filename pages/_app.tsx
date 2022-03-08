@@ -2,6 +2,7 @@ import Image from "next/image";
 import type {AppProps} from "next/app";
 import {
     Dispatch,
+    ReactNode,
     SetStateAction,
     useEffect,
     useMemo,

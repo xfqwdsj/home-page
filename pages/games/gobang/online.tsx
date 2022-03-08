@@ -2,10 +2,8 @@ import {HeadProps} from "../../../components/head";
 import {GetStaticProps, NextPage} from "next";
 import Gobang, {GobangBoard, Player} from "../../../components/gobang/gobang";
 import {
-    Dispatch,
     MutableRefObject,
     Reducer,
-    SetStateAction,
     useEffect,
     useReducer,
     useRef,
