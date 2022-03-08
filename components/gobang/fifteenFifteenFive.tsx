@@ -95,10 +95,12 @@ export const drop = (
             nextPlayer.current = null;
             const onClose = () => dialog.setOpen(false);
             header.setTopBarTitle(`赢家：${winner} | ${topBarTitle}`);
-            dialog.setTitle("赢了！");
-            dialog.setContent(<>{`恭喜：${winner}`}</>);
-            dialog.setActions(<Button onClick={onClose}>确定</Button>);
-            dialog.setOnClose(() => onClose);
+            dialog.setDialog(
+                "赢了！",
+                `恭喜：${winner}`,
+                <Button onClick={onClose}>确定</Button>,
+                onClose
+            );
             dialog.setOpen(true);
         } else {
             nextPlayer.current =

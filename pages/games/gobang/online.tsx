@@ -297,15 +297,15 @@ const OnlineGobang: NextPage<{
                 );
                 onClose();
             };
-            dialog.setTitle("提示");
-            dialog.setContent(<>要删除房间吗？</>);
-            dialog.setActions(
+            dialog.setDialog(
+                "提示",
+                "要删除房间吗？",
                 <>
                     <Button onClick={onClose}>取消</Button>
                     <Button onClick={onConfirm}>确定</Button>
-                </>
+                </>,
+                onClose
             );
-            dialog.setOnClose(() => onClose);
             dialog.setOpen(true);
         };
     }, []);
