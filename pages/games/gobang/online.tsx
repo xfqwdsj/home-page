@@ -208,7 +208,6 @@ const OnlineGobang: NextPage<{
                         )
                     );
                     set(ref(firebaseDatabase, `games/${room}/time`), time);
-                    remove(ref(firebaseDatabase, `games/${room}/next`));
                     remove(ref(firebaseDatabase, `games/${room}/current`));
                     remove(
                         ref(firebaseDatabase, `games/${room}/players/black`)
@@ -218,6 +217,7 @@ const OnlineGobang: NextPage<{
                     );
                     remove(ref(firebaseDatabase, `games/${room}/winner/black`));
                     remove(ref(firebaseDatabase, `games/${room}/winner/white`));
+                    remove(ref(firebaseDatabase, `games/${room}/time`));
                     set(ref(firebaseDatabase, `rooms/public/${room}`), {
                         name: `${
                             firebaseAuth.currentUser.email
@@ -268,13 +268,6 @@ const OnlineGobang: NextPage<{
                     `games/${firebaseAuth.currentUser.uid}/time`
                 ),
                 time
-            );
-            set(
-                ref(
-                    firebaseDatabase,
-                    `games/${firebaseAuth.currentUser.uid}/next`
-                ),
-                firebaseAuth.currentUser.uid
             );
             set(
                 ref(
