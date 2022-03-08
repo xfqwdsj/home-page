@@ -256,7 +256,7 @@ const OnlineGobang: NextPage<{
             dialog.setOnClose(() => onClose);
             dialog.setOpen(true);
         };
-    }, []);
+    }, [me, room]);
 
     const onCreateRoom = () => {
         setCanSetRoom(false);
