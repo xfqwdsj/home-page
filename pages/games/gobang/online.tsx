@@ -98,15 +98,15 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
             };
         case "init":
             set(
-                ref(firebaseDatabase, `games/${room}/time`),
+                ref(firebaseDatabase, `games/${action.joinedRoom}/time`),
                 new Date().getTime()
             );
             set(
-                ref(firebaseDatabase, `games/${room}/players/white`),
+                ref(firebaseDatabase, `games/${action.joinedRoom}/players/white`),
                 firebaseAuth.currentUser?.uid
             );
             onValue(
-                ref(firebaseDatabase, `games/${room}/current`),
+                ref(firebaseDatabase, `games/${action.joinedRoom}/current`),
                 (snapshot) => {
                     if (
                         snapshot.child("player").val() !== me &&
