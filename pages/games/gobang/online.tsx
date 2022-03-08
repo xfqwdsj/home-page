@@ -102,7 +102,10 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
                 new Date().getTime()
             );
             set(
-                ref(firebaseDatabase, `games/${action.joinedRoom}/players/white`),
+                ref(
+                    firebaseDatabase,
+                    `games/${action.joinedRoom}/players/white`
+                ),
                 firebaseAuth.currentUser?.uid
             );
             onValue(
@@ -160,6 +163,13 @@ const OnlineGobang: NextPage<{
     const [canSetRoom, setCanSetRoom] = useState(false);
     const [rooms, setRooms] = useState<Record<string, ServerSideRoomData>>({});
     const nextPlayer = useRef<Player>("black");
+    const roomRef = useRef(room);
+    const meRef = useRef(me);
+
+    useEffect(() => {
+        roomRef.current = room;
+        meRef.current = me;
+    }, [room, me]);
 
     useEffect(() => {
         const publicRooms = ref(firebaseDatabase, "rooms/public");
@@ -187,49 +197,89 @@ const OnlineGobang: NextPage<{
         const cleanup = () => {
             off(publicRooms);
             unsubscribe();
-            if (room !== undefined) {
-                if (firebaseAuth.currentUser?.uid === room) {
+            if (roomRef.current !== undefined && meRef !== undefined) {
+                if (firebaseAuth.currentUser?.uid === roomRef.current) {
                     const time = new Date().getTime();
-                    off(ref(firebaseDatabase, `games/${room}/current`));
                     off(
                         ref(
                             firebaseDatabase,
-                            `games/${room}/players/${
-                                me === "black" ? "white" : "black"
+                            `games/${roomRef.current}/current`
+                        )
+                    );
+                    off(
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/players/${
+                                meRef.current === "black" ? "white" : "black"
                             }`
                         )
                     );
                     off(
                         ref(
                             firebaseDatabase,
-                            `games/${room}/winner/${
-                                me === "black" ? "white" : "black"
+                            `games/${roomRef.current}/winner/${
+                                meRef.current === "black" ? "white" : "black"
                             }`
                         )
                     );
-                    set(ref(firebaseDatabase, `games/${room}/time`), time);
-                    remove(ref(firebaseDatabase, `games/${room}/current`));
-                    remove(
-                        ref(firebaseDatabase, `games/${room}/players/black`)
+                    set(
+                        ref(firebaseDatabase, `games/${roomRef.current}/time`),
+                        time
                     );
                     remove(
-                        ref(firebaseDatabase, `games/${room}/players/white`)
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/current`
+                        )
                     );
-                    remove(ref(firebaseDatabase, `games/${room}/winner/black`));
-                    remove(ref(firebaseDatabase, `games/${room}/winner/white`));
-                    remove(ref(firebaseDatabase, `games/${room}/time`));
-                    set(ref(firebaseDatabase, `rooms/public/${room}`), {
-                        name: `${
-                            firebaseAuth.currentUser.email
-                                ? firebaseAuth.currentUser.email
-                                : firebaseAuth.currentUser.uid
-                        } 的房间`,
-                        status: "end",
-                        time,
-                    } as ServerSideRoomData);
+                    remove(
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/players/black`
+                        )
+                    );
+                    remove(
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/players/white`
+                        )
+                    );
+                    remove(
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/winner/black`
+                        )
+                    );
+                    remove(
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/winner/white`
+                        )
+                    );
+                    remove(
+                        ref(firebaseDatabase, `games/${roomRef.current}/time`)
+                    );
+                    set(
+                        ref(
+                            firebaseDatabase,
+                            `rooms/public/${roomRef.current}`
+                        ),
+                        {
+                            name: `${
+                                firebaseAuth.currentUser.email
+                                    ? firebaseAuth.currentUser.email
+                                    : firebaseAuth.currentUser.uid
+                            } 的房间`,
+                            status: "end",
+                            time,
+                        } as ServerSideRoomData
+                    );
                 } else {
                     remove(
-                        ref(firebaseDatabase, `games/${room}/players/${me}`)
+                        ref(
+                            firebaseDatabase,
+                            `games/${roomRef.current}/players/${meRef.current}`
+                        )
                     );
                 }
             }
@@ -242,7 +292,9 @@ const OnlineGobang: NextPage<{
             cleanup();
             const onClose = () => dialog.setOpen(false);
             const onConfirm = () => {
-                remove(ref(firebaseDatabase, `rooms/public/${room}`));
+                remove(
+                    ref(firebaseDatabase, `rooms/public/${roomRef.current}`)
+                );
                 onClose();
             };
             dialog.setTitle("提示");
@@ -256,7 +308,7 @@ const OnlineGobang: NextPage<{
             dialog.setOnClose(() => onClose);
             dialog.setOpen(true);
         };
-    }, [me, room]);
+    }, []);
 
     const onCreateRoom = () => {
         setCanSetRoom(false);
