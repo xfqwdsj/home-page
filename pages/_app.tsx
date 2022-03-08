@@ -37,7 +37,7 @@ export type AppDialogController = {
     setTitle: Dispatch<SetStateAction<string>>;
     setContent: Dispatch<SetStateAction<JSX.Element>>;
     setActions: Dispatch<SetStateAction<JSX.Element>>;
-    setOnCancel: Dispatch<SetStateAction<() => void>>;
+    setOnClose: Dispatch<SetStateAction<() => void>>;
     setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -83,14 +83,14 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
     const [dialogTitle, changeDialogTitle] = useState("");
     const [dialogContent, changeDialogContent] = useState(<></>);
     const [dialogActions, changeDialogActions] = useState(<></>);
-    const [dialogOnCancel, changeDialogOnCancel] = useState(() => () => {});
+    const [dialogOnClose, changeDialogOnClose] = useState(() => () => {});
     const [isDialogOpen, changeDialogOpen] = useState(false);
 
     const GlobalAlertDialog: AppDialogController = {
         setTitle: changeDialogTitle,
         setContent: changeDialogContent,
         setActions: changeDialogActions,
-        setOnCancel: changeDialogOnCancel,
+        setOnClose: changeDialogOnClose,
         setOpen: changeDialogOpen,
     };
 
@@ -161,7 +161,7 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                 </Box>
                 <Dialog
                     open={isDialogOpen}
-                    onClose={dialogOnCancel}
+                    onClose={dialogOnClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
