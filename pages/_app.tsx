@@ -34,10 +34,12 @@ import {initFirebaseAppCheck} from "../components/firebase";
 import AV from "../components/leancloud";
 
 export type AppDialogController = {
-    setTitle: Dispatch<SetStateAction<string>>;
-    setContent: Dispatch<SetStateAction<JSX.Element>>;
-    setActions: Dispatch<SetStateAction<JSX.Element>>;
-    setOnClose: Dispatch<SetStateAction<() => void>>;
+    setDialog: (
+        title: ReactNode,
+        content: ReactNode,
+        actions: ReactNode,
+        onClose: () => void
+    ) => void;
     setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -80,17 +82,24 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
         filter: `invert(${theme.palette.mode === "light" ? "0%" : "100%"})`,
     }));
 
-    const [dialogTitle, changeDialogTitle] = useState("");
-    const [dialogContent, changeDialogContent] = useState(<></>);
-    const [dialogActions, changeDialogActions] = useState(<></>);
+    const [dialogTitle, changeDialogTitle] = useState<ReactNode>(<></>);
+    const [dialogContent, changeDialogContent] = useState<ReactNode>(<></>);
+    const [dialogActions, changeDialogActions] = useState<ReactNode>(<></>);
     const [dialogOnClose, changeDialogOnClose] = useState(() => () => {});
     const [isDialogOpen, changeDialogOpen] = useState(false);
 
     const GlobalAlertDialog: AppDialogController = {
-        setTitle: changeDialogTitle,
-        setContent: changeDialogContent,
-        setActions: changeDialogActions,
-        setOnClose: changeDialogOnClose,
+        setDialog: (
+            title: ReactNode,
+            content: ReactNode,
+            actions: ReactNode,
+            onClose: () => void
+        ) => {
+            changeDialogTitle(title);
+            changeDialogContent(content);
+            changeDialogActions(actions);
+            changeDialogOnClose(() => onClose());
+        },
         setOpen: changeDialogOpen,
     };
 
@@ -165,15 +174,17 @@ const App = ({Component, pageProps}: AppProps<{head?: HeadProps}>) => {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">
-                        {dialogTitle}
-                    </DialogTitle>
+                    <DialogTitle
+                        id="alert-dialog-title"
+                        children={dialogTitle}
+                    />
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            {dialogContent}
-                        </DialogContentText>
+                        <DialogContentText
+                            id="alert-dialog-description"
+                            children={dialogContent}
+                        />
                     </DialogContent>
-                    <DialogActions>{dialogActions}</DialogActions>
+                    <DialogActions children={dialogActions} />
                 </Dialog>
             </Container>
 
