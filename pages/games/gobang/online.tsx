@@ -12,9 +12,14 @@ import {
 import {
     Button,
     Collapse,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
     List,
     ListItemButton,
     ListItemText,
+    Radio,
+    RadioGroup,
     Slider,
 } from "@mui/material";
 import {AppDialogController, AppHeaderController} from "../../_app";
@@ -57,27 +62,25 @@ type Action = (
           header: AppHeaderController;
           x: number;
           y: number;
+          nextPlayer: MutableRefObject<Player | null>;
       }
     | {
           type: "init";
           joinedRoom: string;
-          dispatch: Dispatch<Action>;
+          role: Player;
       }
-) & {
-    nextPlayer: MutableRefObject<Player | null>;
-};
+);
 
 const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
-    const {nextPlayer} = action;
     switch (action.type) {
         case "updateBoard":
-            const {dialog, header, x, y} = action;
+            const {dialog, header, x, y, nextPlayer} = action;
             set(
                 ref(firebaseDatabase, `games/${room}/time`),
                 new Date().getTime()
             );
             set(ref(firebaseDatabase, `games/${room}/current`), {
-                player: me,
+                player: nextPlayer.current,
                 x,
                 y,
             });
@@ -95,57 +98,10 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
                 me,
             };
         case "init":
-            set(
-                ref(firebaseDatabase, `games/${action.joinedRoom}/time`),
-                new Date().getTime()
-            );
-            set(
-                ref(
-                    firebaseDatabase,
-                    `games/${action.joinedRoom}/players/white`
-                ),
-                firebaseAuth.currentUser?.uid
-            );
-            onValue(
-                ref(firebaseDatabase, `games/${action.joinedRoom}/current`),
-                (snapshot) => {
-                    if (
-                        snapshot.child("player").val() !== me &&
-                        snapshot.child("player").val() === nextPlayer.current
-                    ) {
-                        action.dispatch({
-                            type: "updateBoard",
-                            dialog,
-                            header,
-                            x: snapshot.child("x").val() as number,
-                            y: snapshot.child("y").val() as number,
-                            nextPlayer,
-                        });
-                    }
-                }
-            );
-            /*
-            onValue(
-                ref(
-                    firebaseDatabase,
-                    `games/${room}/players/${
-                        me === "black" ? "white" : "black"
-                    }`
-                ), (snapshot) => {
-
-                }
-            );
-            off(
-                ref(
-                    firebaseDatabase,
-                    `games/${room}/winner/${me === "black" ? "white" : "black"}`
-                )
-            );
-            */
             return {
                 board: defaultBoard(),
                 room: action.joinedRoom,
-                me: "white",
+                me: action.role,
             };
     }
 };
@@ -309,7 +265,6 @@ const OnlineGobang: NextPage<{
     }, []);
 
     const onCreateRoom = () => {
-        setCanSetRoom(false);
         if (firebaseAuth.currentUser) {
             const time = new Date().getTime();
             set(
@@ -318,13 +273,6 @@ const OnlineGobang: NextPage<{
                     `games/${firebaseAuth.currentUser.uid}/time`
                 ),
                 time
-            );
-            set(
-                ref(
-                    firebaseDatabase,
-                    `games/${firebaseAuth.currentUser.uid}/players/black`
-                ),
-                firebaseAuth.currentUser.uid
             );
             set(
                 ref(
@@ -347,12 +295,117 @@ const OnlineGobang: NextPage<{
 
     const joinRoom = (id: string) => {
         setCanSetRoom(false);
-        dispatchState({
-            type: "init",
-            joinedRoom: id,
-            dispatch: dispatchState,
-            nextPlayer,
-        });
+        let role: Player | undefined;
+        const RoleSelect = ({
+            onChange,
+        }: {
+            onChange: (player: Player) => void;
+        }) => {
+            const [black, setBlack] = useState(false);
+            const [white, setWhite] = useState(false);
+            const [role, setRole] = useState<Player>();
+
+            useEffect(() => {
+                onValue(
+                    ref(firebaseDatabase, `games/${id}/players`),
+                    (snapshot) => {
+                        setBlack(snapshot.child("black").exists());
+                        setWhite(snapshot.child("white").exists());
+                    }
+                );
+
+                const cleanup = () => {
+                    off(ref(firebaseDatabase, `games/${id}/players`));
+                };
+
+                window.addEventListener("beforeunload", cleanup);
+
+                return () => {
+                    window.removeEventListener("beforeunload", cleanup);
+                    cleanup();
+                };
+            }, []);
+
+            return (
+                <FormControl>
+                    <FormLabel id="radio-group-rules">角色</FormLabel>
+                    <RadioGroup
+                        row
+                        value={role}
+                        onChange={(event) => {
+                            setRole(event.target.value as Player);
+                            onChange(event.target.value as Player);
+                        }}
+                        aria-labelledby="radio-group-rules"
+                    >
+                        <FormControlLabel
+                            value="black"
+                            control={<Radio />}
+                            label="黑"
+                            disabled={black}
+                        />
+                        <FormControlLabel
+                            value="white"
+                            control={<Radio />}
+                            label="白"
+                            disabled={white}
+                        />
+                    </RadioGroup>
+                </FormControl>
+            );
+        };
+
+        const onClose = () => {
+            dialog.setOpen(false);
+        };
+        const join = () => {
+            if (role !== undefined) {
+                set(
+                    ref(firebaseDatabase, `games/${id}/time`),
+                    new Date().getTime()
+                );
+                set(
+                    ref(firebaseDatabase, `games/${id}/players/${role}`),
+                    firebaseAuth.currentUser?.uid
+                );
+                onValue(
+                    ref(firebaseDatabase, `games/${id}/current`),
+                    (snapshot) => {
+                        if (
+                            snapshot.child("player").val() !== me &&
+                            snapshot.child("player").val() ===
+                                nextPlayer.current
+                        ) {
+                            dispatchState({
+                                type: "updateBoard",
+                                dialog,
+                                header,
+                                x: snapshot.child("x").val() as number,
+                                y: snapshot.child("y").val() as number,
+                                nextPlayer,
+                            });
+                        }
+                    }
+                );
+                dispatchState({
+                    type: "init",
+                    joinedRoom: id,
+                    role,
+                });
+            }
+            onClose();
+        };
+
+        dialog.setDialog(
+            "选择角色",
+            <RoleSelect onChange={(player) => (role = player)} />,
+            <>
+                <Button onClick={onClose}>取消</Button>
+                <Button onClick={join}>确定</Button>
+            </>,
+            onClose
+        );
+        dialog.setOpen(true);
     };
 
     const onPointClick = (x: number, y: number) => {
