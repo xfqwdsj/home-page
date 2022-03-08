@@ -74,6 +74,10 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
     switch (action.type) {
         case "updateBoard":
             const {dialog, header, x, y} = action;
+            set(
+                ref(firebaseDatabase, `games/${room}/time`),
+                new Date().getTime()
+            );
             set(ref(firebaseDatabase, `games/${room}/current`), {
                 player: me,
                 x,
@@ -93,6 +97,14 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
                 me,
             };
         case "init":
+            set(
+                ref(firebaseDatabase, `games/${room}/time`),
+                new Date().getTime()
+            );
+            set(
+                ref(firebaseDatabase, `games/${room}/players/white`),
+                firebaseAuth.currentUser?.uid
+            );
             onValue(
                 ref(firebaseDatabase, `games/${room}/current`),
                 (snapshot) => {
@@ -132,7 +144,7 @@ const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
             return {
                 board: defaultBoard(),
                 room: action.joinedRoom,
-                me,
+                me: "white",
             };
     }
 };
