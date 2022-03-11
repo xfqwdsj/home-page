@@ -55,7 +55,7 @@ type ServerSideRoomData = {
 
 type State = {board: GobangBoard; room?: string; me?: Player};
 
-type Action = (
+type Action =
     | {
           type: "updateBoard";
           dialog: AppDialogController;
@@ -68,8 +68,7 @@ type Action = (
           type: "init";
           joinedRoom: string;
           role: Player;
-      }
-);
+      };
 
 const calculateState: Reducer<State, Action> = ({board, room, me}, action) => {
     switch (action.type) {
