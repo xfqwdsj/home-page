@@ -10,7 +10,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@fontsource/roboto": "^4.5.3",
+    "@fontsource/roboto": "^5.0.4",
     "@leancloud/platform-adapters-browser": "^1.5.2",
     "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.70",
