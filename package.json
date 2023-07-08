@@ -15,7 +15,7 @@
     "@mui/icons-material": "^5.13.7",
     "@mui/lab": "^5.0.0-alpha.135",
     "@mui/material": "^5.13.7",
-    "firebase": "^9.6.7",
+    "firebase": "^10.0.0",
     "leancloud-storage": "^4.12.2",
     "nanoid": "^4.0.0",
     "next": "^13.0.0",
