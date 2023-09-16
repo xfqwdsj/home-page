@@ -12,7 +12,7 @@
     "@emotion/styled": "^11.6.0",
     "@fontsource/roboto": "^5.0.8",
     "@leancloud/platform-adapters-browser": "^1.5.2",
-    "@mui/icons-material": "^5.14.8",
+    "@mui/icons-material": "^5.14.9",
     "@mui/lab": "^5.0.0-alpha.144",
     "@mui/material": "^5.14.9",
     "firebase": "^10.3.1",
