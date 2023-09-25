@@ -16,7 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.145",
     "@mui/material": "^5.14.10",
     "firebase": "^10.4.0",
-    "leancloud-storage": "^4.12.2",
+    "leancloud-storage": "^4.15.1",
     "nanoid": "^5.0.1",
     "next": "^13.5.2",
     "next-mdx-remote": "^4.0.0",
