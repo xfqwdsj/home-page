@@ -1,3 +1,21 @@
+export interface Config {
+  "mixed-port": number;
+  "allow-lan": boolean;
+  mode: "rule";
+  "log-level": "info" | "warning" | "error" | "debug" | "silent";
+  proxies: Proxy[];
+  "proxy-groups": Group[];
+  "rule-providers": any;
+  rules: string[];
+}
+
+export interface Proxy {
+  name: string;
+  type: string;
+  server: string;
+  port: string;
+}
+
 export interface Group {
   name: string;
   type: "select" | "url-test";
@@ -7,12 +25,10 @@ export interface Group {
   proxies: string[];
 }
 
-export const defaultClashConfig = {
-  port: 7890,
-  "socks-port": 7891,
-  "redir-port": 7892,
+export const defaultClashConfig: Config = {
+  "mixed-port": 7890,
   "allow-lan": false,
-  mode: "Rule",
+  mode: "rule",
   "log-level": "info",
   proxies: [],
   "proxy-groups": [{ name: "PROXY", type: "select", proxies: [] }],
