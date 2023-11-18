@@ -40,7 +40,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
       const config = defaultClashConfig;
       const roles = await getRoles(AC.User.logIn(name, password));
       const ruleName = req.query["r"] as string | undefined;
-      for (let role of roles) {
+      for (const role of roles) {
         const proxy = await new AC.Query("Proxies").get(role.get("proxy").id);
         const proxies = proxy.get("proxies") as any[] | undefined;
         const providers = proxy.get("providers") as string[] | undefined;
@@ -57,8 +57,14 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           }
 
           const pushProxies = (proxies: any[]) => {
-            (config["proxies"] as any[]).push(...proxies);
-            result.proxies.push(...proxies.map((it) => it["name"]));
+            for (const proxy of proxies) {
+              if (!(config["proxies"] as any[]).find((it) => it.name === proxy.name)) {
+                (config["proxies"] as any[]).push(proxy);
+              }
+              if (!result.proxies.includes(proxy.name)) {
+                result.proxies.push(proxy.name);
+              }
+            }
           };
 
           if (proxies) {
