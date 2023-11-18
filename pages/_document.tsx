@@ -1,10 +1,10 @@
-import Document, { Head, Html, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 
-class MyDocument extends Document {
+export default class MyDocument extends Document {
   render(): JSX.Element {
     return (
-      <Html>
-        <Head lang="zh-CN" />
+      <Html lang="zh-CN">
+        <Head />
         <body>
           <Main />
           <NextScript />
@@ -13,5 +13,3 @@ class MyDocument extends Document {
     );
   }
 }
-
-export default MyDocument;
