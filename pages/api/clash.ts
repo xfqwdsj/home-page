@@ -4,6 +4,7 @@ import { defaultClashConfig, Group } from "../../components/clash_profile/defaul
 import YAML from "yaml";
 import AV from "leancloud-storage/core";
 import * as http from "http";
+import * as https from "https";
 
 const AC = require("leancloud-storage") as typeof AV;
 
@@ -43,7 +44,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
         const proxy = await new AC.Query("Proxies").get(role.get("proxy").id);
         const proxies = proxy.get("proxies") as any[] | undefined;
         const providers = proxy.get("providers") as string[] | undefined;
-        const groups = (proxy.get("groups") as ServerSideGroup[]).map((group) => {
+        const groupPromises = (proxy.get("groups") as ServerSideGroup[]).map(async (group) => {
           const { name, type } = group;
           if (type !== "select" && type !== "url-test") {
             throw new Error("Unsupported group type.");
@@ -65,10 +66,15 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           }
 
           if (providers) {
-            for (let providerUrl of providers) {
+            const promises = providers.map((providerUrl) => {
               const url = new URL(providerUrl);
-              if (url.protocol === "http:") {
-                http.get(url, (res) => {
+
+              if (url.protocol !== "http:" && url.protocol !== "https:") {
+                return Promise.resolve();
+              }
+
+              return new Promise<void>((resolve) => {
+                const callback = (res: http.IncomingMessage) => {
                   let data = "";
                   res.setEncoding("utf8");
                   res.on("data", (chunk) => {
@@ -77,14 +83,25 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
                   res.on("end", () => {
                     const { proxies } = YAML.parse(data);
                     pushProxies(proxies as any[]);
+                    resolve();
                   });
-                });
-              }
-            }
+                };
+
+                if (url.protocol === "http:") {
+                  http.get(url, callback);
+                } else if (url.protocol === "https:") {
+                  https.get(url, callback);
+                }
+              });
+            });
+
+            await Promise.all(promises);
           }
 
           return result;
         });
+
+        const groups = await Promise.all(groupPromises);
         (config["proxy-groups"] as any[]).push(...groups);
         ((config["proxy-groups"] as any[])[0]["proxies"] as any[]).push(...groups.map((group) => group.name));
       }
@@ -104,13 +121,13 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      if (rule.get("groups") as any[] | null | undefined) {
+      if (rule.get("groups") as any[] | undefined) {
         (config["proxy-groups"] as any[]).push(...rule.get("groups"));
       }
-      if (rule.get("providers") as any | null | undefined) {
+      if (rule.get("providers") as any | undefined) {
         config["rule-providers"] = Object.assign(config["rule-providers"], rule.get("providers"));
       }
-      if (rule.get("rules") as any[] | null | undefined) {
+      if (rule.get("rules") as any[] | undefined) {
         (config["rules"] as any[]).push(...rule.get("rules"));
       }
       send(config, res);

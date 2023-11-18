@@ -14,7 +14,6 @@ export const defaultClashConfig = {
   "allow-lan": false,
   mode: "Rule",
   "log-level": "info",
-  "proxy-providers": {},
   proxies: [],
   "proxy-groups": [{ name: "PROXY", type: "select", proxies: [] }],
   "rule-providers": {},
