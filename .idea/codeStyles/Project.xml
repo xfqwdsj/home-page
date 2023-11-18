@@ -6,9 +6,18 @@
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
     </JSCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
-      <option name="FORCE_SEMICOLON_STYLE" value="true" />
-      <option name="FORCE_QUOTE_STYlE" value="true" />
+      <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
+      <option name="USE_DOUBLE_QUOTES" value="false" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
     </TypeScriptCodeStyleSettings>
+    <codeStyleSettings language="TypeScript">
+      <option name="SPACE_AROUND_EQUALITY_OPERATORS" value="false" />
+      <option name="SPACE_BEFORE_COLON" value="false" />
+      <option name="SPACE_AFTER_COLON" value="false" />
+      <option name="ENUM_CONSTANTS_WRAP" value="0" />
+      <indentOptions>
+        <option name="CONTINUATION_INDENT_SIZE" value="8" />
+      </indentOptions>
+    </codeStyleSettings>
   </code_scheme>
 </component>

@@ -1,11 +1,10 @@
 export interface Group {
   name: string;
-  type: string;
-  url?: string;
-  interval?: number;
-  tolerance?: number;
-  proxies?: string[];
-  use?: string[];
+  type: "select" | "url-test";
+  url?: "http://www.gstatic.com/generate_204" | undefined;
+  interval?: 300 | undefined;
+  tolerance?: 50 | undefined;
+  proxies: string[];
 }
 
 export const defaultClashConfig = {
@@ -20,4 +19,4 @@ export const defaultClashConfig = {
   "proxy-groups": [{ name: "PROXY", type: "select", proxies: [] }],
   "rule-providers": {},
   rules: [],
-} as any;
+};
