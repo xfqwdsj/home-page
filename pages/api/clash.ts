@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getRoles } from "../../components/user";
-import { Config, defaultClashConfig, Group, Proxy } from "../../components/clash_profile/default";
+import { compareProxies, Config, defaultConfig, Group, Proxy } from "../../components/clash_profile/type";
 import YAML from "yaml";
 import AV from "leancloud-storage/core";
 import * as http from "http";
 import * as https from "https";
+import { compareObjects } from "../../components/object";
 
 const AC = require("leancloud-storage") as typeof AV;
 
@@ -42,7 +43,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    const config = defaultClashConfig;
+    const config = structuredClone(defaultConfig);
     const roles = await getRoles(AC.User.logIn(name, password));
     const ruleName = req.query["r"] as string | undefined;
 
@@ -64,8 +65,42 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const pushProxies = (proxies: Proxy[]) => {
+          proxies = proxies.filter((proxy, index, self) => {
+            return proxy.server !== "127.0.0.1" && proxy.server !== "::1" && proxy.server !== "localhost" && self.findIndex((it) => compareObjects(proxy, it)) === index;
+          });
+
           for (const proxy of config.proxies) {
-            proxies = proxies.filter((it) => (it.server !== proxy.server || it.port !== proxy.port) && it.server !== "127.0.0.1" && it.server !== "::1" && it.server !== "localhost");
+            const filtered: Proxy[] = [];
+
+            for (const it of proxies) {
+              if (proxy.name === it.name) {
+                if (compareProxies(proxy, it)) {
+                  filtered.push(it);
+                } else {
+                  let name = it.name;
+                  const pattern = /(.*)\s(\d+)$/;
+
+                  if (pattern.test(name)) {
+                    const match = name.match(pattern);
+                    if (match) {
+                      name = `${match[1]} ${parseInt(match[2]) + 1}`;
+                    }
+                  } else {
+                    name = `${name} 1`;
+                  }
+
+                  filtered.push({ ...it, name });
+                }
+              } else {
+                if (!compareProxies(proxy, it)) {
+                  filtered.push(it);
+                } else {
+                  filtered.push(proxy);
+                }
+              }
+            }
+
+            proxies = filtered;
           }
 
           for (const proxy of proxies) {
@@ -102,7 +137,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
                 });
                 res.on("end", () => {
                   const { proxies } = YAML.parse(data);
-                  pushProxies(proxies as any[]);
+                  pushProxies(proxies);
                   resolve();
                 });
               };

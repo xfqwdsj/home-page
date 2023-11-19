@@ -1,3 +1,5 @@
+import { compareObjects } from "../object";
+
 export interface Config {
   "mixed-port": number;
   "allow-lan": boolean;
@@ -16,6 +18,10 @@ export interface Proxy {
   port: string;
 }
 
+export const compareProxies = (a: Proxy, b: Proxy) => {
+  return compareObjects({...a, name: undefined}, {...b, name: undefined});
+};
+
 export interface Group {
   name: string;
   type: "select" | "url-test";
@@ -25,7 +31,7 @@ export interface Group {
   proxies: string[];
 }
 
-export const defaultClashConfig: Config = {
+export const defaultConfig: Config = {
   "mixed-port": 7890,
   "allow-lan": false,
   mode: "rule",
