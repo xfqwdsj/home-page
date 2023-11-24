@@ -64,10 +64,12 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           };
         }
 
-        const pushProxies = (proxies: Proxy[]) => {
-          proxies = proxies.filter((proxy, index, self) => {
-            return proxy.server !== "127.0.0.1" && proxy.server !== "::1" && proxy.server !== "localhost" && self.findIndex((it) => compareObjects(proxy, it)) === index;
-          });
+        const pushProxies = (proxies: Proxy[], bypassLoopbackCheck?: boolean) => {
+          if (!bypassLoopbackCheck){
+            proxies = proxies.filter((proxy, index, self) => {
+              return proxy.server !== "127.0.0.1" && proxy.server !== "::1" && proxy.server !== "localhost" && self.findIndex((it) => compareObjects(proxy, it)) === index;
+            });
+          }
 
           for (const proxy of config.proxies) {
             const filtered: Proxy[] = [];
@@ -117,7 +119,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
         };
 
         if (proxies) {
-          pushProxies(proxies);
+          pushProxies(proxies, true);
         }
 
         if (providers) {
