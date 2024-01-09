@@ -14,12 +14,13 @@ export interface Config {
 export interface Proxy {
   name: string;
   type: string;
+  cipher?: string;
   server: string;
   port: string;
 }
 
 export const compareProxies = (a: Proxy, b: Proxy) => {
-  return compareObjects({...a, name: undefined}, {...b, name: undefined});
+  return compareObjects({ ...a, name: undefined }, { ...b, name: undefined });
 };
 
 export interface Group {
