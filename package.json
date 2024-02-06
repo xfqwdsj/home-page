@@ -13,7 +13,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@leancloud/platform-adapters-browser": "^1.5.2",
     "@mui/icons-material": "^5.15.5",
-    "@mui/lab": "^5.0.0-alpha.162",
+    "@mui/lab": "^5.0.0-alpha.164",
     "@mui/material": "^5.15.6",
     "firebase": "^10.7.2",
     "leancloud-storage": "^4.15.2",
