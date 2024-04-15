@@ -22,7 +22,7 @@
     "next-mdx-remote": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "yaml": "^2.3.4"
+    "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/node": "^20.12.3",
