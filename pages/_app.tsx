@@ -30,7 +30,6 @@ import {
 } from "@mui/material";
 import AppHead, { HeadProps } from "../components/head";
 import vercel from "../public/vercel.svg";
-import { initFirebaseAppCheck } from "../components/firebase";
 import AV from "../components/leancloud";
 
 export type AppDialogController = {
@@ -128,10 +127,6 @@ const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
         appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
       });
     })();
-  }, []);
-
-  useEffect(() => {
-    initFirebaseAppCheck();
   }, []);
 
   useEffect(() => {
