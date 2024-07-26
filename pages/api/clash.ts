@@ -78,6 +78,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
             for (const it of proxies) {
               if (it.type === "ss" && it.cipher && !allowedShadowSocksCipher.includes(it.cipher)) continue;
+              if (it.type === "vless") continue;
 
               if (proxy.name === it.name) {
                 if (compareProxies(proxy, it)) {
