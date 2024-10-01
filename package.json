@@ -14,7 +14,7 @@
     "@leancloud/platform-adapters-browser": "^1.5.2",
     "@mui/icons-material": "^5.16.7",
     "@mui/lab": "^5.0.0-alpha.170",
-    "@mui/material": "^5.15.20",
+    "@mui/material": "^5.16.7",
     "leancloud-storage": "^4.15.2",
     "nanoid": "^5.0.7",
     "next": "^14.2.5",
