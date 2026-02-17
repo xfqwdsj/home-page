@@ -74,60 +74,68 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
           const allowedShadowSocksCipher = ["aes-128-gcm", "aes-192-gcm", "aes-256-gcm", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr", "aes-192-ctr", "aes-256-ctr", "rc4-md5", "chacha20-ietf", "xchacha20", "chacha20-ietf-poly1305", "xchacha20-ietf-poly1305"];
 
-          for (const proxy of config.proxies) {
-            const filtered: Proxy[] = [];
+          // Build a set of existing proxy names for O(1) lookup
+          const existingNames = new Set(config.proxies.map((p) => p.name));
 
-            for (const it of proxies) {
-              if (it.type === "ss" && it.cipher && !allowedShadowSocksCipher.includes(it.cipher)) continue;
-              if (it.type === "vless") continue;
-
-              let result: Proxy;
-
-              if (proxy.name === it.name) {
-                if (compareProxies(proxy, it)) {
-                  result = it;
-                } else {
-                  let name = it.name;
-                  const pattern = /(.*)\s(\d+)$/;
-
-                  if (pattern.test(name)) {
-                    const match = name.match(pattern);
-                    if (match) {
-                      name = `${match[1]} ${parseInt(match[2]) + 1}`;
-                    }
-                  } else {
-                    name = `${name} 1`;
-                  }
-
-                  result = { ...it, name };
-                }
-              } else {
-                if (!compareProxies(proxy, it)) {
-                  result = it;
-                } else {
-                  result = proxy;
-                }
-              }
-
-              if (!uuid.validate(result.uuid)) result.uuid = uuid.v7();
-
-              filtered.push(result);
+          // Helper function to generate unique name
+          const getUniqueName = (baseName: string): string => {
+            if (!existingNames.has(baseName)) {
+              return baseName;
             }
 
-            proxies = filtered;
-          }
+            const pattern = /(.*)\s(\d+)$/;
+            let name = baseName;
+            let counter = 1;
+
+            if (pattern.test(baseName)) {
+              const match = baseName.match(pattern);
+              if (match) {
+                name = match[1];
+                counter = parseInt(match[2]) + 1;
+              }
+            }
+
+            let uniqueName = `${name} ${counter}`;
+            while (existingNames.has(uniqueName)) {
+              counter++;
+              uniqueName = `${name} ${counter}`;
+            }
+
+            return uniqueName;
+          };
+
+          const proxiesToAdd: Proxy[] = [];
 
           for (const proxy of proxies) {
-            if (!group.proxies.includes(proxy.name)) {
-              group.proxies.push(proxy.name);
+            if (proxy.type === "ss" && proxy.cipher && !allowedShadowSocksCipher.includes(proxy.cipher)) continue;
+            if (proxy.type === "vless") continue;
+
+            // Check if this proxy already exists (by comparing content, not name)
+            const existingProxy = config.proxies.find((p) => compareProxies(p, proxy));
+            
+            let finalProxy: Proxy;
+            if (existingProxy) {
+              // Proxy with same content exists, reuse its name
+              finalProxy = existingProxy;
+            } else {
+              // New proxy, ensure unique name
+              const uniqueName = getUniqueName(proxy.name);
+              finalProxy = { ...proxy, name: uniqueName };
+              
+              if (!uuid.validate(finalProxy.uuid)) finalProxy.uuid = uuid.v7();
+              
+              // Add to our tracking set and list
+              existingNames.add(uniqueName);
+              proxiesToAdd.push(finalProxy);
+            }
+
+            // Add to group if not already present
+            if (!group.proxies.includes(finalProxy.name)) {
+              group.proxies.push(finalProxy.name);
             }
           }
 
-          for (const proxy of config.proxies) {
-            proxies = proxies.filter((it) => it.name !== proxy.name);
-          }
-
-          config.proxies.push(...proxies);
+          config.proxies.push(...proxiesToAdd);
         };
 
         if (proxies) {
