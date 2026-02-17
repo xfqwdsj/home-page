@@ -18,7 +18,7 @@
     "leancloud-storage": "^4.15.2",
     "nanoid": "^5.1.6",
     "next": "15.5.9",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "uuid": "^13.0.0",
