@@ -1,18 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getRoles } from "../../components/user";
-import { compareProxies, Config, defaultConfig, Group, Proxy } from "../../components/clash_profile/type";
+import { Config, defaultConfig, Group, Proxy } from "../../components/clash_profile/type";
 import YAML from "yaml";
-import AV from "leancloud-storage/core";
+import Parse from "parse/node";
 import * as http from "http";
 import * as https from "https";
 import * as uuid from "uuid";
 import { compareObjects } from "../../components/object";
 
-const AC = require("leancloud-storage") as typeof AV;
-
-AC.init({
-  appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI", appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
-});
+Parse.initialize("yN7VS5sajq19yVQXLw3V5nwqLTRoU3K37CYWokts", "4eIUmlLBJXoD77a6wlXeaFD3nqafjthxq6KrOtxX");
+Parse.serverURL = "https://parseapi.back4app.com";
 
 interface GroupData {
   name: string;
@@ -45,14 +42,21 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const config = structuredClone(defaultConfig);
-    const roles = await getRoles(AC.User.logIn(name, password));
+    const user = await Parse.User.logIn(name, password).catch(() => null);
+    if (!user) {
+      res.status(401).send(null);
+      return;
+    }
+    const roles = await getRoles(Parse, user);
     const ruleName = req.query["r"] as string | undefined;
 
+    const queryOptions = { sessionToken: user.getSessionToken() as string };
+
     for (const role of roles) {
-      const proxy = await new AC.Query("Proxies").get(role.get("proxy").id);
+      const proxy = await new Parse.Query("Proxies").get(role.get("proxy").id, queryOptions);
       const proxies = proxy.get("proxies") as Proxy[] | undefined;
       const providers = proxy.get("providers") as string[] | undefined;
-      
+
       // Helper function to generate content key for deduplication
       const getContentKey = (proxy: Proxy): string => {
         const { name, uuid, ...rest } = proxy;
@@ -96,7 +100,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
         return uniqueName;
       };
-      
+
       const groupPromises = (proxy.get("groups") as GroupData[]).map(async (groupData) => {
         const { name, type } = groupData;
         if (type !== "select" && type !== "url-test") {
@@ -205,17 +209,17 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!ruleName) {
       send(config, res);
-      await AC.User.logOut();
+      await Parse.User.logOut();
       return;
     }
 
-    const rule = await new AC.Query("Rules")
+    const rule = await new Parse.Query("Rules")
       .equalTo("name", ruleName)
-      .first();
+      .first(queryOptions);
 
     if (!rule) {
       res.status(404).send("Rule not found.");
-      await AC.User.logOut();
+      await Parse.User.logOut();
       return;
     }
 
@@ -235,7 +239,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     send(config, res);
-    await AC.User.logOut();
+    await Parse.User.logOut();
   })();
 };
 

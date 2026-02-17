@@ -1,13 +1,17 @@
-import { Role, User } from "leancloud-storage";
+import Parse from "parse";
 
-export const getRoles = (promise: Promise<User>): Promise<Array<Role>> =>
-  promise
-    .then((user) => user.getRoles())
-    .then((roles) =>
-      roles.sort(
-        (a, b) => (a.get("order") as number) - (b.get("order") as number)
-      )
-    );
+type ParseType = typeof Parse;
 
-export const parseRoles = (promise: Promise<User>): Promise<Array<string>> =>
-  getRoles(promise).then((roles) => roles.map((role) => role.getName()));
+export async function getRoles(parse: ParseType, user: Parse.User) {
+  const query = new parse.Query(parse.Role);
+  query.equalTo("users", user);
+  const roles = await query.find({
+    sessionToken: user.getSessionToken() as string,
+  });
+  return roles.sort((a, b) => (a.get("order") as number) - (b.get("order") as number));
+}
+
+export async function parseRoles(parse: ParseType, user: Parse.User) {
+  const roles = await getRoles(parse, user);
+  return roles.map((role) => role.getName() as string);
+}

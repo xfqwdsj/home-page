@@ -1,13 +1,6 @@
 import Image from "next/image";
 import type { AppProps } from "next/app";
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -30,15 +23,10 @@ import {
 } from "@mui/material";
 import AppHead, { HeadProps } from "../components/head";
 import vercel from "../public/vercel.svg";
-import AV from "../components/leancloud";
+import Parse from "parse";
 
 export type AppDialogController = {
-  setDialog: (
-    title: ReactNode,
-    content: ReactNode,
-    actions: ReactNode,
-    onClose: () => void
-  ) => void;
+  setDialog: (title: ReactNode, content: ReactNode, actions: ReactNode, onClose: () => void) => void;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -50,32 +38,25 @@ export type AppHeaderController = {
 
 const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const theme = useMemo(
-    () =>
-      createTheme({
-        components: {
-          MuiTypography: {
-            styleOverrides: {
-              root: {
-                wordWrap: "break-word",
-              },
-            },
-          },
-          MuiBackdrop: {
-            styleOverrides: {
-              root: {
-                backgroundColor: "rgba(0, 0, 0, 0.2)",
-                backdropFilter: "blur(5px)",
-              },
-            },
+  const theme = useMemo(() => createTheme({
+    components: {
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            wordWrap: "break-word",
           },
         },
-        palette: {
-          mode: prefersDarkMode ? "dark" : "light",
+      }, MuiBackdrop: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "rgba(0, 0, 0, 0.2)", backdropFilter: "blur(5px)",
+          },
         },
-      }),
-    [prefersDarkMode]
-  );
+      },
+    }, palette: {
+      mode: prefersDarkMode ? "dark" : "light",
+    },
+  }), [prefersDarkMode]);
 
   const StyledImage = styled(Image)(({ theme }) => ({
     filter: `invert(${theme.palette.mode === "light" ? "0%" : "100%"})`,
@@ -84,62 +65,42 @@ const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
   const [dialogTitle, changeDialogTitle] = useState<ReactNode>(<></>);
   const [dialogContent, changeDialogContent] = useState<ReactNode>(<></>);
   const [dialogActions, changeDialogActions] = useState<ReactNode>(<></>);
-  const [dialogOnClose, changeDialogOnClose] = useState(() => () => {});
+  const [dialogOnClose, changeDialogOnClose] = useState(() => () => {
+  });
   const [isDialogOpen, changeDialogOpen] = useState(false);
 
   const GlobalAlertDialog: AppDialogController = {
-    setDialog: (
-      title: ReactNode,
-      content: ReactNode,
-      actions: ReactNode,
-      onClose: () => void
-    ) => {
+    setDialog: (title: ReactNode, content: ReactNode, actions: ReactNode, onClose: () => void) => {
       changeDialogTitle(title);
       changeDialogContent(content);
       changeDialogActions(actions);
       changeDialogOnClose(() => onClose);
-    },
-    setOpen: changeDialogOpen,
+    }, setOpen: changeDialogOpen,
   };
 
-  const [headPageTitle, changeHeadPageTitle] = useState(
-    pageProps.head ? pageProps.head.pageTitle : "LTFan"
-  );
-  const [headPageDescription, changeHeadPageDescription] = useState(
-    pageProps.head ? pageProps.head.pageDescription : "LTFan's home page."
-  );
-  const [topBarTitle, changeTopBarTitle] = useState(
-    pageProps.head ? pageProps.head.topBarTitle : "LTFan"
-  );
+  const [headPageTitle, changeHeadPageTitle] = useState(pageProps.head ? pageProps.head.pageTitle : "LTFan");
+  const [headPageDescription, changeHeadPageDescription] = useState(pageProps.head ? pageProps.head.pageDescription : "LTFan's home page.");
+  const [topBarTitle, changeTopBarTitle] = useState(pageProps.head ? pageProps.head.topBarTitle : "LTFan");
 
   const GlobalHeader: AppHeaderController = {
-    setPageTitle: changeHeadPageTitle,
-    setPageDescription: changeHeadPageDescription,
-    setTopBarTitle: changeTopBarTitle,
+    setPageTitle: changeHeadPageTitle, setPageDescription: changeHeadPageDescription, setTopBarTitle: changeTopBarTitle,
   };
 
   useEffect(() => {
     (async () => {
-      const adapters = await import("@leancloud/platform-adapters-browser");
-      AV.setAdapters(adapters);
-      AV.init({
-        appId: "oGcy9vKWCexf8bMi2jBtyziu-MdYXbMMI",
-        appKey: "SFcECqIUlHq4iPpMy2DpjxbY",
-      });
+      Parse.initialize("yN7VS5sajq19yVQXLw3V5nwqLTRoU3K37CYWokts", "4eIUmlLBJXoD77a6wlXeaFD3nqafjthxq6KrOtxX");
+      Parse.serverURL = "https://parseapi.back4app.com";
     })();
   }, []);
 
   useEffect(() => {
     changeHeadPageTitle(pageProps.head ? pageProps.head.pageTitle : "LTFan");
-    changeHeadPageDescription(
-      pageProps.head ? pageProps.head.pageDescription : "LTFan's home page."
-    );
+    changeHeadPageDescription(pageProps.head ? pageProps.head.pageDescription : "LTFan's home page.");
     changeTopBarTitle(pageProps.head ? pageProps.head.topBarTitle : "LTFan");
   }, [pageProps.head]);
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+  return (<ThemeProvider theme={theme}>
+      <CssBaseline/>
 
       <AppHead
         pageTitle={headPageTitle}
@@ -176,13 +137,7 @@ const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
           width={1}
           p={5}
           sx={{
-            backgroundColor: (theme) =>
-              alpha(
-                theme.palette.mode === "light"
-                  ? theme.palette.common.black
-                  : theme.palette.common.white,
-                0.05
-              ),
+            backgroundColor: (theme) => alpha(theme.palette.mode === "light" ? theme.palette.common.black : theme.palette.common.white, 0.05),
           }}
         >
           <Box width="max-content" mx="auto">
@@ -204,8 +159,7 @@ const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
           </Box>
         </Box>
       </footer>
-    </ThemeProvider>
-  );
+    </ThemeProvider>);
 };
 
 export default App;

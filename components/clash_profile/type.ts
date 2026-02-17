@@ -1,5 +1,3 @@
-import { compareObjects } from "../object";
-
 export interface Config {
   "mixed-port": number;
   "allow-lan": boolean;
@@ -19,10 +17,6 @@ export interface Proxy {
   server: string;
   port: string;
 }
-
-export const compareProxies = (a: Proxy, b: Proxy) => {
-  return compareObjects({ ...a, name: undefined, uuid: undefined }, { ...b, name: undefined, uuid: undefined });
-};
 
 export interface Group {
   name: string;
