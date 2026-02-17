@@ -110,6 +110,8 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
               }
 
               if (!uuid.validate(result.uuid)) result.uuid = uuid.v7();
+
+              filtered.push(result);
             }
 
             proxies = filtered;
