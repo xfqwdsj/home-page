@@ -144,7 +144,9 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
                 });
                 res.on("end", () => {
                   const { proxies } = YAML.parse(data);
-                  pushProxies(proxies);
+                  if (proxies instanceof Array) {
+                    pushProxies(proxies);
+                  }
                   resolve();
                 });
               };
