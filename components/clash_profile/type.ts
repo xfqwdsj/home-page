@@ -14,6 +14,7 @@ export interface Config {
 export interface Proxy {
   name: string;
   type: string;
+  uuid?: string;
   cipher?: string;
   server: string;
   port: string;

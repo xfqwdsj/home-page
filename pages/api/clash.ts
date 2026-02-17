@@ -5,6 +5,7 @@ import YAML from "yaml";
 import AV from "leancloud-storage/core";
 import * as http from "http";
 import * as https from "https";
+import * as uuid from "uuid";
 import { compareObjects } from "../../components/object";
 
 const AC = require("leancloud-storage") as typeof AV;
@@ -79,6 +80,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
             for (const it of proxies) {
               if (it.type === "ss" && it.cipher && !allowedShadowSocksCipher.includes(it.cipher)) continue;
               if (it.type === "vless") continue;
+              if (!uuid.validate(it.uuid)) it.uuid = uuid.v7();
 
               if (proxy.name === it.name) {
                 if (compareProxies(proxy, it)) {
