@@ -21,7 +21,7 @@ export interface Proxy {
 }
 
 export const compareProxies = (a: Proxy, b: Proxy) => {
-  return compareObjects({ ...a, name: undefined }, { ...b, name: undefined });
+  return compareObjects({ ...a, name: undefined, uuid: undefined }, { ...b, name: undefined, uuid: undefined });
 };
 
 export interface Group {
