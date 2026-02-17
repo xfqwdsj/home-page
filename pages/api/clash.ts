@@ -52,6 +52,50 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
       const proxy = await new AC.Query("Proxies").get(role.get("proxy").id);
       const proxies = proxy.get("proxies") as Proxy[] | undefined;
       const providers = proxy.get("providers") as string[] | undefined;
+      
+      // Helper function to generate content key for deduplication
+      const getContentKey = (proxy: Proxy): string => {
+        const { name, uuid, ...rest } = proxy;
+        return JSON.stringify(rest);
+      };
+
+      // Initialize tracking structures once per role (shared across all groups)
+      // Build a set of existing proxy names for O(1) lookup
+      const existingNames = new Set(config.proxies.map((p) => p.name));
+
+      // Build a map for O(1) content-based lookup
+      const contentToProxy = new Map<string, Proxy>();
+      for (const proxy of config.proxies) {
+        contentToProxy.set(getContentKey(proxy), proxy);
+      }
+
+      // Helper function to generate unique name
+      const getUniqueName = (baseName: string): string => {
+        if (!existingNames.has(baseName)) {
+          return baseName;
+        }
+
+        const pattern = /(.*)\s(\d+)$/;
+        let name = baseName;
+        let counter = 1;
+
+        if (pattern.test(baseName)) {
+          const match = baseName.match(pattern);
+          if (match) {
+            name = match[1];
+            counter = parseInt(match[2], 10) + 1;
+          }
+        }
+
+        let uniqueName = `${name} ${counter}`;
+        while (existingNames.has(uniqueName)) {
+          counter++;
+          uniqueName = `${name} ${counter}`;
+        }
+
+        return uniqueName;
+      };
+      
       const groupPromises = (proxy.get("groups") as GroupData[]).map(async (groupData) => {
         const { name, type } = groupData;
         if (type !== "select" && type !== "url-test") {
@@ -64,49 +108,6 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
             url: "http://www.gstatic.com/generate_204", interval: 300, tolerance: 50, ...group,
           };
         }
-
-        // Helper function to generate content key for deduplication
-        const getContentKey = (proxy: Proxy): string => {
-          const { name, uuid, ...rest } = proxy;
-          return JSON.stringify(rest);
-        };
-
-        // Initialize tracking structures once per group (not per pushProxies call)
-        // Build a set of existing proxy names for O(1) lookup
-        const existingNames = new Set(config.proxies.map((p) => p.name));
-
-        // Build a map for O(1) content-based lookup
-        const contentToProxy = new Map<string, Proxy>();
-        for (const proxy of config.proxies) {
-          contentToProxy.set(getContentKey(proxy), proxy);
-        }
-
-        // Helper function to generate unique name
-        const getUniqueName = (baseName: string): string => {
-          if (!existingNames.has(baseName)) {
-            return baseName;
-          }
-
-          const pattern = /(.*)\s(\d+)$/;
-          let name = baseName;
-          let counter = 1;
-
-          if (pattern.test(baseName)) {
-            const match = baseName.match(pattern);
-            if (match) {
-              name = match[1];
-              counter = parseInt(match[2], 10) + 1;
-            }
-          }
-
-          let uniqueName = `${name} ${counter}`;
-          while (existingNames.has(uniqueName)) {
-            counter++;
-            uniqueName = `${name} ${counter}`;
-          }
-
-          return uniqueName;
-        };
 
         const pushProxies = (proxies: Proxy[], bypassLoopbackCheck?: boolean) => {
           // Always remove exact duplicates from input array
