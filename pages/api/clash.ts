@@ -65,6 +65,49 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           };
         }
 
+        // Helper function to generate content key for deduplication
+        const getContentKey = (proxy: Proxy): string => {
+          const { name, uuid, ...rest } = proxy;
+          return JSON.stringify(rest);
+        };
+
+        // Initialize tracking structures once per group (not per pushProxies call)
+        // Build a set of existing proxy names for O(1) lookup
+        const existingNames = new Set(config.proxies.map((p) => p.name));
+
+        // Build a map for O(1) content-based lookup
+        const contentToProxy = new Map<string, Proxy>();
+        for (const proxy of config.proxies) {
+          contentToProxy.set(getContentKey(proxy), proxy);
+        }
+
+        // Helper function to generate unique name
+        const getUniqueName = (baseName: string): string => {
+          if (!existingNames.has(baseName)) {
+            return baseName;
+          }
+
+          const pattern = /(.*)\s(\d+)$/;
+          let name = baseName;
+          let counter = 1;
+
+          if (pattern.test(baseName)) {
+            const match = baseName.match(pattern);
+            if (match) {
+              name = match[1];
+              counter = parseInt(match[2], 10) + 1;
+            }
+          }
+
+          let uniqueName = `${name} ${counter}`;
+          while (existingNames.has(uniqueName)) {
+            counter++;
+            uniqueName = `${name} ${counter}`;
+          }
+
+          return uniqueName;
+        };
+
         const pushProxies = (proxies: Proxy[], bypassLoopbackCheck?: boolean) => {
           if (!bypassLoopbackCheck) {
             proxies = proxies.filter((proxy, index, self) => {
@@ -73,48 +116,6 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           }
 
           const allowedShadowSocksCipher = ["aes-128-gcm", "aes-192-gcm", "aes-256-gcm", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr", "aes-192-ctr", "aes-256-ctr", "rc4-md5", "chacha20-ietf", "xchacha20", "chacha20-ietf-poly1305", "xchacha20-ietf-poly1305"];
-
-          // Helper function to generate content key for deduplication
-          const getContentKey = (proxy: Proxy): string => {
-            const { name, uuid, ...rest } = proxy;
-            return JSON.stringify(rest);
-          };
-
-          // Build a set of existing proxy names for O(1) lookup
-          const existingNames = new Set(config.proxies.map((p) => p.name));
-
-          // Build a map for O(1) content-based lookup
-          const contentToProxy = new Map<string, Proxy>();
-          for (const proxy of config.proxies) {
-            contentToProxy.set(getContentKey(proxy), proxy);
-          }
-
-          // Helper function to generate unique name
-          const getUniqueName = (baseName: string): string => {
-            if (!existingNames.has(baseName)) {
-              return baseName;
-            }
-
-            const pattern = /(.*)\s(\d+)$/;
-            let name = baseName;
-            let counter = 1;
-
-            if (pattern.test(baseName)) {
-              const match = baseName.match(pattern);
-              if (match) {
-                name = match[1];
-                counter = parseInt(match[2], 10) + 1;
-              }
-            }
-
-            let uniqueName = `${name} ${counter}`;
-            while (existingNames.has(uniqueName)) {
-              counter++;
-              uniqueName = `${name} ${counter}`;
-            }
-
-            return uniqueName;
-          };
 
           const proxiesToAdd: Proxy[] = [];
 
