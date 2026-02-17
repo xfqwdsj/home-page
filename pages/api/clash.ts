@@ -74,14 +74,18 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
           const allowedShadowSocksCipher = ["aes-128-gcm", "aes-192-gcm", "aes-256-gcm", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr", "aes-192-ctr", "aes-256-ctr", "rc4-md5", "chacha20-ietf", "xchacha20", "chacha20-ietf-poly1305", "xchacha20-ietf-poly1305"];
 
+          // Helper function to generate content key for deduplication
+          const getContentKey = (proxy: Proxy): string => {
+            return JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
+          };
+
           // Build a set of existing proxy names for O(1) lookup
           const existingNames = new Set(config.proxies.map((p) => p.name));
 
           // Build a map for O(1) content-based lookup
           const contentToProxy = new Map<string, Proxy>();
           for (const proxy of config.proxies) {
-            const key = JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
-            contentToProxy.set(key, proxy);
+            contentToProxy.set(getContentKey(proxy), proxy);
           }
 
           // Helper function to generate unique name
@@ -98,7 +102,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
               const match = baseName.match(pattern);
               if (match) {
                 name = match[1];
-                counter = parseInt(match[2]) + 1;
+                counter = parseInt(match[2], 10) + 1;
               }
             }
 
@@ -118,7 +122,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
             if (proxy.type === "vless") continue;
 
             // Check if this proxy already exists (by comparing content, not name)
-            const contentKey = JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
+            const contentKey = getContentKey(proxy);
             const existingProxy = contentToProxy.get(contentKey);
 
             let finalProxy: Proxy;
