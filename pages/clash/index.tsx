@@ -22,9 +22,7 @@ import { GetStaticProps, NextPage } from "next";
 import Parse from "parse";
 
 const head: HeadProps = {
-  pageTitle: "Clash | LTFan",
-  pageDescription: "LTFan's Clash configs console.",
-  topBarTitle: "Clash",
+  pageTitle: "Clash | LTFan", pageDescription: "LTFan's Clash configs console.", topBarTitle: "Clash",
 };
 
 export const getStaticProps: GetStaticProps = () => ({
@@ -38,16 +36,13 @@ interface QueryResult {
   rules: Array<string>;
 }
 
-const query = async (
-  name: string,
-  pswd: string
-): Promise<QueryResult | string> => {
+const query = async (name: string, pswd: string): Promise<QueryResult | string> => {
   try {
     const user = await Parse.User.logIn(name, pswd);
     const roles = await parseRoles(user);
-    const rules = (await new Parse.Query("Rules").find()).map(
-      (rule) => rule.get("name") as string
-    );
+    const rules = (await new Parse.Query("Rules").find({
+      sessionToken: user.getSessionToken() as string,
+    })).map((rule) => rule.get("name") as string);
     await Parse.User.logOut();
     return { roles, rules };
   } catch (e) {
@@ -65,11 +60,7 @@ const Clash: NextPage = () => {
   const [ruls, setRuls] = useState(new Array<string>()); // Rules
   const [rule, setRule] = useState("none"); // Current rule
 
-  const dialog = (
-    title: string,
-    msg: string,
-    content?: JSX.Element | undefined
-  ) => {
+  const dialog = (title: string, msg: string, content?: JSX.Element | undefined) => {
     setTite(title);
     setMsge(msg);
     setCont(content ? content : <></>);
@@ -85,8 +76,7 @@ const Clash: NextPage = () => {
     setRule("none");
   };
 
-  return (
-    <>
+  return (<>
       <Grid container spacing={1}>
         <Grid container item spacing={1} justifyContent="center">
           <Grid item>
@@ -172,15 +162,13 @@ const Clash: NextPage = () => {
                 onChange={(event) => setRule(event.target.value)}
                 aria-labelledby="radio-group-rules"
               >
-                <FormControlLabel value="none" control={<Radio />} label="无" />
-                {ruls.map((it) => (
-                  <FormControlLabel
+                <FormControlLabel value="none" control={<Radio/>} label="无"/>
+                {ruls.map((it) => (<FormControlLabel
                     key={it}
                     value={it}
-                    control={<Radio />}
+                    control={<Radio/>}
                     label={it}
-                  />
-                ))}
+                  />))}
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -189,9 +177,7 @@ const Clash: NextPage = () => {
           <Grid item>
             <Link
               component={NextLinkComposed}
-              to={`/api/clash?n=${name}&p=${pswd}${
-                rule !== "none" ? `&r=${rule}` : ""
-              }`}
+              to={`/api/clash?n=${name}&p=${pswd}${rule !== "none" ? `&r=${rule}` : ""}`}
             >
               配置链接
             </Link>
@@ -217,8 +203,7 @@ const Clash: NextPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
-  );
+    </>);
 };
 
 export default Clash;
