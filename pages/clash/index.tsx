@@ -19,7 +19,7 @@ import { NextLinkComposed } from "../../components/link";
 import { HeadProps } from "../../components/head";
 import { parseRoles } from "../../components/user";
 import { GetStaticProps, NextPage } from "next";
-import AV from "../../components/leancloud";
+import Parse from "parse";
 
 const head: HeadProps = {
   pageTitle: "Clash | LTFan",
@@ -43,11 +43,12 @@ const query = async (
   pswd: string
 ): Promise<QueryResult | string> => {
   try {
-    const roles = await parseRoles(AV.User.logIn(name, pswd));
-    const rules = (await new AV.Query("Rules").find()).map(
+    const user = await Parse.User.logIn(name, pswd);
+    const roles = await parseRoles(user);
+    const rules = (await new Parse.Query("Rules").find()).map(
       (rule) => rule.get("name") as string
     );
-    AV.User.logOut();
+    await Parse.User.logOut();
     return { roles, rules };
   } catch (e) {
     return (e as Error).message;
@@ -138,14 +139,14 @@ const Clash: NextPage = () => {
               variant="contained"
               onClick={() => {
                 try {
-                  const user = new AV.User();
+                  const user = new Parse.User();
                   user.setUsername(name);
                   user.setPassword(pswd);
                   user
                     .signUp()
                     .then(() => {
                       dialog("注册成功", "请联系管理员");
-                      AV.User.logOut();
+                      Parse.User.logOut();
                     })
                     .catch((e) => {
                       dialog("注册错误", (e as Error).message);
