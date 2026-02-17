@@ -76,7 +76,8 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
 
           // Helper function to generate content key for deduplication
           const getContentKey = (proxy: Proxy): string => {
-            return JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
+            const { name, uuid, ...rest } = proxy;
+            return JSON.stringify(rest);
           };
 
           // Build a set of existing proxy names for O(1) lookup
