@@ -80,11 +80,12 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
             for (const it of proxies) {
               if (it.type === "ss" && it.cipher && !allowedShadowSocksCipher.includes(it.cipher)) continue;
               if (it.type === "vless") continue;
-              if (!uuid.validate(it.uuid)) it.uuid = uuid.v7();
+
+              let result: Proxy;
 
               if (proxy.name === it.name) {
                 if (compareProxies(proxy, it)) {
-                  filtered.push(it);
+                  result = it;
                 } else {
                   let name = it.name;
                   const pattern = /(.*)\s(\d+)$/;
@@ -98,15 +99,17 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
                     name = `${name} 1`;
                   }
 
-                  filtered.push({ ...it, name });
+                  result = { ...it, name };
                 }
               } else {
                 if (!compareProxies(proxy, it)) {
-                  filtered.push(it);
+                  result = it;
                 } else {
-                  filtered.push(proxy);
+                  result = proxy;
                 }
               }
+
+              if (!uuid.validate(result.uuid)) result.uuid = uuid.v7();
             }
 
             proxies = filtered;
