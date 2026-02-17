@@ -77,6 +77,13 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
           // Build a set of existing proxy names for O(1) lookup
           const existingNames = new Set(config.proxies.map((p) => p.name));
 
+          // Build a map for O(1) content-based lookup
+          const contentToProxy = new Map<string, Proxy>();
+          for (const proxy of config.proxies) {
+            const key = JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
+            contentToProxy.set(key, proxy);
+          }
+
           // Helper function to generate unique name
           const getUniqueName = (baseName: string): string => {
             if (!existingNames.has(baseName)) {
@@ -111,8 +118,9 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
             if (proxy.type === "vless") continue;
 
             // Check if this proxy already exists (by comparing content, not name)
-            const existingProxy = config.proxies.find((p) => compareProxies(p, proxy));
-            
+            const contentKey = JSON.stringify({ ...proxy, name: undefined, uuid: undefined });
+            const existingProxy = contentToProxy.get(contentKey);
+
             let finalProxy: Proxy;
             if (existingProxy) {
               // Proxy with same content exists, reuse its name
@@ -121,11 +129,12 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
               // New proxy, ensure unique name
               const uniqueName = getUniqueName(proxy.name);
               finalProxy = { ...proxy, name: uniqueName };
-              
+
               if (!uuid.validate(finalProxy.uuid)) finalProxy.uuid = uuid.v7();
-              
-              // Add to our tracking set and list
+
+              // Add to our tracking structures and list
               existingNames.add(uniqueName);
+              contentToProxy.set(contentKey, finalProxy);
               proxiesToAdd.push(finalProxy);
             }
 
