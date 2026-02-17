@@ -40,13 +40,12 @@ const query = async (name: string, pswd: string): Promise<QueryResult | string> 
   try {
     const user = await Parse.User.logIn(name, pswd);
     const roles = await parseRoles(user);
-    const rules = (await new Parse.Query("Rules").find({
-      sessionToken: user.getSessionToken() as string,
-    })).map((rule) => rule.get("name") as string);
-    await Parse.User.logOut();
+    const rules = (await new Parse.Query("Rules").find()).map((rule) => rule.get("name") as string);
     return { roles, rules };
   } catch (e) {
     return (e as Error).message;
+  } finally {
+    await Parse.User.logOut();
   }
 };
 
@@ -77,133 +76,133 @@ const Clash: NextPage = () => {
   };
 
   return (<>
-      <Grid container spacing={1}>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <TextField
-              label="用户名"
-              type="text"
-              autoComplete="username"
-              value={name}
-              onChange={(event) => {
-                clear();
-                setName(event.target.value);
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <TextField
-              label="密码"
-              type="password"
-              autoComplete="password"
-              value={pswd}
-              onChange={(event) => {
-                clear();
-                setPswd(event.target.value);
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <Button
-              variant="contained"
-              onClick={() => {
-                query(name, pswd).then((result) => {
-                  if (typeof result === "string") {
-                    dialog("查询错误", result);
-                  } else {
-                    setRuls(result.rules);
-                    dialog("查询成功", `你的组为${result.roles}`);
-                  }
-                });
-              }}
-            >
-              查询
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              onClick={() => {
-                try {
-                  const user = new Parse.User();
-                  user.setUsername(name);
-                  user.setPassword(pswd);
-                  user
-                    .signUp()
-                    .then(() => {
-                      dialog("注册成功", "请联系管理员");
-                      Parse.User.logOut();
-                    })
-                    .catch((e) => {
-                      dialog("注册错误", (e as Error).message);
-                    });
-                } catch (e) {
-                  dialog("注册错误", (e as Error).message);
-                }
-              }}
-            >
-              注册
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <FormControl>
-              <FormLabel id="radio-group-rules" sx={{ mx: "auto" }}>
-                规则
-              </FormLabel>
-              <RadioGroup
-                row
-                value={rule}
-                onChange={(event) => setRule(event.target.value)}
-                aria-labelledby="radio-group-rules"
-              >
-                <FormControlLabel value="none" control={<Radio/>} label="无"/>
-                {ruls.map((it) => (<FormControlLabel
-                    key={it}
-                    value={it}
-                    control={<Radio/>}
-                    label={it}
-                  />))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Grid container item spacing={1} justifyContent="center">
-          <Grid item>
-            <Link
-              component={NextLinkComposed}
-              to={`/api/clash?n=${name}&p=${pswd}${rule !== "none" ? `&r=${rule}` : ""}`}
-            >
-              配置链接
-            </Link>
-          </Grid>
+    <Grid container spacing={1}>
+      <Grid container item spacing={1} justifyContent="center">
+        <Grid item>
+          <TextField
+            label="用户名"
+            type="text"
+            autoComplete="username"
+            value={name}
+            onChange={(event) => {
+              clear();
+              setName(event.target.value);
+            }}
+          />
         </Grid>
       </Grid>
-      <Dialog
-        open={open}
-        onClose={close}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{tite}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {msge}
-          </DialogContentText>
-          {cont}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={close} autoFocus>
-            确定
+      <Grid container item spacing={1} justifyContent="center">
+        <Grid item>
+          <TextField
+            label="密码"
+            type="password"
+            autoComplete="password"
+            value={pswd}
+            onChange={(event) => {
+              clear();
+              setPswd(event.target.value);
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid container item spacing={1} justifyContent="center">
+        <Grid item>
+          <Button
+            variant="contained"
+            onClick={() => {
+              query(name, pswd).then((result) => {
+                if (typeof result === "string") {
+                  dialog("查询错误", result);
+                } else {
+                  setRuls(result.rules);
+                  dialog("查询成功", `你的组为${result.roles}`);
+                }
+              });
+            }}
+          >
+            查询
           </Button>
-        </DialogActions>
-      </Dialog>
-    </>);
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            onClick={() => {
+              try {
+                const user = new Parse.User();
+                user.setUsername(name);
+                user.setPassword(pswd);
+                user
+                  .signUp()
+                  .then(() => {
+                    dialog("注册成功", "请联系管理员");
+                    Parse.User.logOut();
+                  })
+                  .catch((e) => {
+                    dialog("注册错误", (e as Error).message);
+                  });
+              } catch (e) {
+                dialog("注册错误", (e as Error).message);
+              }
+            }}
+          >
+            注册
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid container item spacing={1} justifyContent="center">
+        <Grid item>
+          <FormControl>
+            <FormLabel id="radio-group-rules" sx={{ mx: "auto" }}>
+              规则
+            </FormLabel>
+            <RadioGroup
+              row
+              value={rule}
+              onChange={(event) => setRule(event.target.value)}
+              aria-labelledby="radio-group-rules"
+            >
+              <FormControlLabel value="none" control={<Radio/>} label="无"/>
+              {ruls.map((it) => (<FormControlLabel
+                key={it}
+                value={it}
+                control={<Radio/>}
+                label={it}
+              />))}
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Grid container item spacing={1} justifyContent="center">
+        <Grid item>
+          <Link
+            component={NextLinkComposed}
+            to={`/api/clash?n=${name}&p=${pswd}${rule !== "none" ? `&r=${rule}` : ""}`}
+          >
+            配置链接
+          </Link>
+        </Grid>
+      </Grid>
+    </Grid>
+    <Dialog
+      open={open}
+      onClose={close}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{tite}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {msge}
+        </DialogContentText>
+        {cont}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={close} autoFocus>
+          确定
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </>);
 };
 
 export default Clash;
