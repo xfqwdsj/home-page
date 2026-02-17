@@ -39,7 +39,7 @@ interface QueryResult {
 const query = async (name: string, pswd: string): Promise<QueryResult | string> => {
   try {
     const user = await Parse.User.logIn(name, pswd);
-    const roles = await parseRoles(user);
+    const roles = await parseRoles(Parse, user);
     const rules = (await new Parse.Query("Rules").find()).map((rule) => rule.get("name") as string);
     return { roles, rules };
   } catch (e) {

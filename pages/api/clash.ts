@@ -47,7 +47,7 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
       res.status(401).send(null);
       return;
     }
-    const roles = await getRoles(user);
+    const roles = await getRoles(Parse, user);
     const ruleName = req.query["r"] as string | undefined;
 
     const queryOptions = { sessionToken: user.getSessionToken() as string };
