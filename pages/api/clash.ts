@@ -59,7 +59,8 @@ const ClashApi = (req: NextApiRequest, res: NextApiResponse) => {
         return JSON.stringify(rest);
       };
 
-      // Initialize tracking structures once per role (shared across all groups)
+      // Initialize tracking structures for this role iteration (shared across all groups in this role)
+      // Each role has isolated tracking structures to avoid cross-role contamination
       // Build a set of existing proxy names for O(1) lookup
       const existingNames = new Set(config.proxies.map((p) => p.name));
 
