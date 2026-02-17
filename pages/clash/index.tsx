@@ -12,9 +12,10 @@ import {
   Link,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { NextLinkComposed } from "../../components/link";
 import { HeadProps } from "../../components/head";
 import { parseRoles } from "../../components/user";
@@ -76,113 +77,101 @@ const Clash: NextPage = () => {
   };
 
   return (<>
-    <Grid container spacing={1}>
-      <Grid container item spacing={1} justifyContent="center">
-        <Grid item>
-          <TextField
-            label="用户名"
-            type="text"
-            autoComplete="username"
-            value={name}
-            onChange={(event) => {
-              clear();
-              setName(event.target.value);
-            }}
-          />
-        </Grid>
+    <Stack spacing={1}>
+      <Grid container spacing={1} justifyContent="center">
+        <TextField
+          label="用户名"
+          type="text"
+          autoComplete="username"
+          value={name}
+          onChange={(event) => {
+            clear();
+            setName(event.target.value);
+          }}
+        />
       </Grid>
-      <Grid container item spacing={1} justifyContent="center">
-        <Grid item>
-          <TextField
-            label="密码"
-            type="password"
-            autoComplete="password"
-            value={pswd}
-            onChange={(event) => {
-              clear();
-              setPswd(event.target.value);
-            }}
-          />
-        </Grid>
+      <Grid container spacing={1} justifyContent="center">
+        <TextField
+          label="密码"
+          type="password"
+          autoComplete="password"
+          value={pswd}
+          onChange={(event) => {
+            clear();
+            setPswd(event.target.value);
+          }}
+        />
       </Grid>
-      <Grid container item spacing={1} justifyContent="center">
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={() => {
-              query(name, pswd).then((result) => {
-                if (typeof result === "string") {
-                  dialog("查询错误", result);
-                } else {
-                  setRuls(result.rules);
-                  dialog("查询成功", `你的组为${result.roles}`);
-                }
-              });
-            }}
-          >
-            查询
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={() => {
-              try {
-                const user = new Parse.User();
-                user.setUsername(name);
-                user.setPassword(pswd);
-                user
-                  .signUp()
-                  .then(() => {
-                    dialog("注册成功", "请联系管理员");
-                    Parse.User.logOut();
-                  })
-                  .catch((e) => {
-                    dialog("注册错误", (e as Error).message);
-                  });
-              } catch (e) {
-                dialog("注册错误", (e as Error).message);
+      <Grid container spacing={1} justifyContent="center">
+        <Button
+          variant="contained"
+          onClick={() => {
+            query(name, pswd).then((result) => {
+              if (typeof result === "string") {
+                dialog("查询错误", result);
+              } else {
+                setRuls(result.rules);
+                dialog("查询成功", `你的组为${result.roles}`);
               }
-            }}
+            });
+          }}
+        >
+          查询
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            try {
+              const user = new Parse.User();
+              user.setUsername(name);
+              user.setPassword(pswd);
+              user
+                .signUp()
+                .then(() => {
+                  dialog("注册成功", "请联系管理员");
+                  Parse.User.logOut();
+                })
+                .catch((e) => {
+                  dialog("注册错误", (e as Error).message);
+                });
+            } catch (e) {
+              dialog("注册错误", (e as Error).message);
+            }
+          }}
+        >
+          注册
+        </Button>
+      </Grid>
+      <Grid container spacing={1} justifyContent="center">
+        <FormControl>
+          <FormLabel id="radio-group-rules" sx={{ mx: "auto" }}>
+            规则
+          </FormLabel>
+          <RadioGroup
+            row
+            value={rule}
+            onChange={(event) => setRule(event.target.value)}
+            aria-labelledby="radio-group-rules"
           >
-            注册
-          </Button>
-        </Grid>
+            <FormControlLabel value="none" control={<Radio/>} label="无"/>
+            {ruls.map((it) => (<FormControlLabel
+              key={it}
+              value={it}
+              control={<Radio/>}
+              label={it}
+            />))}
+          </RadioGroup>
+        </FormControl>
       </Grid>
-      <Grid container item spacing={1} justifyContent="center">
-        <Grid item>
-          <FormControl>
-            <FormLabel id="radio-group-rules" sx={{ mx: "auto" }}>
-              规则
-            </FormLabel>
-            <RadioGroup
-              row
-              value={rule}
-              onChange={(event) => setRule(event.target.value)}
-              aria-labelledby="radio-group-rules"
-            >
-              <FormControlLabel value="none" control={<Radio/>} label="无"/>
-              {ruls.map((it) => (<FormControlLabel
-                key={it}
-                value={it}
-                control={<Radio/>}
-                label={it}
-              />))}
-            </RadioGroup>
-          </FormControl>
-        </Grid>
+      <Grid container spacing={1} justifyContent="center">
+        <Link
+          component={NextLinkComposed}
+          to={`/api/clash?n=${name}&p=${pswd}${rule !== "none" ? `&r=${rule}` : ""}`}
+        >
+          配置链接
+        </Link>
       </Grid>
-      <Grid container item spacing={1} justifyContent="center">
-        <Grid item>
-          <Link
-            component={NextLinkComposed}
-            to={`/api/clash?n=${name}&p=${pswd}${rule !== "none" ? `&r=${rule}` : ""}`}
-          >
-            配置链接
-          </Link>
-        </Grid>
-      </Grid>
-    </Grid>
+    </Stack>
     <Dialog
       open={open}
       onClose={close}

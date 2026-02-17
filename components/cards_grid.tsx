@@ -25,7 +25,7 @@ export type CardInfo = {
 export const CardsGrid = (props: { cards: CardInfo[] }) => (
   <Grid container columns={60} spacing={2} sx={{ alignItems: "stretch" }}>
     {props.cards.map((card) => (
-      <Grid item xs={30} sm={20} md={15} xl={12} key={JSON.stringify(card)}>
+      <Grid size={{ xs: 30, sm: 20, md: 15, xl: 12 }} key={JSON.stringify(card)}>
         <Card sx={{ width: 1, height: 1 }}>
           <Stack width={1} height={1}>
             <CardContent>
