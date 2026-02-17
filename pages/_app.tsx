@@ -89,6 +89,7 @@ const App = ({ Component, pageProps }: AppProps<{ head?: HeadProps }>) => {
   useEffect(() => {
     (async () => {
       Parse.initialize("yN7VS5sajq19yVQXLw3V5nwqLTRoU3K37CYWokts", "4eIUmlLBJXoD77a6wlXeaFD3nqafjthxq6KrOtxX");
+      Parse.serverURL = "https://parseapi.back4app.com";
     })();
   }, []);
 
