@@ -39,8 +39,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0(@types/react@19.2.14)(react@19.2.4)
       parse:
-        specifier: ^8.1.0
-        version: 8.1.0
+        specifier: ^8.2.0
+        version: 8.2.0
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -1925,8 +1925,8 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
 
-  parse@8.1.0:
-    resolution: {integrity: sha512-QJvYHrNXXKfo8F9wUPB5eeT8VOTc9tObWuf07dAKgQi3375gC3bejyxIezOh3c6SOmCVpvBL2Ro0jspQbeEgkA==}
+  parse@8.2.0:
+    resolution: {integrity: sha512-jSx4zIqCja6O2HKhkzZ6JTm4fBUQS6sQpvFCAsqzaU4XlEhoRLm9mM1tZeYhvxTVA6zymvj/EJZ4YDOXCTRbmA==}
     engines: {node: '>=20.19.0 <21 || >=22.12.0 <23 || >=24.1.0 <25'}
 
   path-exists@4.0.0:
@@ -4701,7 +4701,7 @@ snapshots:
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
 
-  parse@8.1.0:
+  parse@8.2.0:
     dependencies:
       '@babel/runtime': 7.28.6
       '@babel/runtime-corejs3': 7.29.0
