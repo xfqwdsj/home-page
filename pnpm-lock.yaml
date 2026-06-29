@@ -48,8 +48,8 @@ importers:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
       uuid:
-        specifier: ^14.0.0
-        version: 14.0.0
+        specifier: ^14.0.1
+        version: 14.0.1
       yaml:
         specifier: ^2.9.0
         version: 2.9.0
@@ -2390,8 +2390,8 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  uuid@14.0.0:
-    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+  uuid@14.0.1:
+    resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
     hasBin: true
 
   vfile-matter@5.0.1:
@@ -5407,7 +5407,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  uuid@14.0.0: {}
+  uuid@14.0.1: {}
 
   vfile-matter@5.0.1:
     dependencies:
