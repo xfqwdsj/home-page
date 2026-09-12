@@ -15,7 +15,7 @@
     "@mui/lab": "^7.0.1-beta.23",
     "@mui/material": "^7.3.9",
     "clsx": "^2.1.1",
-    "nanoid": "^6.0.0",
+    "nanoid": "^6.0.1",
     "next": "^16.2.12",
     "next-mdx-remote": "^6.0.0",
     "parse": "^8.6.0",
